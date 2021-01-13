@@ -1,6 +1,10 @@
-Florescence.pem
-Florescence.ppk
+*.pem
+*.ppk
+*.pub
+.env
+
 
 #RamsComputer
 chromedriver
 chromedriver_mac64.zip
+

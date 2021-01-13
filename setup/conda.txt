@@ -1,0 +1,7 @@
+selenium
+beautifulsoup4
+textblob
+pillow
+wordcloud
+matplotlib
+mysql-connector-python
