@@ -3,9 +3,12 @@ import mysql.connector
 import os, warnings
 import time, re, logging, traceback
 import pandas
+
 GOOGLE_REVIEW_HEADER = ['id_review', 'caption', 'relative_date','retrieval_date', 'rating', 
                         'username', 'n_review_user', 'n_photo_user', 'url_user', 'store']
-class PDO:    
+STORE_HEADER = ['id_store', 'store_name', 'googlereviews_url','tripadvisor_url']
+
+class DataAccess:    
     def __init__(self):
         load_dotenv('.env')
         self.connector = self.__get_connector()
@@ -20,6 +23,29 @@ class PDO:
         self.connection.close()
         return True
     
+    def getAllStores(self, dataframeReturnType = False):
+        query = 'SELECT * FROM `stores`'
+        output = self.__executeSelectQuery(query)
+        if not dataframeReturnType:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = STORE_HEADER)
+            df.set_index('id_store', inplace=True)
+            return df
+    
+    def getOneStore(self, id_store = None, dataframeReturnType = False):
+        if id_store == None:
+            return None
+        query = 'SELECT * FROM `stores` WHERE id_store = %s'
+        args = (id_store,)
+        output = self.__executeSelectQuery(query, args)
+        if not dataframeReturnType:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = STORE_HEADER)
+            df.set_index('id_store', inplace=True)
+            return df
+        
     def writeRawGoogleReview(self, row):
         query = '''
             INSERT INTO googlereviews 
@@ -31,10 +57,10 @@ class PDO:
         args = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
         return self.__executeInsertQuery(query, args)
     
-    def getAllRawGooleReview(self, returnType = False):
+    def getAllRawGooleReview(self, dataframeReturnType = False):
         query = 'SELECT * FROM `googlereviews`'
         output = self.__executeSelectQuery(query)
-        if not returnType:
+        if not dataframeReturnType:
             return output
         else:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
@@ -54,11 +80,11 @@ class PDO:
             cursor.close()
         return status
     
-    def __executeSelectQuery(self, query):
+    def __executeSelectQuery(self, query, args=None):
         results = None
         try:
             cursor = self.connector.cursor()
-            cursor.execute(query)
+            cursor.execute(query, args)
             results = cursor.fetchall()           
         except mysql.connector.Error as err:
             self.__log_warn(err)
