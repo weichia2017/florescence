@@ -3,6 +3,10 @@ This repository is used by `Team Floescence` for the project `Flourishing Our Lo
 ## setup
 To install required libraries for the project, run `bash src/setup.sh` to install from conda-forge and pip.
 ## src
+
+`DatabaseAccess.py` is an object allows database access a local database (use .env) with the following fields.
+`DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_BASE`. Read the Object to find out more about the possible queries.
+
 `GoogleMapsReviewScrapper.py` is the main object that is used for Google Map's reviews scraping.
 By collecting the reviews sorted by earliest, we can ensure we get the latest reviews and stop if there is a duplicated review (meaning that we hit a review that was previously collected).
 ```
