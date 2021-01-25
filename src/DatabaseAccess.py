@@ -20,7 +20,7 @@ class DataAccess:
     def __exit__(self, exc_type, exc_value, tb):
         if exc_type is not None:
             traceback.print_exception(exc_type, exc_value, tb)
-        self.connection.close()
+        self.connector.close()
         return True
     
     def getAllStores(self, dataframeReturnType = False):
@@ -104,6 +104,7 @@ class DataAccess:
     def __get_logger(self):
         logger = logging.getLogger('logger')
         logger.setLevel(logging.DEBUG)
+        logger.propagate = False
         fh = logging.FileHandler('logger.log')
         fh.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
