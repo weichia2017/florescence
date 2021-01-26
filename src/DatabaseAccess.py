@@ -8,7 +8,7 @@ GOOGLE_REVIEW_HEADER = ['id_review', 'caption', 'relative_date','retrieval_date'
                         'username', 'n_review_user', 'n_photo_user', 'url_user', 'store']
 STORE_HEADER = ['id_store', 'store_name', 'googlereviews_url','tripadvisor_url']
 
-class DataAccess:    
+class DataAccess:
     def __init__(self):
         load_dotenv('.env')
         self.connector = self.__get_connector()
@@ -22,8 +22,8 @@ class DataAccess:
             traceback.print_exception(exc_type, exc_value, tb)
         self.connection.close()
         return True
-    
-    def getAllStores(self, dataframeReturnType = False):
+
+    def getStore(self, dataframeReturnType = False):
         query = 'SELECT * FROM `stores`'
         output = self.__executeSelectQuery(query)
         if not dataframeReturnType:
@@ -33,7 +33,7 @@ class DataAccess:
             df.set_index('id_store', inplace=True)
             return df
     
-    def getOneStore(self, id_store = None, dataframeReturnType = False):
+    def getStore(self, id_store, dataframeReturnType = False):
         if id_store == None:
             return None
         query = 'SELECT * FROM `stores` WHERE id_store = %s'
@@ -46,7 +46,7 @@ class DataAccess:
             df.set_index('id_store', inplace=True)
             return df
         
-    def writeRawGoogleReview(self, row):
+    def writeRawGoogleReview(self, review):
         query = '''
             INSERT INTO googlereviews 
             (`id_review`, `caption`, `relative_date`, `retrieval_date`, `rating`, 
@@ -57,9 +57,22 @@ class DataAccess:
         args = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
         return self.__executeInsertQuery(query, args)
     
-    def getAllRawGooleReview(self, dataframeReturnType = False):
+    def getRawGoogleReviews(self, dataframeReturnType = False):
         query = 'SELECT * FROM `googlereviews`'
         output = self.__executeSelectQuery(query)
+        if not dataframeReturnType:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
+            df.set_index('id_review', inplace=True)
+            return df
+    
+    def getRawGoogleReviews(self, id_store, dataframeReturnType = False):
+        if id_store == None:
+            return None
+        query = 'SELECT * FROM `googlereviews` WHERE id_store = %s'
+        args = (id_store,)
+        output = self.__executeSelectQuery(query, args)
         if not dataframeReturnType:
             return output
         else:
@@ -87,7 +100,7 @@ class DataAccess:
             cursor.execute(query, args)
             results = cursor.fetchall()           
         except mysql.connector.Error as err:
-            self.__log_warn(err)
+            self.logger.warn(err)
         finally:
             cursor.close()
         return results
@@ -110,9 +123,3 @@ class DataAccess:
         fh.setFormatter(formatter)
         logger.addHandler(fh)
         return logger
-    
-    def __log_info(self, info):
-        self.logger.warn(info)
-    
-    def __log_warn(self, warn):
-        self.logger.warn(warn)
