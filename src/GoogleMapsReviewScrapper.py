@@ -30,14 +30,15 @@ class Scraper:
         return True
 
     def setURL(self, name, url):
-        self.logger.warn('Getting ' + name + ' at ' + url)
+        self.logger.info('Attempting to load the Google Maps for '+name)
         self.driver.get(url)
-        self.logger.warn('Loaded ' + name)
+        self.logger.info('Sucessfully navigated to '+name+' Google Maps page.')
 
     def sort_by_date(self):
         wait = WebDriverWait(self.driver, MAX_WAIT)
         clicked = False
         tries = 0
+        self.logger.info('Attempting to sort Reviews by Dates')
         while not clicked and tries < MAX_RETRY:
             try:
                 menu_bt = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@data-value=\'Sort\']')))
@@ -46,15 +47,18 @@ class Scraper:
                 time.sleep(3)
             except Exception as e:
                 tries += 1
-                self.logger.warn('Failed to click recent button, attempt: '+ str(tries))
+                self.logger.warn('Failed to click "Show More" button, will retry! (Attempt: '+str(tries)+'/'+str(MAX_RETRY)+")")
             if tries == MAX_RETRY:
+                self.logger.warn('Failed to sort Reviews by Dates, this scrape should be terminated, returning -1 ')
                 return -1
+        self.logger.info('Reviews has been sorted by Dates.')
         recent_rating_bt = self.driver.find_elements_by_xpath('//li[@role=\'menuitemradio\']')[1]
         recent_rating_bt.click()
         time.sleep(5)
         return 0
 
     def get_reviews(self, offset):
+        self.logger.info('Getting Review from Review '+str(offset)+' onwards.')
         self.__scroll()
         time.sleep(4) 
         self.__expand_reviews()
@@ -126,11 +130,12 @@ class Scraper:
         self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
 
     def __get_logger(self):
-        logger = logging.getLogger('GoogleMapsScraper')
+        logger = logging.getLogger('logger')
         logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler('GoogleMapsScraper.log')
+        logger.propagate = False
+        fh = logging.FileHandler('logger.log')
         fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter('%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
         fh.setFormatter(formatter)
         logger.addHandler(fh)
         return logger
@@ -141,6 +146,7 @@ class Scraper:
             options.add_argument("--headless")
         else:
             options.add_argument("--window-size=1366,768")
+        options.add_argument('--no-sandbox')  
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         input_driver = webdriver.Chrome(chrome_options=options)
