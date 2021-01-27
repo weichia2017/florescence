@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import mysql.connector
+from mysql.connector import errorcode
 import os, warnings
 import time, re, logging, traceback
 import pandas
@@ -20,10 +21,9 @@ class DataAccess:
     and most methods includes a parameter that will format the output into a pandas.DataFrame.
     
     Typical usage example:
-
-    dao = DataAccess()
-    storeList = dao.getStores()
-    storeDataFrame = dao.getStores(True)
+        dao = DataAccess()
+        storeList = dao.getStores()
+        storeDataFrame = dao.getStores(True)
     """
     def __init__(self):
         load_dotenv('.env')
@@ -48,7 +48,7 @@ class DataAccess:
 
         Args:
             dataframeReturnType: Optional; if dataframeReturnType is True, 
-            The returned object will be in a pandas.DataFrame format.
+                The returned object will be in a pandas.DataFrame format.
 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -75,7 +75,7 @@ class DataAccess:
         Args:
             store_id: Required; the store's id to be retrieved from the database.
             dataframeReturnType: Optional; if dataframeReturnType is True, 
-            The returned object will be in a pandas.DataFrame format.
+                The returned object will be in a pandas.DataFrame format.
 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -98,13 +98,13 @@ class DataAccess:
     def writeRawGoogleReview(self, review):
         """Write a row into Google Reviews table.
 
-        Writes a single row into Google Reviews table. (Check this.GOOGLE_REVIEW_HEADER for format)
+        Writes a single row into Google Reviews table. (Check GOOGLE_REVIEW_HEADER for format)
         Take note that id_review is a unique key therefore no duplicates are allowed.
 
         Args:
             review: A list of of strings value in the following format.
-            ['id_review', 'caption', 'relative_date', 'retrieval_date', 'rating', 
-            'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
+                ['id_review', 'caption', 'relative_date', 'retrieval_date', 'rating', 
+                'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
 
         Returns:
             A boolean rather if the insertion was successful or not.
@@ -119,14 +119,14 @@ class DataAccess:
         args = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
         return self.__executeInsertQuery(query, args)
     
-    def getRawGoogleReviews(self, dataframeReturnType = False):
+    def getAllRawGoogleReviews(self, dataframeReturnType = False):
         """Retrieve all Google Reviews from the Database from All Stores
 
-        Retrieves all rows from Google Reviews table regardless of stores.
-        If store_id args is provided, it will search for all Google Review for that store.
+        Retrieves all rows from Google Reviews table.
 
         Args:
-            store_id: Optional; to search for specific stores only.
+            dataframeReturnType: Optional; if dataframeReturnType is True, 
+                The returned object will be in a pandas.DataFrame format.
 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -144,13 +144,14 @@ class DataAccess:
             return df
     
     def getRawGoogleReviews(self, store_id, dataframeReturnType = False):
-        """Retrieve all Google Reviews from the Database from All Stores
+        """Retrieve all Google Reviews from the Database from specified store.
 
-        Retrieves all rows from Google Reviews table regardless of stores.
-        If store_id args is provided, it will search for all Google Review for that store.
+        Retrieves all rows from Google Reviews table for a specific store given by store_id args.
 
         Args:
-            store_id: Optional; to search for specific stores only.
+            store_id: the store id, getStores() to find the code ID.
+            dataframeReturnType: Optional; if dataframeReturnType is True, 
+                The returned object will be in a pandas.DataFrame format.
 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -196,13 +197,25 @@ class DataAccess:
         return results
         
     def __get_connector(self):
-        mydb = mysql.connector.connect(
-            host=os.environ.get("DB_HOST"),
-            user=os.environ.get("DB_USER"),
-            passwd=os.environ.get("DB_PASS"),
-            database=os.environ.get("DB_BASE")
-        )
-        return mydb
+        try:
+            mydb = mysql.connector.connect(
+                host=os.environ.get("DB_HOST"),
+                user=os.environ.get("DB_USER"),
+                passwd=os.environ.get("DB_PASS"),
+                database=os.environ.get("DB_BASE")
+            )
+            return mydb
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                self.logger.warn("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                self.logger.warn("Database does not exist")
+            else:
+                self.logger.warn(err)
+        else:
+            mydb.close()
+            return None
+
     
     def __get_logger(self):
         logger = logging.getLogger('logger')
