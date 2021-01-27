@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import mysql.connector
+from mysql.connector import errorcode
 import os, warnings
 import time, re, logging, traceback
 import pandas
@@ -196,13 +197,25 @@ class DataAccess:
         return results
         
     def __get_connector(self):
-        mydb = mysql.connector.connect(
-            host=os.environ.get("DB_HOST"),
-            user=os.environ.get("DB_USER"),
-            passwd=os.environ.get("DB_PASS"),
-            database=os.environ.get("DB_BASE")
-        )
-        return mydb
+        try:
+            mydb = mysql.connector.connect(
+                host=os.environ.get("DB_HOST"),
+                user=os.environ.get("DB_USER"),
+                passwd=os.environ.get("DB_PASS"),
+                database=os.environ.get("DB_BASE")
+            )
+            return mydb
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                self.logger.warn("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                self.logger.warn("Database does not exist")
+            else:
+                self.logger.warn(err)
+        else:
+            mydb.close()
+            return None
+
     
     def __get_logger(self):
         logger = logging.getLogger('logger')
