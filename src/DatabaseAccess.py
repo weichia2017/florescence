@@ -100,7 +100,7 @@ class DataAccess:
     def writeRawGoogleReview(self, review):
         """Write a row into Google Reviews table.
 
-        Writes a single row into Google Reviews table. (Check GOOGLE_REVIEW_HEADER for format)
+        Writes a single row into Google Reviews table.
         Take note that id_review is a unique key therefore no duplicates are allowed.
 
         Args:
@@ -130,13 +130,13 @@ class DataAccess:
         return self.__executeInsertQuery(query, args)
     
     def writeRawTripAdvisorReview(self, review):
-        """Write a row into Tripadvisor  table.
+        """Write a row into Tripadvisor table.
 
-        Writes a single row into Google Reviews table. (Check GOOGLE_REVIEW_HEADER for format)
+        Writes a single row into Tripadvisor Reviews table.
         Take note that id_review is a unique key therefore no duplicates are allowed.
 
         Args:
-            review: GoogleReview Class.
+            review: Tripadvisor Class.
 
         Returns:
             A boolean rather if the insertion was successful or not.
