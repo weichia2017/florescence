@@ -1,0 +1,15 @@
+[Unit]
+Description=Jupyter Notebook
+
+[Service]
+Type=simple
+PIDFile=/run/jupyter.pid
+ExecStart=/home/ec2-user/anaconda3/bin/jupyter-notebook --config=/home/ec2-user/.jupyter/jupyter_notebook_config.py --notebook-dir=/home/ec2-user/Notebooks
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/Notebooks
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

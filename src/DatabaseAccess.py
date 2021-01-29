@@ -5,6 +5,8 @@ import os, warnings
 import time, re, logging, traceback
 import pandas
 
+from GoogleReview import GoogleReview
+
 GOOGLE_REVIEW_HEADER = ['id_review', 'caption', 'relative_date','retrieval_date', 'rating', 
                         'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
 STORE_HEADER = ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
@@ -110,15 +112,60 @@ class DataAccess:
             A boolean rather if the insertion was successful or not.
         """
         query = '''
-            INSERT INTO `google_reviews`
-            (`id_review`, `caption`, `relative_date`, `retrieval_date`, `rating`, 
-            `username`, `n_review_user`, `n_photo_user`, `url_user`, `store_id`) 
+            INSERT INTO `google_reviews` 
+            (`review_id`, `store_id`, `review_text`, `review_date`, `rating`, `username`, 
+            `n_review_user`, `retrieval_date`, `n_photo_user`, `url_user`, `relative_date`) 
             VALUES 
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             '''
-        args = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+        args = (review.review_id,
+                review.store_id,
+                review.review_text, 
+                review.getEstimatedDate(),  
+                review.rating, 
+                review.username, 
+                review.n_review_user, 
+                review.retrieval_date,
+                review.n_photo_user, 
+                review.url_user,
+                review.relative_date)
         return self.__executeInsertQuery(query, args)
     
+    def writeRawTripAdvisorReview(self, review):
+        """Write a row into Tripadvisor  table.
+
+        Writes a single row into Google Reviews table. (Check GOOGLE_REVIEW_HEADER for format)
+        Take note that id_review is a unique key therefore no duplicates are allowed.
+
+        Args:
+            review: GoogleReview Class.
+
+        Returns:
+            A boolean rather if the insertion was successful or not.
+        """
+        query = '''
+            INSERT INTO `tripadvisor_reviews` 
+            (`review_id`, `store_id`, `review_text`, `review_date`, `rating`, `username`, 
+            `n_review_user`, `retrieval_date`, `review_title`, `valueRating`, `atmosphereRating`, 
+            `serviceRating`, `foodRating`) 
+            VALUES 
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            '''
+        args = (review.review_id,
+                review.store_id,
+                review.review_text, 
+                review.review_date,  
+                review.rating, 
+                review.username, 
+                review.n_review_user, 
+                review.retrieval_date,
+                review.review_title, 
+                review.valueRating,
+                review.atmosphereRating,
+                review.serviceRating,
+                review.foodRating)
+        return self.__executeInsertQuery(query, args)
+
     def getAllRawGoogleReviews(self, dataframeReturnType = False):
         """Retrieve all Google Reviews from the Database from All Stores
 
