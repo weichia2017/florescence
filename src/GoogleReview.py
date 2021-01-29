@@ -9,19 +9,19 @@ class GoogleReview:
     from the Google Maps Review webpage.
     
     Attributes:
-        id_review: The Unique Code for the review
+        review_id: The Unique Code for the review
         username: Username of the reviewer
         review_text: The contents and feedback from the reviewer
         rating: The rating given by the reviwer
         relative_date: There is no exact timestamp provided by Google. It uses a relative date.
             e.g. a week ago, 3 weeks ago, 1 month ago.
-        n_reviews: Number of reviews the user has made before
-        n_photos: Numbers of photo the user has made before
+        n_review_user: Number of reviews the user has made before
+        n_photos_user: Numbers of photo the user has made before
         user_url: URL to the profile of the reviewer
         retrieval_date: The date that this review for retrieved.
     """
     def __init__(self, review):
-        self.id_review = review.find('button', class_='section-review-action-menu')['data-review-id']
+        self.review_id = review.find('button', class_='section-review-action-menu')['data-review-id']
         self.username = review.find('div', class_='section-review-title').find('span').text
         try:
             review_text = self.__filter_string(review.find('span', class_='section-review-text').text)
@@ -38,11 +38,11 @@ class GoogleReview:
             else:
                 n_photos = 0
             idx = len(metadata)
-            self.n_reviews = int(metadata[idx - 1].split(' ')[0].replace('.', ''))
-            self.n_photos = n_photos
+            self.n_review_user = int(metadata[idx - 1].split(' ')[0].replace('.', ''))
+            self.n_photo_user = n_photos
         except Exception as e:
-            self.n_reviews = 0
-            self.n_photos = 0
+            self.n_review_user = 0
+            self.n_photo_user = 0
         self.user_url = review.find('a')['href']
         self.retrieval_date = datetime.now()
 
