@@ -104,9 +104,7 @@ class DataAccess:
         Take note that id_review is a unique key therefore no duplicates are allowed.
 
         Args:
-            review: A list of of strings value in the following format.
-                ['id_review', 'caption', 'relative_date', 'retrieval_date', 'rating', 
-                'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
+            review: GoogleReview Class.
 
         Returns:
             A boolean rather if the insertion was successful or not.
@@ -217,7 +215,7 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
             df.set_index('id_review', inplace=True)
             return df
-    
+
     def __executeInsertQuery(self, query, args):
         status = True
         try:
@@ -263,7 +261,6 @@ class DataAccess:
             mydb.close()
             return None
 
-    
     def __get_logger(self):
         logger = logging.getLogger('logger')
         logger.setLevel(logging.DEBUG)

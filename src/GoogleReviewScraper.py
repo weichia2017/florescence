@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from datetime import datetime
 import time, re, logging, traceback
+from GoogleReview import GoogleReview
 
 MAX_WAIT = 10
 MAX_RETRY = 5
@@ -106,7 +107,7 @@ class Scraper:
             offset: The starting point of the Scrape for Reviews
         
         Returns:
-            A Nested List of reviews from Google Maps Reviews. It will return reviews between
+            A List of GoogleReview() objects. It will return reviews between
             offset to the maximum number of reviews visible on the page.
             
         """ 
@@ -116,60 +117,11 @@ class Scraper:
         self.__expand_reviews()
         response = BeautifulSoup(self.driver.page_source, 'html.parser')
         rblock = response.find_all('div', class_='section-review-content')
-        parsed_reviews = []
+        reviews = []
         for index, review in enumerate(rblock):
             if index >= offset:
-                parsed_reviews.append(self.__parse(review))
-        return parsed_reviews
-
-    def __parse(self, review):
-        item = {}
-        id_review = review.find('button', class_='section-review-action-menu')['data-review-id']
-        username = review.find('div', class_='section-review-title').find('span').text
-        try:
-            review_text = self.__filter_string(review.find('span', class_='section-review-text').text)
-        except Exception as e:
-            review_text = None
-        rating = float(review.find('span', class_='section-review-stars')['aria-label'].split(' ')[1])
-        relative_date = review.find('span', class_='section-review-publish-date').text
-
-        try:
-            n_reviews_photos = review.find('div', class_='section-review-subtitle').find_all('span')[1].text
-            metadata = n_reviews_photos.split('\xe3\x83\xbb')
-            if len(metadata) == 3:
-                n_photos = int(metadata[2].split(' ')[0].replace('.', ''))
-            else:
-                n_photos = 0
-            idx = len(metadata)
-            n_reviews = int(metadata[idx - 1].split(' ')[0].replace('.', ''))
-        except Exception as e:
-            n_reviews = 0
-            n_photos = 0
-        user_url = review.find('a')['href']
-
-        item['id_review'] = id_review
-        item['caption'] = review_text
-        item['relative_date'] = relative_date
-        item['retrieval_date'] = datetime.now()
-        # retrieval_date - time(relative_date)
-        item['rating'] = rating
-        item['username'] = username
-        item['n_review_user'] = n_reviews
-        item['n_photo_user'] = n_photos
-        item['url_user'] = user_url
-        return item
-
-    def __parse_place(self, response):
-        place = {}
-        try:
-            place['overall_rating'] = float(response.find('div', class_='gm2-display-2').text.replace(',', '.'))
-        except:
-            place['overall_rating'] = 'NOT FOUND'
-        try:
-            place['n_reviews'] = int(response.find('div', class_='gm2-caption').text.replace('.', '').replace(',','').split(' ')[0])
-        except:
-            place['n_reviews'] = 0
-        return place
+                reviews.append(GoogleReview(review))
+        return reviews
 
     def __expand_reviews(self):
         links = self.driver.find_elements_by_xpath('//button[@class=\'section-expand-review blue-link\']')
@@ -203,7 +155,3 @@ class Scraper:
         options.add_argument("--lang=en-GB")
         input_driver = webdriver.Chrome(chrome_options=options)
         return input_driver
-
-    def __filter_string(self, str):
-        strOut = str.replace('\r', ' ').replace('\n', ' ').replace('\t', ' ')
-        return strOut
