@@ -125,7 +125,7 @@ class DataAccess:
                 review.n_review_user, 
                 review.retrieval_date,
                 review.n_photo_user, 
-                review.url_user,
+                review.user_url,
                 review.relative_date)
         return self.__executeInsertQuery(query, args)
     
