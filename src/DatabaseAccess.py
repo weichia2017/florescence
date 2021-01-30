@@ -224,7 +224,7 @@ class DataAccess:
             self.connector.commit()
         except mysql.connector.Error as err:
             status = False
-            self.__log_warn(err)
+            self.logger.warn(err)
         finally:
             cursor.close()
         return status
