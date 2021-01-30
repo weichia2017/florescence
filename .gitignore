@@ -9,4 +9,7 @@ chromedriver
 chromedriver_mac64.zip
 TripAdvisorRawData.xlsx
 TripAdvisorScrapeURLs.xlsx
+__pycache__
+TripAdvisorScraper.log
+logger.log
 

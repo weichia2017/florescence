@@ -10,7 +10,7 @@ import time, logging, traceback
 from random import randrange
 
 MAX_WAIT = 10
-MAX_RETRY = 5
+MAX_RETRY = 3
 
 class Scraper:
     
@@ -34,11 +34,6 @@ class Scraper:
         self.driver.get(url)
         self.logger.warn('Loaded ' + name)
         time.sleep(1)
-        
-        
-    def getNewNumberOfReviews(self):
-        totalNewNoOfReviews = int(self.driver.find_element_by_xpath("//label[@for='filters_detail_language_filterLang_en']").text.split("(")[1][:-1])
-        return totalNewNoOfReviews
     
     def showMoreButton(self):
         wait = WebDriverWait(self.driver, MAX_WAIT)
@@ -58,27 +53,39 @@ class Scraper:
         return 0
     
     
-    def getReviews(self,newReviewsCount,dateUpdated,nameOfShop):
+    def getReviews(self,store_id):
         time.sleep(2)
-        newReviewsList = []
-        while(newReviewsCount > 0):
-            self.showMoreButton()
-       
-            listOfReviews = self.driver.find_elements_by_xpath("//div[@class='review-container']")
+        list_of_review_objects = []
             
-            for review in listOfReviews:
-                with Review(review) as r:
-                    if(newReviewsCount == 0):
-                        return newReviewsList
-                    newReviewsList.append(r.get_Review(dateUpdated,nameOfShop))
-                    newReviewsCount -= 1 
-     
-            if(newReviewsCount != 0): 
-                sleepTime = randrange(5,15)
-                print("Sleeping for", sleepTime,"seconds before next page")
-                time.sleep(sleepTime)
-                self.driver.find_element_by_xpath('//a[@class="nav next ui_button primary"]').click()
+        self.showMoreButton()
+       
+        listOfReviews = self.driver.find_elements_by_xpath("//div[@class='review-container']")
+            
+        for review in listOfReviews:
+            with Review(review,store_id) as review_object:
+                list_of_review_objects.append(review_object)
+
+        return list_of_review_objects
     
+    def clickNextPageButton(self):
+        wait = WebDriverWait(self.driver, MAX_WAIT)
+        clicked = False
+        tries = 0
+        while not clicked and tries < MAX_RETRY:
+            try:
+                nextButton = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@class="nav next ui_button primary"]')))
+                nextButton.click()
+                clicked = True
+                time.sleep(3)
+
+            except Exception as e:
+                tries += 1
+                self.logger.warn('Failed to click recent button, attempt: '+ str(tries))
+                
+            if tries == MAX_RETRY:
+                return False
+            
+        return True
     
     def __get_logger(self):
         logger = logging.getLogger('TripAdvisorScraper')
