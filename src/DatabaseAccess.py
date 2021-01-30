@@ -122,8 +122,8 @@ class DataAccess:
                 review.username, 
                 review.n_review_user, 
                 review.n_photo_user, 
-                review.url_user, 
-                review.store_id)
+                review.user_url,
+                review.relative_date)
         return self.__executeInsertQuery(query, args)
     
     def getAllRawGoogleReviews(self, dataframeReturnType = False):
