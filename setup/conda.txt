@@ -5,3 +5,4 @@ pillow
 wordcloud
 matplotlib
 mysql-connector-python
+python-dotenv
