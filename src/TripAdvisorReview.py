@@ -1,6 +1,6 @@
 import datetime 
 
-class Review:    
+class TripAdvisorReview:    
     def __init__(self, review,store_id):        
         self.value_rating      = None
         self.atmosphere_rating = None

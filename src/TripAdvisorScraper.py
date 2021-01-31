@@ -5,14 +5,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from Review import Review
+from TripAdvisorReview import TripAdvisorReview
 import time, logging, traceback
 from random import randrange
 
 MAX_WAIT = 10
 MAX_RETRY = 3
 
-class Scraper:
+class TripAdvisorScraper:
     
     def __init__(self, debug=False):
         self.debug = debug
@@ -62,7 +62,7 @@ class Scraper:
         listOfReviews = self.driver.find_elements_by_xpath("//div[@class='review-container']")
             
         for review in listOfReviews:
-            with Review(review,store_id) as review_object:
+            with TripAdvisorReview(review,store_id) as review_object:
                 list_of_review_objects.append(review_object)
 
         return list_of_review_objects

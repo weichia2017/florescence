@@ -6,7 +6,7 @@ import time, re, logging, traceback
 import pandas
 
 from GoogleReview import GoogleReview
-from Review import Review 
+from TripAdvisorReview import TripAdvisorReview 
 
 GOOGLE_REVIEW_HEADER = ['id_review', 'caption', 'relative_date','retrieval_date', 'rating', 
                         'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
@@ -19,6 +19,7 @@ STORE_HEADER = ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
 
 class DataAccess:
     """DataAccess module for Florescence MySQL Database.
+    
     This DataAccess object requires .env object that includes the following variable
         DB_HOST: Endpoint of the MySQL Database
         DB_USER: Username of a user account with sufficient read/write access
@@ -48,12 +49,15 @@ class DataAccess:
 
     def getStores(self, dataframeReturnType = False):
         """Fetches all rows from Stores table.
+        
         Retrieves all rows from the Stores table that will return return
         the Store's ID, Name, GoogleReview URL, and TripAdvisor URL.
         The URLs may consist of empty Strings, indicating there's no URL.
+        
         Args:
             dataframeReturnType: Optional; if dataframeReturnType is True, 
                 The returned object will be in a pandas.DataFrame format.
+    
         Returns:
             Returns a nested list of stores and each row will consist of the following format
             ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
@@ -71,13 +75,16 @@ class DataAccess:
     
     def getStore(self, store_id, dataframeReturnType = False):
         """Fetches a single row from Stores table.
+        
         Retrieves a row from the Stores table from a provided store's ID.
         This will return return the Store's ID, Name, GoogleReview URL, and TripAdvisor URL.
         The URLs may consist of empty Strings, indicating there's no URL.
+        
         Args:
             store_id: Required; the store's id to be retrieved from the database.
             dataframeReturnType: Optional; if dataframeReturnType is True, 
                 The returned object will be in a pandas.DataFrame format.
+                
         Returns:
             Returns a nested list of stores and each row will consist of the following format
             ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
@@ -98,10 +105,13 @@ class DataAccess:
         
     def writeRawGoogleReview(self, review):
         """Write a row into Google Reviews table.
+        
         Writes a single row into Google Reviews table.
         Take note that id_review is a unique key therefore no duplicates are allowed.
+        
         Args:
             review: GoogleReview Class.
+            
         Returns:
             A boolean rather if the insertion was successful or not.
         """
@@ -127,10 +137,13 @@ class DataAccess:
     
     def writeRawTripAdvisorReview(self, review):
         """Write a row into Tripadvisor table.
+        
         Writes a single row into Tripadvisor Reviews table.
         Take note that id_review is a unique key therefore no duplicates are allowed.
+        
         Args:
             review: Tripadvisor Class.
+            
         Returns:
             A boolean rather if the insertion was successful or not.
         """
@@ -160,10 +173,13 @@ class DataAccess:
 
     def getAllRawGoogleReviews(self, dataframeReturnType = False):
         """Retrieve all Google Reviews from the Database from All Stores
+        
         Retrieves all rows from Google Reviews table.
+        
         Args:
             dataframeReturnType: Optional; if dataframeReturnType is True, 
                 The returned object will be in a pandas.DataFrame format.
+                
         Returns:
             Returns a nested list of stores and each row will consist of the following format
             ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
@@ -181,11 +197,14 @@ class DataAccess:
     
     def getRawGoogleReviews(self, store_id, dataframeReturnType = False):
         """Retrieve all Google Reviews from the Database from specified store.
+        
         Retrieves all rows from Google Reviews table for a specific store given by store_id args.
+        
         Args:
             store_id: the store id, getStores() to find the code ID.
             dataframeReturnType: Optional; if dataframeReturnType is True, 
                 The returned object will be in a pandas.DataFrame format.
+                
         Returns:
             Returns a nested list of stores and each row will consist of the following format
             ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
@@ -236,7 +255,7 @@ class DataAccess:
                 user=os.environ.get("DB_USER"),
                 passwd=os.environ.get("DB_PASS"),
                 database=os.environ.get("DB_BASE"),
-                collation='utf8mb4_unicode_ci'
+                collation='utf8mb4_unicode_ci'      # For the emojis 
             )
             return mydb
         except mysql.connector.Error as err:
