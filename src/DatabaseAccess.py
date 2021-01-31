@@ -275,7 +275,7 @@ class DataAccess:
         A 'source' column was added to designate the origins of the review.
         
         Args:
-            show_all: Optional; all columns are returned by default however since
+            show_all: Optional, default False; all columns are returned by default however since
                 reviews from both site are different, there will be np.NaN included.
                 if show_all is set to True, only columns that is used by the sources
                 columns will be returned.
@@ -292,7 +292,7 @@ class DataAccess:
         tdf = dao.getAllRawTripAdvisorReviews(True)
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
-        if show_all:
+        if not show_all:
             df = df[SHARED_HEADER]
         if return_as_dataframe:        
             return df
