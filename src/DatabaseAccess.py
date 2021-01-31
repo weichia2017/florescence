@@ -102,7 +102,7 @@ class DataAccess:
         """Write a row into Google Reviews table.
         
         Writes a single row into Google Reviews table.
-        Take note that id_review is a unique key therefore no duplicates are allowed.
+        Take note that review_id is a unique key therefore no duplicates are allowed.
         
         Args:
             review: GoogleReview Class.
@@ -134,7 +134,7 @@ class DataAccess:
         """Write a row into Tripadvisor table.
         
         Writes a single row into Tripadvisor Reviews table.
-        Take note that id_review is a unique key therefore no duplicates are allowed.
+        Take note that review_id is a unique key therefore no duplicates are allowed.
         
         Args:
             review: Tripadvisor Class.
@@ -186,7 +186,7 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
-            df.set_index('id_review', inplace=True)
+            df.set_index('review_id', inplace=True)
             return df
     
     def getRawGoogleReviews(self, store_id, dataframeReturnType = False):
@@ -213,7 +213,7 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
-            df.set_index('id_review', inplace=True)
+            df.set_index('review_id', inplace=True)
             return df
 
     def getAllRawTripAdvisorReviews(self, dataframeReturnType = False):
@@ -236,7 +236,7 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
-            df.set_index('id_review', inplace=True)
+            df.set_index('review_id', inplace=True)
             return df
     
     def getRawTripAdvisorReviews(self, store_id, dataframeReturnType = False):
@@ -263,7 +263,7 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
-            df.set_index('id_review', inplace=True)
+            df.set_index('review_id', inplace=True)
             return df
 
     def __executeInsertQuery(self, query, args):
