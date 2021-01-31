@@ -44,7 +44,7 @@ class DataAccess:
         self.connector.close()
         return True
 
-    def getStores(self, return_as_dataframe = False):
+    def getStores(self, return_as_dataframe = True):
         """Fetches all rows from Stores table.
         
         Retrieves all rows from the Stores table that will return return
@@ -52,8 +52,8 @@ class DataAccess:
         The URLs may consist of empty Strings, indicating there's no URL.
         
         Args:
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
     
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -70,7 +70,7 @@ class DataAccess:
             df.set_index('store_id', inplace=True)
             return df
     
-    def getStore(self, store_id, return_as_dataframe = False):
+    def getStore(self, store_id, return_as_dataframe = True):
         """Fetches a single row from Stores table.
         
         Retrieves a row from the Stores table from a provided store's ID.
@@ -79,8 +79,8 @@ class DataAccess:
         
         Args:
             store_id: Required; the store's id to be retrieved from the database.
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
                 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
@@ -168,17 +168,17 @@ class DataAccess:
         
         return self.__executeInsertQuery(query, args)
 
-    def getAllRawGoogleReviews(self, return_as_dataframe = False):
+    def getAllRawGoogleReviews(self, return_as_dataframe = True):
         """Retrieve all Google Reviews from the Database from All Stores
         
         Retrieves all rows from Google Reviews table.
         
         Args:
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
                 
         Returns:
-            Returns a nested list of all raw Google Reviews
+            Returns a nested list of reviews from Google
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
@@ -191,18 +191,18 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
     
-    def getRawGoogleReviews(self, store_id, return_as_dataframe = False):
+    def getRawGoogleReviews(self, store_id, return_as_dataframe = True):
         """Retrieve all Google Reviews from the Database from specified store.
         
         Retrieves all rows from Google Reviews table for a specific store given by store_id args.
         
         Args:
             store_id: the store id, getStores() to find the code ID.
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
                 
         Returns:
-            Returns a nested list of stores and each row will consist of the following format
+            Returns a nested list of reviews from Google
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
@@ -218,17 +218,17 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    def getAllRawTripAdvisorReviews(self, return_as_dataframe = False):
+    def getAllRawTripAdvisorReviews(self, return_as_dataframe = True):
         """Retrieve all Tripadvisor Reviews from the Database from All Stores
         
         Retrieves all rows from Tripadvisor Reviews table.
         
         Args:
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
                 
         Returns:
-            Returns a nested list of all raw Google Reviews
+            Returns a nested list of reviews from Tripadvisor
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
@@ -241,18 +241,18 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
     
-    def getRawTripAdvisorReviews(self, store_id, return_as_dataframe = False):
+    def getRawTripAdvisorReviews(self, store_id, return_as_dataframe = True):
         """Retrieve all Tripadvisor from the Database from specified store.
         
         Retrieves all rows from Tripadvisor table for a specific store given by store_id args.
         
         Args:
             store_id: the store id, getStores() to find the code ID.
-            return_as_dataframe: Optional; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
                 
         Returns:
-            Returns a nested list of stores and each row will consist of the following format
+            Returns a nested list of reviews from Tripadvisor
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
@@ -268,7 +268,25 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    def getAllRawReviews(self, show_all = False, return_as_dataframe = False):
+    def getAllRawReviews(self, show_all = False, return_as_dataframe = True):
+        """Retrieve all reviews from the Database from specified store.
+        
+        Retrieve all reviews from both Tripadvisor and Google. Columns will be handled according to args provided.
+        A 'source' column was added to designate the origins of the review.
+        
+        Args:
+            show_all: Optional; all columns are returned by default however since
+                reviews from both site are different, there will be np.NaN included.
+                if show_all is set to True, only columns that is used by the sources
+                columns will be returned.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
+                
+        Returns:
+            Returns a nested list of reviews from all sources
+            If return_as_dataframe is set to True, a pandas.DataFrame object
+            is returned with the columns and indexes set accordingly.
+        """
         gdf = dao.getAllRawGoogleReviews(True)
         gdf['source'] = "Google"
         tdf = dao.getAllRawTripAdvisorReviews(True)
