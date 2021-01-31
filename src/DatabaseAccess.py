@@ -285,11 +285,11 @@ class DataAccess:
         Returns:
             Returns a nested list of reviews from all sources
             If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
+            is returned with the columns and indexes set accordingly, else a list is returned
         """
-        gdf = dao.getAllRawGoogleReviews(True)
+        gdf = this.getAllRawGoogleReviews(True)
         gdf['source'] = "Google"
-        tdf = dao.getAllRawTripAdvisorReviews(True)
+        tdf = this.getAllRawTripAdvisorReviews(True)
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
         if not show_all:
