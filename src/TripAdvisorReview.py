@@ -38,7 +38,7 @@ class TripAdvisorReview:
         self.review_title = review.find_element_by_xpath(".//span[@class='noQuotes']").text 
     
         # The Text Review
-        self.review_text = review.find_element_by_xpath(".//p[@class='partial_entry']").text
+        self.review_text = review.find_element_by_xpath(".//p[@class='partial_entry']").text.replace("\n", " ")
         
         # Extra Review namely, 1.Value, 2.Atmosphere, 3.Service, 4.Food
         isThereExtraReviews =  review.find_elements_by_xpath(".//li[@class='recommend-answer']")

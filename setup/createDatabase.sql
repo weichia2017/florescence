@@ -22,10 +22,10 @@ CREATE TABLE `florescence`.`tripadvisor_reviews` (
   `n_review_user` int(11) DEFAULT NULL,
   `retrieval_date` date DEFAULT NULL,
   `review_title` text DEFAULT NULL,
-  `valueRating` int(11) DEFAULT NULL,
-  `atmosphereRating` int(11) DEFAULT NULL,
-  `serviceRating` int(11) DEFAULT NULL,
-  `foodRating` int(11) DEFAULT NULL
+  `value_rating` int(11) DEFAULT NULL,
+  `atmosphere_rating` int(11) DEFAULT NULL,
+  `service_rating` int(11) DEFAULT NULL,
+  `food_rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `florescence`.`stores` ( 
