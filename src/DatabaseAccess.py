@@ -287,9 +287,9 @@ class DataAccess:
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly, else a list is returned
         """
-        gdf = this.getAllRawGoogleReviews(True)
+        gdf = self.getAllRawGoogleReviews(True)
         gdf['source'] = "Google"
-        tdf = this.getAllRawTripAdvisorReviews(True)
+        tdf = self.getAllRawTripAdvisorReviews(True)
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
         if not show_all:
