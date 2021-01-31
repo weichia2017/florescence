@@ -176,9 +176,8 @@ class DataAccess:
                 The returned object will be in a pandas.DataFrame format.
                 
         Returns:
-            Returns a nested list of stores and each row will consist of the following format
-            ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
-            If dataframeReturnType  is set to True, a pandas.DataFrame object
+            Returns a nested list of all raw Google Reviews
+            If dataframeReturnType is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
         query = 'SELECT * FROM `google_reviews`'
@@ -202,8 +201,7 @@ class DataAccess:
                 
         Returns:
             Returns a nested list of stores and each row will consist of the following format
-            ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
-            If dataframeReturnType  is set to True, a pandas.DataFrame object
+            If dataframeReturnType is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly.
         """
         if store_id == None:
@@ -219,6 +217,19 @@ class DataAccess:
             return df
 
     def getAllRawTripAdvisorReviews(self, dataframeReturnType = False):
+        """Retrieve all Tripadvisor Reviews from the Database from All Stores
+        
+        Retrieves all rows from Tripadvisor Reviews table.
+        
+        Args:
+            dataframeReturnType: Optional; if dataframeReturnType is True, 
+                The returned object will be in a pandas.DataFrame format.
+                
+        Returns:
+            Returns a nested list of all raw Google Reviews
+            If dataframeReturnType is set to True, a pandas.DataFrame object
+            is returned with the columns and indexes set accordingly.
+        """
         query = 'SELECT * FROM `tripadvisor_reviews`'
         output = self.__executeSelectQuery(query)
         if not dataframeReturnType:
@@ -229,6 +240,20 @@ class DataAccess:
             return df
     
     def getRawTripAdvisorReviews(self, store_id, dataframeReturnType = False):
+        """Retrieve all Tripadvisor from the Database from specified store.
+        
+        Retrieves all rows from Tripadvisor table for a specific store given by store_id args.
+        
+        Args:
+            store_id: the store id, getStores() to find the code ID.
+            dataframeReturnType: Optional; if dataframeReturnType is True, 
+                The returned object will be in a pandas.DataFrame format.
+                
+        Returns:
+            Returns a nested list of stores and each row will consist of the following format
+            If dataframeReturnType is set to True, a pandas.DataFrame object
+            is returned with the columns and indexes set accordingly.
+        """
         if store_id == None:
             return None
         query = 'SELECT * FROM `tripadvisor_reviews` WHERE store_id = %s'
