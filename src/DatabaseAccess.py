@@ -5,11 +5,11 @@ import os, warnings
 import time, re, logging, traceback
 import pandas
 
-TRIP_ADVISOR_HEADER = ['review_id','store_id','review_text','review_date','rating','username',
-   'n_review_user','retrival_date','review_title','value_rating',
-    'atmosphere_rating','service_rating','food_rating']
 GOOGLE_REVIEW_HEADER = ['review_id', 'store_id', 'review_text', 'review_date', 'rating', 'username', 
     'n_review_user', 'retrieval_date', 'n_photo_user', 'url_user', 'relative_date']
+TRIP_ADVISOR_HEADER = ['review_id','store_id','review_text','review_date','rating','username',
+   'n_review_user','retrieval_date','review_title','value_rating',
+    'atmosphere_rating','service_rating','food_rating']
 STORE_HEADER = ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
 
 class DataAccess:
@@ -265,6 +265,13 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
             df.set_index('review_id', inplace=True)
             return df
+
+    def getAllRawReviews(self, dataframeReturnType = False):
+        df = pandas.concat([self.getAllRawGoogleReviews(True),self.getAllRawTripAdvisorReviews(True)])
+        if dataframeReturnType:        
+            return df
+        else:
+            return df.reset_index().values.tolist()
 
     def __executeInsertQuery(self, query, args):
         status = True
