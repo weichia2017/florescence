@@ -10,7 +10,7 @@ import time, logging, traceback
 from random import randrange
 
 MAX_WAIT = 10
-MAX_RETRY = 3
+MAX_RETRY = 5
 
 class TripAdvisorScraper:
     
@@ -41,13 +41,13 @@ class TripAdvisorScraper:
         tries = 0
         while not clicked and tries < MAX_RETRY:
             try:
-                menu_bt = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='taLnk ulBlueLinks']")))
-                menu_bt.click()
+                show_more_bt = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='taLnk ulBlueLinks']")))
+                show_more_bt.click()
                 clicked = True
                 time.sleep(3)
             except Exception:
                 tries += 1
-                self.logger.warn('Failed to click recent button, attempt: '+ str(tries))
+                self.logger.warn('Failed to click show more button, attempt: '+ str(tries))
             if tries == MAX_RETRY:
                 return -1
         return 0
@@ -73,14 +73,14 @@ class TripAdvisorScraper:
         tries = 0
         while not clicked and tries < MAX_RETRY:
             try:
-                nextButton = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@class="nav next ui_button primary"]')))
-                nextButton.click()
+                next_page_btn = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@class="nav next ui_button primary"]')))
+                next_page_btn.click()
                 clicked = True
                 time.sleep(3)
 
             except Exception as e:
                 tries += 1
-                self.logger.warn('Failed to click recent button, attempt: '+ str(tries))
+                self.logger.warn('Failed to click next page button, attempt: '+ str(tries))
                 
             if tries == MAX_RETRY:
                 return False
@@ -105,5 +105,5 @@ class TripAdvisorScraper:
             options.add_argument("--window-size=1366,768")
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
-        input_driver = webdriver.Chrome("./chromedriver", chrome_options=options)
+        input_driver = webdriver.Chrome(chrome_options=options)
         return input_driver
