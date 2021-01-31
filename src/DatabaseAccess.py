@@ -5,16 +5,11 @@ import os, warnings
 import time, re, logging, traceback
 import pandas
 
-from GoogleReview import GoogleReview
-from TripAdvisorReview import TripAdvisorReview 
-
-GOOGLE_REVIEW_HEADER = ['id_review', 'caption', 'relative_date','retrieval_date', 'rating', 
-                        'username', 'n_review_user', 'n_photo_user', 'url_user', 'store_id']
-
-# TRIP_ADVISOR_HEADER = ['review_id','store_id','review_text','review_date','rating','username',
-#                        'n_review_user','retrival_date','review_title','value_rating',
-#                        'atmosphere_rating','service_rating','food_rating']
-
+TRIP_ADVISOR_HEADER = ['review_id','store_id','review_text','review_date','rating','username',
+   'n_review_user','retrival_date','review_title','value_rating',
+    'atmosphere_rating','service_rating','food_rating']
+GOOGLE_REVIEW_HEADER = ['review_id', 'store_id', 'review_text', 'review_date', 'rating', 'username', 
+    'n_review_user', 'retrieval_date', 'n_photo_user', 'url_user', 'relative_date']
 STORE_HEADER = ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
 
 class DataAccess:
@@ -220,6 +215,29 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
+            df.set_index('id_review', inplace=True)
+            return df
+
+    def getAllRawTripAdvisorReviews(self, dataframeReturnType = False):
+        query = 'SELECT * FROM `tripadvisor_reviews`'
+        output = self.__executeSelectQuery(query)
+        if not dataframeReturnType:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
+            df.set_index('id_review', inplace=True)
+            return df
+    
+    def getRawTripAdvisorReviews(self, store_id, dataframeReturnType = False):
+        if store_id == None:
+            return None
+        query = 'SELECT * FROM `tripadvisor_reviews` WHERE store_id = %s'
+        args = (store_id,)
+        output = self.__executeSelectQuery(query, args)
+        if not dataframeReturnType:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
             df.set_index('id_review', inplace=True)
             return df
 
