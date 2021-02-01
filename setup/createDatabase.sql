@@ -1,15 +1,31 @@
-CREATE TABLE `florescence`.`googlereviews` (
-  `id_review` varchar(255) NOT NULL,
-  `caption` text DEFAULT NULL,
-  `relative_date` varchar(45) DEFAULT NULL,
-  `retrieval_date` date DEFAULT NULL,
+CREATE TABLE `florescence`.`google_reviews` (
+  `review_id` varchar(255) NOT NULL PRIMARY KEY,
+  `store_id` int(11) DEFAULT NULL,
+  `review_text` text DEFAULT NULL,
+  `review_date` date DEFAULT NULL,
   `rating` int(11) DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   `n_review_user` int(11) DEFAULT NULL,
+  `retrieval_date` date DEFAULT NULL,
   `n_photo_user` int(11) DEFAULT NULL,
   `url_user` varchar(255) DEFAULT NULL,
-  `store` varchar(45) DEFAULT NULL
-  PRIMARY KEY (`id_review`)
+  `relative_date` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `florescence`.`tripadvisor_reviews` (
+  `review_id` varchar(255) NOT NULL PRIMARY KEY,
+  `store_id` int(11) DEFAULT NULL,
+  `review_text` text DEFAULT NULL,
+  `review_date` date DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `n_review_user` int(11) DEFAULT NULL,
+  `retrieval_date` date DEFAULT NULL,
+  `review_title` text DEFAULT NULL,
+  `value_rating` int(11) DEFAULT NULL,
+  `atmosphere_rating` int(11) DEFAULT NULL,
+  `service_rating` int(11) DEFAULT NULL,
+  `food_rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `florescence`.`stores` ( 
