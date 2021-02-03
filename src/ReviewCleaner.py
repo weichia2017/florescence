@@ -9,7 +9,7 @@ class Cleaner:
         self.activity = []
         self.df = DataFrame
     
-    def seperateEmptyReview(self):
+    def separateEmptyReview(self):
         self.empty_df = self.df[self.df.review_text==""].copy()
         self.df = self.df[self.df.review_text!=""].copy()
         return len(DataFrame.emptyReviews)
@@ -22,7 +22,7 @@ class Cleaner:
 
     def remove_punctuation(self):
         def __function(input_text):
-            input_text.translate(str.maketrans('', '', PUNCTUATIONS))
+            return input_text.translate(str.maketrans('', '', PUNCTUATIONS))
         self.__apply_to_review(__function)
 
     def lemmatize(self):
@@ -33,6 +33,22 @@ class Cleaner:
             lemmatized_list = [wd.lemmatize(tag) for wd, tag in words_and_tags]
             return ' '.join(lemmatized_list)
         self.__apply_to_review(__function)
+
+    def expand_contracts(self):
+        translation = {
+            r"won\'t": " will not", r"can\'t": " can not",
+            r"n\'t": " not", r"\'re": " are", 
+            r"\'s": " is", r"\'d": " would", 
+            r"\'ll": " will", r"\'t": " not",
+            r"\'ve": " have", r"\'m": " am"
+        }
+        def __function(input_text):
+            for key, value in translation.items():
+                text = re.sub(key, value, input_text)
+            return input_text
+        self.__apply_to_review(__function)
+
+    df.review_text = np.vectorize(decontracted)(df.review_text)
 
     def tokenizer(self):
         def __function(input_text):
