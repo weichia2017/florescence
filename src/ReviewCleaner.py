@@ -48,13 +48,11 @@ class Cleaner:
             return input_text
         self.__apply_to_review(__function)
 
-    df.review_text = np.vectorize(decontracted)(df.review_text)
-
     def tokenizer(self):
         def __function(input_text):
             textBlob = TextBlob(text)
             return blob_object.lower().words
-        self.__apply_to_review(__function)
+        self.df.review_text = self.df.apply(lambda x: tokenizer(x.review_text), axis=1)
 
     def __apply_to_review(self, func):
         df.review_text = np.vectorize(func)(self.df.review_text)
