@@ -6,7 +6,6 @@ PUNCTUATIONS = '!"#$%&\()*+,-./:;<=>?@[\\]^_{|}~'
 
 class Cleaner:
     def __main__(self, DataFrame):
-        self.activity = []
         self.df = DataFrame
 
     def separateEmptyReview(self):
