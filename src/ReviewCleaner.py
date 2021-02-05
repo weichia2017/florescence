@@ -3,10 +3,8 @@ import pandas as pd
 from textblob import TextBlob
 PUNCTUATIONS = '!"#$%&\()*+,-./:;<=>?@[\\]^_{|}~'
 
-
 class Cleaner:
-    def __main__(self, DataFrame):
-        self.activity = []
+    def __init__(self, DataFrame):
         self.df = DataFrame
 
     def separateEmptyReview(self):
@@ -36,15 +34,14 @@ class Cleaner:
         self.__apply_to_review(__function)
 
     def expand_contracts(self):
-        translation = {
-            r"won\'t": " will not", r"can\'t": " can not",
-            r"n\'t": " not", r"\'re": " are",
-            r"\'s": " is", r"\'d": " would",
-            r"\'ll": " will", r"\'t": " not",
-            r"\'ve": " have", r"\'m": " am"
-        }
-
         def __function(input_text):
+            translation = {
+                r"won\'t": " will not", r"can\'t": " can not",
+                r"n\'t": " not", r"\'re": " are",
+                r"\'s": " is", r"\'d": " would",
+                r"\'ll": " will", r"\'t": " not",
+                r"\'ve": " have", r"\'m": " am"
+            }
             for key, value in translation.items():
                 text = re.sub(key, value, input_text)
             return input_text
