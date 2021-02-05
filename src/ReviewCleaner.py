@@ -12,7 +12,6 @@ class Cleaner:
     def separateEmptyReview(self):
         self.empty_df = self.df[self.df.review_text == ""].copy()
         self.df = self.df[self.df.review_text != ""].copy()
-        return len(DataFrame.emptyReviews)
 
     def remove_translated(self):
         def __function(text):
