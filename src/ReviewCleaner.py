@@ -48,7 +48,7 @@ class Cleaner:
 
     def tokenizer(self):
         def __function(input_text):
-            textBlob = TextBlob(text)
+            textBlob = TextBlob(input_text)
             return blob_object.lower().words
         self.df.review_text = self.df.apply(
             lambda x: tokenizer(x.review_text), axis=1)
