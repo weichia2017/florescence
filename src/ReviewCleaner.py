@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import re
 from textblob import TextBlob
 PUNCTUATIONS = '!"#$%&\()*+,-./:;<=>?@[\\]^_{|}~'
 
@@ -10,7 +11,6 @@ class Cleaner:
     def separateEmptyReview(self):
         self.empty_df = self.df[self.df.review_text == ""].copy()
         self.df = self.df[self.df.review_text != ""].copy()
-        return len(DataFrame.emptyReviews)
 
     def remove_translated(self):
         def __function(input_text):
@@ -50,8 +50,8 @@ class Cleaner:
     def tokenizer(self):
         def __function(input_text):
             textBlob = TextBlob(input_text)
-            return blob_object.lower().words
-        self.df.review_text = self.df.apply(lambda x: tokenizer(x.review_text), axis=1)
+            return textBlob.lower().words
+        self.df.review_text = self.df.apply(lambda x: __function(x.review_text), axis=1)
 
     def __apply_to_review(self, func):
         self.df.review_text = np.vectorize(func)(self.df.review_text)
