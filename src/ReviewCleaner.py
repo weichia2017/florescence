@@ -54,7 +54,7 @@ class Cleaner:
             lambda x: tokenizer(x.review_text), axis=1)
 
     def __apply_to_review(self, func):
-        df.review_text = np.vectorize(func)(self.df.review_text)
+        self.df.review_text = np.vectorize(func)(self.df.review_text)
 
     def get_empty_df(self):
         try:
