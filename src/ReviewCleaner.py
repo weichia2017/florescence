@@ -13,9 +13,9 @@ class Cleaner:
         return len(DataFrame.emptyReviews)
 
     def remove_translated(self):
-        def __function(text):
-            text = text.replace("(Translated by Google)", "")
-            return text[:text.find("(Original)")].strip()
+        def __function(input_text):
+            input_text = input_text.replace("(Translated by Google)", "")
+            return input_text[:input_text.find("(Original)")].strip()
         self.__apply_to_review(__function)
 
     def remove_punctuation(self):
@@ -25,7 +25,7 @@ class Cleaner:
 
     def lemmatize(self):
         def __function(input_text):
-            textBlob = TextBlob(text)
+            textBlob = TextBlob(input_text)
             tag_dict = {"J": 'a', "N": 'n', "V": 'v', "R": 'r'}
             words_and_tags = [(w, tag_dict.get(pos[0], 'n'))
                               for w, pos in textBlob.tags]
@@ -43,19 +43,18 @@ class Cleaner:
                 r"\'ve": " have", r"\'m": " am"
             }
             for key, value in translation.items():
-                text = re.sub(key, value, input_text)
+                input_text = re.sub(key, value, input_text)
             return input_text
         self.__apply_to_review(__function)
 
     def tokenizer(self):
         def __function(input_text):
-            textBlob = TextBlob(text)
+            textBlob = TextBlob(input_text)
             return blob_object.lower().words
-        self.df.review_text = self.df.apply(
-            lambda x: tokenizer(x.review_text), axis=1)
+        self.df.review_text = self.df.apply(lambda x: tokenizer(x.review_text), axis=1)
 
     def __apply_to_review(self, func):
-        df.review_text = np.vectorize(func)(self.df.review_text)
+        self.df.review_text = np.vectorize(func)(self.df.review_text)
 
     def get_empty_df(self):
         try:
