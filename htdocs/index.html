@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- <html xmlns:th="http://www.thymeleaf.org"> -->
+
+<head>
+  <title>Flourishing Our Locale</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+  <!-- Internal CSS -->
+  <style>
+    .btn-success {
+      background-color: #42B72A;
+      border: none;
+    }
+
+    body {
+      background-color: #F0F2F5;
+      background-image: url("images/TanjongPagarBg2.png");
+      background-size:cover;                   
+      background-repeat:   no-repeat;
+      background-position: center 40%;   
+    }
+
+    .loginContainer {
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.753);
+      padding: 15px;
+      margin: 15px;
+    }
+
+    .loginContainer img {
+      width: 50px;
+    }
+
+    .row {
+      height: 100vh;
+    }
+
+    .titleColor{
+        color:#8b8b8b
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row align-items-center">
+    <!-- Main container -->
+    <div class="container col-10 col-sm-6 col-md-6 col-lg-4 p-5 shadow-lg mx-auto d-block loginContainer">
+      <!-- Vessel Image -->
+
+      <p class="text-center lead titleColor">Re-Discover Tanjong Pagar</p>
+
+      <!-- Login Form -->
+      <form id="login-form" th:action="@{/authWeb}" method="post">
+
+        <!-- Username Field -->
+        <div class="form-group">
+          <input type="username" name="username" id="username" class="form-control" placeholder="Username" required>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        </div>
+
+        <!-- Form Success/Failure Messages -->
+        <div th:if="${formError != null}" th:text="${formError}" class="form-group" style="color: red;"></div>
+        <div th:if="${formSuccess != null}" th:text="${formSuccess}" class="form-group" style="color: green;"></div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+        <!-- Forgot Password Link -->
+        <a href="@{/resetPassword}">Forgot Password?</a>
+
+        <!-- Seperator -->
+        <hr>
+
+        <!-- Register Button -->
+        <button class="btn btn-success">
+          <a href="" class="text-decoration-none text-white d-block">Create New Account</a>
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
