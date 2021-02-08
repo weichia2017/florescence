@@ -18,8 +18,10 @@ class MainScraper:
             stores.dropna(inplace=True)
             stores.reset_index(inplace=True)
             for index, row in stores.iterrows():
-                self.__scrape_google(row, dao)
-                self.__scrape_tripadvisor(row, dao)
+                if (row['googlereviews_url'] != ""):
+                    self.__scrape_google(row, dao)
+                if (row['tripadvisor_url'] != ""):
+                    self.__scrape_tripadvisor(row, dao)
 
     def __scrape_google(self, row, dao):
         store_id = row['store_id']
