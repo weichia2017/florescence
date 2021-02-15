@@ -5,6 +5,12 @@
     <meta name="description" content="">
     <title>Company's Name Dashboard</title>
 
+    <!-- Fontwesome -->
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/> -->
+
+    <!-- Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     
@@ -54,6 +60,64 @@
     <main class="container">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
+
+        <button class="btn btn-primary">Update</button>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+                rate_review
+              </span>
+              501 Total Reviews
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2">
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                auto_graph
+              </span>
+              Overall Sentiment Score
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 col-md-5 col-sm-12 border border-secondary p-2 rounded mb-2">
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                tag_faces
+              </span>
+              Sentiment Score
+            </div>
+          </div>
+          <div class="col-lg-8 col-md-7 col-sm-12 border border-secondary p-2 rounded mb-2">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                cloud 
+              </span>
+              Word Cloud
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col border border-secondary p-2 rounded mb-2">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                timeline
+              </span>
+              Sentiment over time
+              <!-- <div class="col-12 border"></div> -->
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
