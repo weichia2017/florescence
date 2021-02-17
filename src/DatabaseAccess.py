@@ -287,9 +287,9 @@ class DataAccess:
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly, else a list is returned
         """
-        gdf = self.getAllRawGoogleReviews(True)
+        gdf = self.getAllRawGoogleReviews()
         gdf['source'] = "Google"
-        tdf = self.getAllRawTripAdvisorReviews(True)
+        tdf = self.getAllRawTripAdvisorReviews()
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
         if not show_all:
@@ -298,6 +298,31 @@ class DataAccess:
             return df
         else:
             return df.reset_index().values.tolist()
+
+    def getRewReviews(self, store_id ,show_all = False, return_as_dataframe = True):
+        if store_id == None:
+            return None
+        gdf = self.getRawGoogleReviews(store_id)
+        gdf['source'] = "Google"
+        tdf = self.getRawTripAdvisorReviews(store_id)
+        tdf['source'] = "Tripadvisor"
+        df = pandas.concat([gdf,tdf])
+        if not show_all:
+            df = df[SHARED_HEADER]
+        if return_as_dataframe:        
+            return df
+        else:
+            return df.reset_index().values.tolist()
+
+    def getUnprocessedReviews(self):
+        query = 'SELECT * FROM google_reviews WHERE review_id NOT IN (SELECT review_id FROM sentiment_scores)'
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
+            df.set_index('review_id', inplace=True)
+            return df
 
     def __executeInsertQuery(self, query, args):
         status = True

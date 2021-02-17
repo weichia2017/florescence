@@ -36,6 +36,14 @@ CREATE TABLE `florescence`.`stores` (
   PRIMARY KEY (`id_store`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `florescence`.`sentiment_scores` ( 
+  `review_id` varchar(255) NOT NULL PRIMARY KEY,
+  `negative` DECIMAL DEFAULT NULL,
+  `neutral` DECIMAL DEFAULT NULL, 
+  `positive` DECIMAL DEFAULT NULL, 
+  `compound` DECIMAL DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Base Stores
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('Praelum Wine Bistro', 'https://www.google.com/maps/place/Praelum+Wine+Bistro/@1.2793238,103.8430118,15z/data=!4m2!3m1!1s0x0:0x49dd8f5ea10e0dc8?sa=X&ved=2ahUKEwiAzI6l9ertAhVUU30KHaMpBuAQ_BIwCnoECBYQBQ', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d5264234-Reviews-Praelum_Wine_Bistro-Singapore.html');
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('BTM Mussels & Bar', 'https://www.google.com/maps/place/BTM+Mussels+%26+Bar/@1.2793024,103.8407799,17z/data=!3m1!4b1!4m5!3m4!1s0x31da198e0899b8f1:0xae833c61844c8f6f!8m2!3d1.279297!4d103.8429686', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d20733849-Reviews-BTM_Mussels_Bar-Singapore.html');

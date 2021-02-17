@@ -14,7 +14,7 @@ MAX_WAIT = 10
 MAX_RETRY = 5
 DEFAULT_PULL = 100
 
-class Scraper:
+class GoogleReviewScraper:
     """Scraper module for Scraping Data from Google Maps Reviews.
 
     This scraper module will scrape from Google Maps and collect information based on a provided
