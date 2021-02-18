@@ -13,9 +13,11 @@ def get_file_handler():
     return file_handler
 
 def get_logger(name, mode = "file"):
-   logger = logging.getLogger(name)
-   logger.setLevel(logging.DEBUG)
-   if (mode in ['console', 'both']): logger.addHandler(get_console_handler())
-   if (mode in ['file', 'both']):logger.addHandler(get_file_handler())
-   logger.propagate = False
-   return logger
+    if mode not in ['console', 'file', 'both']:
+        mode = 'both'
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    if (mode in ['console', 'both']): logger.addHandler(get_console_handler())
+    if (mode in ['file', 'both']):logger.addHandler(get_file_handler())
+    logger.propagate = False
+    return logger
