@@ -1,3 +1,4 @@
+import logger
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -6,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from TripAdvisorReview import TripAdvisorReview
-import time, logging, traceback
+import time, traceback
 from random import randrange
 
 MAX_WAIT = 10
@@ -17,7 +18,7 @@ class TripAdvisorScraper:
     def __init__(self, debug=False):
         self.debug = debug
         self.driver = self.__get_driver()
-        self.logger = self.__get_logger()
+        self.logger = logger.get_logger(__name__)
 
     def __enter__(self):
         return self
@@ -84,20 +85,7 @@ class TripAdvisorScraper:
                 
             if tries == MAX_RETRY:
                 return False
-            
         return True
-    
-    def __get_logger(self):
-        logger = logging.getLogger('logger')
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
-        fh = logging.FileHandler('logger.log')
-        fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        return logger
 
     def __get_driver(self, debug=False):
         options = Options()
