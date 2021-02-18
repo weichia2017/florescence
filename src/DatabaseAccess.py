@@ -2,8 +2,9 @@ from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import errorcode
 import os, warnings
-import time, re, logging, traceback
+import time, re, traceback
 import pandas
+import logger
 
 GOOGLE_REVIEW_HEADER = ['review_id', 'store_id', 'review_text', 'review_date', 'rating', 'username', 
     'n_review_user', 'retrieval_date', 'n_photo_user', 'url_user', 'relative_date']
@@ -33,7 +34,7 @@ class DataAccess:
     def __init__(self):
         load_dotenv('.env')
         self.connector = self.__get_connector()
-        self.logger = self.__get_logger()
+        self.logger = logger.get_logger(__name__)
 
     def __enter__(self):
         return self
@@ -369,14 +370,3 @@ class DataAccess:
         else:
             mydb.close()
             return None
-
-    def __get_logger(self):
-        logger = logging.getLogger('logger')
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
-        fh = logging.FileHandler('logger.log')
-        fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        return logger

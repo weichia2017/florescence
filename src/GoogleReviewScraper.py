@@ -7,8 +7,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from datetime import datetime
-import time, re, logging, traceback
+import time, re, traceback
 from GoogleReview import GoogleReview
+import logger
 
 MAX_WAIT = 10
 MAX_RETRY = 5
@@ -35,7 +36,7 @@ class GoogleReviewScraper:
     def __init__(self, debug=False):
         self.debug = debug
         self.driver = self.__get_driver()
-        self.logger = self.__get_logger()
+        self.logger = logger.get_logger(__name__)
 
     def __enter__(self):
         return self
@@ -132,17 +133,6 @@ class GoogleReviewScraper:
     def __scroll(self):
         scrollable_div = self.driver.find_element_by_css_selector('div.section-layout.section-scrollbox.scrollable-y.scrollable-show')
         self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
-
-    def __get_logger(self):
-        logger = logging.getLogger('logger')
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
-        fh = logging.FileHandler('logger.log')
-        fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        return logger
 
     def __get_driver(self, debug=False):
         options = Options()

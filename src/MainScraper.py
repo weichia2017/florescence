@@ -1,13 +1,14 @@
-import time, datetime, logging, traceback
+import time, datetime, traceback
 from random import randrange
 from GoogleReviewScraper import GoogleReviewScraper
 from TripAdvisorScraper import TripAdvisorScraper
 from DatabaseAccess import DataAccess
+import logger
 
 class MainScraper:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
-        self.logger = self.__get_logger()
+        self.logger = logger.get_logger(__name__)
 
     def scrapeStore(self, store_id):
         self.logger.info("Starting Scrape for Store ID:" + str(store_id))
@@ -75,15 +76,3 @@ class MainScraper:
                         self.logger.info(
                             "Sleeping for " + sleepTime + " seconds before next page")
                         time.sleep(sleepTime)
-
-    def __get_logger(self):
-        logger = logging.getLogger('logger')
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
-        fh = logging.FileHandler('logger.log')
-        fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        return logger
