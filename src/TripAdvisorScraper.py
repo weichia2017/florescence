@@ -90,9 +90,11 @@ class TripAdvisorScraper:
     def __get_logger(self):
         logger = logging.getLogger('logger')
         logger.setLevel(logging.DEBUG)
+        logger.propagate = False
         fh = logging.FileHandler('logger.log')
         fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter(
+            '%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
         fh.setFormatter(formatter)
         logger.addHandler(fh)
         return logger
