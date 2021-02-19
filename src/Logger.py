@@ -3,6 +3,8 @@ import sys
 FORMATTER = logging.Formatter(
     '%(asctime)s - %(module)s (%(funcName)s) - %(levelname)s - %(message)s')
 LOG_FILE = "logger.log"
+CONSOLE = False
+FILE = True
 
 
 def get_console_handler():
@@ -17,14 +19,12 @@ def get_file_handler():
     return file_handler
 
 
-def get_logger(name, mode="file"):
-    if mode not in ['console', 'file', 'both']:
-        mode = 'both'
+def get_logger(name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
-    if (mode in ['console', 'both']):
+    if CONSOLE:
         logger.addHandler(get_console_handler())
-    if (mode in ['file', 'both']):
+    if FILE:
         logger.addHandler(get_file_handler())
     logger.propagate = False
     return logger
