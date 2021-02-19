@@ -28,6 +28,7 @@ class MainScraper:
         self.logger.info("Scrape completed")
 
     def __scrape_google(self, row, dao):
+        running = True
         number_to_scrape = 1000
         store_id = row['store_id']
         store_name = row['store_name']

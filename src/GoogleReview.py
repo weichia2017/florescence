@@ -63,6 +63,8 @@ class GoogleReview:
         n = 1 if split[0][0] == 'a' else int(split[0])
         split[1] = split[1][:-1] if split[1][-1] == "s" else split[1]
         compare = {
+            'second' : timedelta(seconds=n),
+            'minute' : timedelta(minutes=n),
             'hour': timedelta(hours=n),
             'day': timedelta(hours=n),
             'week': timedelta(hours=n),

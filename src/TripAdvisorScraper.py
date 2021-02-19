@@ -31,10 +31,10 @@ class TripAdvisorScraper:
         return True
 
     def setURL(self, name, url):
-        self.logger.warn(
-            'Browser opening an visiting the shop ' + name + ' at ' + url)
+        self.logger.info(
+            'Browser opening an visiting the shop ' + name)
         self.driver.get(url)
-        self.logger.warn('Loaded ' + name)
+        self.logger.info('Loaded ' + name)
         time.sleep(1)
 
     def showMoreButton(self):
