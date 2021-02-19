@@ -46,6 +46,7 @@ class GoogleReviewScraper:
     def __exit__(self, exc_type, exc_value, tb):
         if exc_type is not None:
             traceback.print_exception(exc_type, exc_value, tb)
+        self.logger.shutdown()
         self.driver.close()
         self.driver.quit()
         return True
