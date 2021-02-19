@@ -7,13 +7,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from datetime import datetime
-import time, re, traceback
+import time
+import Logger
+import traceback
 from GoogleReview import GoogleReview
-import logger
 
 MAX_WAIT = 10
 MAX_RETRY = 5
 DEFAULT_PULL = 100
+
 
 class GoogleReviewScraper:
     """Scraper module for Scraping Data from Google Maps Reviews.
@@ -21,7 +23,7 @@ class GoogleReviewScraper:
     This scraper module will scrape from Google Maps and collect information based on a provided
     URL specified by setURL() method. Because the Selenium Driver is running --headless mode, 
     a Logger will record down all activity into 'logger.log' for tracking.
-    
+
     Typical usage example:
         scraperObject = Scraper()
         scraper.setURL(url="URL", name="Name")
@@ -48,7 +50,7 @@ class GoogleReviewScraper:
         self.driver.quit()
         return True
 
-    def setURL(self, url, name = None):
+    def setURL(self, url, name=None):
         """Sets the Selenium Driver to the provided URL
 
         Sets the Selenium Driver to URL and load the page.
@@ -73,30 +75,34 @@ class GoogleReviewScraper:
 
         Returns:
             A boolean if the Reviews has been sorted by Newest.
-        """ 
+        """
         wait = WebDriverWait(self.driver, MAX_WAIT)
         clicked = False
         tries = 0
         self.logger.info('Attempting to sort Reviews by Dates')
         while not clicked and tries < MAX_RETRY:
             try:
-                menu_bt = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@data-value=\'Sort\']')))
+                menu_bt = wait.until(EC.element_to_be_clickable(
+                    (By.XPATH, '//button[@data-value=\'Sort\']')))
                 menu_bt.click()
                 clicked = True
                 time.sleep(3)
             except Exception as e:
                 tries += 1
-                self.logger.warn('Failed to click "Show More" button, will retry! (Attempt: '+str(tries)+'/'+str(MAX_RETRY)+")")
+                self.logger.warn(
+                    'Failed to click "Show More" button, will retry! (Attempt: '+str(tries)+'/'+str(MAX_RETRY)+")")
             if tries == MAX_RETRY:
-                self.logger.warn('Failed to sort Reviews by Dates, this scrape should be terminated, returning False ')
+                self.logger.warn(
+                    'Failed to sort Reviews by Dates, this scrape should be terminated, returning False ')
                 return False
         self.logger.info('Reviews has been sorted by Dates.')
-        recent_rating_bt = self.driver.find_elements_by_xpath('//li[@role=\'menuitemradio\']')[1]
+        recent_rating_bt = self.driver.find_elements_by_xpath(
+            '//li[@role=\'menuitemradio\']')[1]
         recent_rating_bt.click()
         time.sleep(5)
         return True
 
-    def get_reviews(self, offset = 0):
+    def get_reviews(self, offset=0):
         """Retrieve the reviews from the Google Maps Reviews
 
         This method will scroll down and have the webpage fetch for reviews then retrieve 
@@ -106,15 +112,15 @@ class GoogleReviewScraper:
 
         Args:
             offset: The starting point of the Scrape for Reviews
-        
+
         Returns:
             A List of GoogleReview() objects. It will return reviews between
             offset to the maximum number of reviews visible on the page.
-            
-        """ 
+
+        """
         self.logger.info('Getting Review from Review '+str(offset)+' onwards.')
         self.__scroll()
-        time.sleep(4) 
+        time.sleep(4)
         self.__expand_reviews()
         response = BeautifulSoup(self.driver.page_source, 'html.parser')
         rblock = response.find_all('div', class_='section-review-content')
@@ -125,14 +131,17 @@ class GoogleReviewScraper:
         return reviews
 
     def __expand_reviews(self):
-        links = self.driver.find_elements_by_xpath('//button[@class=\'section-expand-review blue-link\']')
+        links = self.driver.find_elements_by_xpath(
+            '//button[@class=\'section-expand-review blue-link\']')
         for l in links:
             l.click()
         time.sleep(2)
 
     def __scroll(self):
-        scrollable_div = self.driver.find_element_by_css_selector('div.section-layout.section-scrollbox.scrollable-y.scrollable-show')
-        self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
+        scrollable_div = self.driver.find_element_by_css_selector(
+            'div.section-layout.section-scrollbox.scrollable-y.scrollable-show')
+        self.driver.execute_script(
+            'arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
 
     def __get_driver(self, debug=False):
         options = Options()
@@ -140,7 +149,7 @@ class GoogleReviewScraper:
             options.add_argument("--headless")
         else:
             options.add_argument("--window-size=1366,768")
-        options.add_argument('--no-sandbox')  
+        options.add_argument('--no-sandbox')
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         input_driver = webdriver.Chrome(chrome_options=options)
