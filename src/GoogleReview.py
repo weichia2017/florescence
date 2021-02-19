@@ -69,7 +69,7 @@ class GoogleReview:
             'month': relativedelta(months=n),
             'year': relativedelta(years=n),
         }
-        return (self.retrieval_date - compare[split[1]]).strftime('%d/%m/%y')
+        return (self.retrieval_date - compare[split[1]]).strftime('%y%m/%d')
 
     def __filter_string(self, str):
         strOut = str.replace('\r', ' ').replace('\n', ' ').replace('\t', ' ')
