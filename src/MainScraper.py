@@ -1,9 +1,11 @@
-import time, datetime, traceback
+import time
+import datetime
+import Logger
 from random import randrange
 from GoogleReviewScraper import GoogleReviewScraper
 from TripAdvisorScraper import TripAdvisorScraper
 from DatabaseAccess import DataAccess
-import logger
+
 
 class MainScraper:
     def __init__(self, debug_mode=False):
