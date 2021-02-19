@@ -8,7 +8,7 @@ import logger
 class MainScraper:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
-        self.logger = logger.get_logger(__name__)
+        self.logger = Logger.get_logger(__name__)
 
     def scrapeStore(self, store_id):
         self.logger.info("Starting Scrape for Store ID:" + str(store_id))

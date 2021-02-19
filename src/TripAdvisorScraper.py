@@ -18,7 +18,7 @@ class TripAdvisorScraper:
     def __init__(self, debug=False):
         self.debug = debug
         self.driver = self.__get_driver()
-        self.logger = logger.get_logger(__name__)
+        self.logger = Logger.get_logger(__name__)
 
     def __enter__(self):
         return self
