@@ -1,6 +1,7 @@
 import time
 import datetime
 import Logger
+import traceback
 from random import randrange
 from GoogleReviewScraper import GoogleReviewScraper
 from TripAdvisorScraper import TripAdvisorScraper
@@ -11,6 +12,15 @@ class MainScraper:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
         self.logger = Logger.get_logger(__name__)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        if exc_type is not None:
+            traceback.print_exception(exc_type, exc_value, tb)
+        self.logger.handlers.clear()
+        return True
 
     def scrapeStore(self, store_id):
         self.logger.info("Starting Scrape for Store ID:" + str(store_id))
