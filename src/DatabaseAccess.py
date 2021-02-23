@@ -190,8 +190,62 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
             df.set_index('review_id', inplace=True)
             return df
-    
-    def getRawGoogleReviews(self, store_id, return_as_dataframe = True):
+
+    def getAllRawTripAdvisorReviews(self, return_as_dataframe = True):
+        """Retrieve all Tripadvisor Reviews from the Database from All Stores
+        
+        Retrieves all rows from Tripadvisor Reviews table.
+        
+        Args:
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
+                
+        Returns:
+            Returns a nested list of reviews from Tripadvisor
+            If return_as_dataframe is set to True, a pandas.DataFrame object
+            is returned with the columns and indexes set accordingly.
+        """
+        query = 'SELECT * FROM `tripadvisor_reviews`'
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
+            df.set_index('review_id', inplace=True)
+            return df
+
+    def getAllReviews(self, show_all = False, return_as_dataframe = True):
+        """Retrieve all reviews from the Database from specified store.
+        
+        Retrieve all reviews from both Tripadvisor and Google. Columns will be handled according to args provided.
+        A 'source' column was added to designate the origins of the review.
+        
+        Args:
+            show_all: Optional, default False; all columns are returned by default however since
+                reviews from both site are different, there will be np.NaN included.
+                if show_all is set to True, only columns that is used by the sources
+                columns will be returned.
+            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
+                The returned object will be in a pandas.DataFrame format else a List.
+                
+        Returns:
+            Returns a nested list of reviews from all sources
+            If return_as_dataframe is set to True, a pandas.DataFrame object
+            is returned with the columns and indexes set accordingly, else a list is returned
+        """
+        gdf = self.getAllRawGoogleReviews()
+        gdf['source'] = "Google"
+        tdf = self.getAllRawTripAdvisorReviews()
+        tdf['source'] = "Tripadvisor"
+        df = pandas.concat([gdf,tdf])
+        if not show_all:
+            df = df[SHARED_HEADER]
+        if return_as_dataframe:        
+            return df
+        else:
+            return df.reset_index().values.tolist()
+
+    def getStoreGoogleReviews(self, store_id, return_as_dataframe = True):
         """Retrieve all Google Reviews from the Database from specified store.
         
         Retrieves all rows from Google Reviews table for a specific store given by store_id args.
@@ -217,31 +271,8 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
             df.set_index('review_id', inplace=True)
             return df
-
-    def getAllRawTripAdvisorReviews(self, return_as_dataframe = True):
-        """Retrieve all Tripadvisor Reviews from the Database from All Stores
-        
-        Retrieves all rows from Tripadvisor Reviews table.
-        
-        Args:
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from Tripadvisor
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
-        query = 'SELECT * FROM `tripadvisor_reviews`'
-        output = self.__executeSelectQuery(query)
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
-            df.set_index('review_id', inplace=True)
-            return df
     
-    def getRawTripAdvisorReviews(self, store_id, return_as_dataframe = True):
+    def getStoreTripAdvisorReviews(self, store_id, return_as_dataframe = True):
         """Retrieve all Tripadvisor from the Database from specified store.
         
         Retrieves all rows from Tripadvisor table for a specific store given by store_id args.
@@ -268,28 +299,10 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    def getAllRawReviews(self, show_all = False, return_as_dataframe = True):
-        """Retrieve all reviews from the Database from specified store.
-        
-        Retrieve all reviews from both Tripadvisor and Google. Columns will be handled according to args provided.
-        A 'source' column was added to designate the origins of the review.
-        
-        Args:
-            show_all: Optional, default False; all columns are returned by default however since
-                reviews from both site are different, there will be np.NaN included.
-                if show_all is set to True, only columns that is used by the sources
-                columns will be returned.
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from all sources
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly, else a list is returned
-        """
-        gdf = self.getAllRawGoogleReviews(True)
+    def getStoreReviews(self, store_id, return_as_dataframe = True):
+        gdf = self.getRawGoogleReviews(store_id)
         gdf['source'] = "Google"
-        tdf = self.getAllRawTripAdvisorReviews(True)
+        tdf = self.getRawTripAdvisorReviews(store_id)
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
         if not show_all:

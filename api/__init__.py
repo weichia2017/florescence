@@ -8,10 +8,10 @@ app = Flask(__name__)
 def hello():
     return 'Hello, World!'
 
-@app.route('/reviews')
-def reviews():
+@app.route('/reviews/<int:store_id>')
+def reviewsForStore(store_id):
     dao = DataAccess()
-    raw_df = dao.getAllRawReviews()
+    raw_df = dao.getStoreReviews(store_id)
     result = raw_df.to_json(orient="records")
     parsed = json.loads(result)
     return json.dumps(parsed, indent=4)
