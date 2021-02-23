@@ -1,6 +1,6 @@
 from flask import Flask
 import sys, json
-sys.path.insert(1, 'Florescence/src') 
+sys.path.insert(1, 'florescence/src') 
 from DatabaseAccess import DataAccess
 app = Flask(__name__)
 
