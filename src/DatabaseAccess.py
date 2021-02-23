@@ -105,7 +105,7 @@ class DataAccess:
             df.set_index('store_id', inplace=True)
             return df
 
-    def writeRawGoogleReview(self, review):
+    def writeGoogleReview(self, review):
         """Write a row into Google Reviews table.
 
         Writes a single row into Google Reviews table.
@@ -137,7 +137,7 @@ class DataAccess:
                 review.relative_date)
         return self.__executeInsertQuery(query, args)
 
-    def writeRawTripAdvisorReview(self, review):
+    def writeTripAdvisorReview(self, review):
         """Write a row into Tripadvisor table.
 
         Writes a single row into Tripadvisor Reviews table.
@@ -173,7 +173,7 @@ class DataAccess:
 
         return self.__executeInsertQuery(query, args)
 
-    def getAllRawGoogleReviews(self, return_as_dataframe=True):
+    def getAllGoogleReviews(self, return_as_dataframe = True):
         """Retrieve all Google Reviews from the Database from All Stores
 
         Retrieves all rows from Google Reviews table.
@@ -196,7 +196,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    def getAllRawTripAdvisorReviews(self, return_as_dataframe = True):
+    def getAllTripAdvisorReviews(self, return_as_dataframe = True):
         """Retrieve all Tripadvisor Reviews from the Database from All Stores
         
         Retrieves all rows from Tripadvisor Reviews table.
@@ -238,9 +238,9 @@ class DataAccess:
             If return_as_dataframe is set to True, a pandas.DataFrame object
             is returned with the columns and indexes set accordingly, else a list is returned
         """
-        gdf = self.getAllRawGoogleReviews()
+        gdf = self.getAllGoogleReviews()
         gdf['source'] = "Google"
-        tdf = self.getAllRawTripAdvisorReviews()
+        tdf = self.getAllTripAdvisorReviews()
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf,tdf])
         if not show_all:
@@ -305,9 +305,9 @@ class DataAccess:
             return df
 
     def getStoreReviews(self, store_id, return_as_dataframe = True):
-        gdf = self.getRawGoogleReviews(store_id)
+        gdf = self.getStoreGoogleReviews(store_id)
         gdf['source'] = "Google"
-        tdf = self.getRawTripAdvisorReviews(store_id)
+        tdf = self.getStoreTripAdvisorReviews(store_id)
         tdf['source'] = "Tripadvisor"
         df = pandas.concat([gdf, tdf])
         if not show_all:
@@ -316,7 +316,7 @@ class DataAccess:
             return df
         else:
             return df.reset_index().values.tolist()
-            
+
     def __executeInsertQuery(self, query, args):
         status = True
         try:

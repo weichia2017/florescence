@@ -52,7 +52,7 @@ class MainScraper:
                     reviews = scraper.get_reviews(n)
                     for r in reviews:
                         r.setStoreID(store_id)
-                        status = dao.writeRawGoogleReview(r)
+                        status = dao.writeGoogleReview(r)
                         if not status:
                             running = False
                             break
@@ -77,7 +77,7 @@ class MainScraper:
                 for review_object in list_of_review_objects:
                     review_object.store_name = store_name
                     review_object.retrieval_date = dateUpdated
-                    if not dao.writeRawTripAdvisorReview(review_object):
+                    if not dao.writeTripAdvisorReview(review_object):
                         self.logger.info(
                             "Reviews scrape are all up to date. No (more) new Reviews found.")
                         doesNotExistInDB = False
