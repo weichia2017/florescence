@@ -299,7 +299,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    def getStoreReviews(self, store_id, return_as_dataframe = True):
+    def getStoreReviews(self, store_id, show_all = False, return_as_dataframe = True):
         gdf = self.getStoreGoogleReviews(store_id)
         gdf['source'] = "Google"
         tdf = self.getStoreTripAdvisorReviews(store_id)
