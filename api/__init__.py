@@ -1,29 +1,45 @@
 from flask import Flask
-import sys, json
+from flask import jsonify
+import sys
+import numpy as np
+import pandas as pd
 sys.path.insert(1, 'florescence/src') 
 from DatabaseAccess import DataAccess
+from MasterReview import Master
+
 app = Flask(__name__)
+dao = DataAccess()
 
 @app.route('/')
 def hello():
     return 'Hello, World!'
 
-@app.route('/reviews/<int:store_id>')
-def reviewsForStore(store_id):
-    dao = DataAccess()
-    df = dao.getStoreReviews(store_id)
-    result = df.to_json(orient="records")
-    parsed = json.loads(result)
-    return json.dumps(parsed, indent=4)
+@app.route('/store/')
+def all_Stores():
+    df = dao.getStores().reset_index()
+    return __parse_df(df), 200
 
-@app.route('/sentiments/<int:store_id>')
-def sentimentsForStore(store_id):
-    dao = DataAccess()
-    raw_df = dao.getStoreReviews(store_id)
-    c = Cleaner(raw_df)
-    c.separateEmptyReview()
-    c.remove_translated()
-    df = c.get_df()
-    result = raw_df.to_json(orient="records")
-    parsed = json.loads(result)
-    return json.dumps(parsed, indent=4)
+@app.route('/store/<int:store_id>')
+def one_Store(store_id):
+    df = dao.getStore(store_id).reset_index()
+    return __parse_df(df), 200
+
+@app.route('/sentiment/<int:store_id>')
+def sentiment(store_id):
+    try:
+        df = Master(dao.getStoreReviews(store_id)).sentiment_scores()
+    except Exception as e:
+        return jsonify(respond=str(e)), 400
+    return __parse_df(df), 200
+
+@app.route('/adj_noun_pairs/<int:store_id>')
+def adj_noun_pairs(store_id):
+    try:
+        df = Master(dao.getStoreReviews(store_id)).adj_noun_pairs()
+    except Exception as e:
+        return jsonify(respond=str(e)), 400
+    return __parse_df(df), 200
+
+def __parse_df(df):
+    results = df.to_dict('records')
+    return jsonify(rows=len(results),data=results)

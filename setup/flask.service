@@ -1,0 +1,17 @@
+[Unit]
+Description=Flask
+
+[Service]
+Type=simple
+PIDFile=/run/flask.pid
+User=ec2-user
+Group=ec2-user
+Environment=FLASK_APP=florescence/api
+Environment=FLASK_ENV=development
+WorkingDirectory=/home/ec2-user/Notebooks/florescence
+ExecStart=/home/ec2-user/anaconda3/bin/flask run --host=0.0.0.0
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
