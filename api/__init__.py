@@ -9,12 +9,13 @@ sys.path.insert(1, 'florescence/src')
 from DatabaseAccess import DataAccess
 from MasterReview import Master
 
+app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 LIGHT_CACHE = 60
 HEAVY_CACHE = 60*60
 
-app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 dao = DataAccess()
+all_store_ids = dao.getStores().index.to_list()
 
 @app.route('/')
 def hello():
@@ -29,12 +30,16 @@ def all_Stores():
 @app.route('/store/<int:store_id>')
 @cache.cached(timeout=LIGHT_CACHE)
 def one_Store(store_id):
+    if store_id not in all_store_ids:
+        return jsonify(respond="Not a valid Store ID"), 400
     df = dao.getStore(store_id).reset_index()
     return __parse_df(df), 200
 
 @app.route('/sentiment/<int:store_id>')
 @cache.cached(timeout=HEAVY_CACHE)
 def sentiment(store_id):
+    if store_id not in all_store_ids:
+        return jsonify(respond="Not a valid Store ID"), 400
     try:
         df = Master(dao.getStoreReviews(store_id)).sentiment_scores()
     except Exception as e:
@@ -44,6 +49,8 @@ def sentiment(store_id):
 @app.route('/adj_noun_pairs/<int:store_id>')
 @cache.cached(timeout=HEAVY_CACHE)
 def adj_noun_pairs(store_id):
+    if store_id not in all_store_ids:
+        return jsonify(respond="Not a valid Store ID"), 400
     try:
         df = Master(dao.getStoreReviews(store_id)).adj_noun_pairs()
     except Exception as e:
