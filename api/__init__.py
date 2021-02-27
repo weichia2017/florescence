@@ -24,7 +24,10 @@ def hello():
 @app.route('/store/')
 @cache.cached(timeout=LIGHT_CACHE)
 def all_Stores():
-    df = dao.getStores().reset_index()
+    try:
+        df = dao.getStores().reset_index()
+    except Exception as e:
+        return jsonify(respond=str(e)), 400
     return __parse_df(df), 200
 
 @app.route('/store/<int:store_id>')
@@ -32,7 +35,10 @@ def all_Stores():
 def one_Store(store_id):
     if store_id not in all_store_ids:
         return jsonify(respond="Not a valid Store ID"), 400
-    df = dao.getStore(store_id).reset_index()
+    try:
+        df = dao.getStore(store_id).reset_index()
+    except Exception as e:
+        return jsonify(respond=str(e)), 400
     return __parse_df(df), 200
 
 @app.route('/sentiment/<int:store_id>')
