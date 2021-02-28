@@ -28,6 +28,12 @@ class Cleaner:
     def __init__(self, DataFrame):
         self.df = DataFrame
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        return True
+
     def separateEmptyReview(self):
         """Separates Empty and Non-Empty Reviews
 

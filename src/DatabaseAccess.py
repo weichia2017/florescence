@@ -313,9 +313,9 @@ class DataAccess:
             return df.reset_index().values.tolist()
 
     def __executeInsertQuery(self, query, args):
+        cursor = self.connector.cursor()
         status = True
         try:
-            cursor = self.connector.cursor()
             cursor.execute(query, args)
             self.connector.commit()
         except mysql.connector.Error as err:
@@ -326,9 +326,9 @@ class DataAccess:
         return status
     
     def __executeSelectQuery(self, query, args=None):
+        cursor = self.connector.cursor()
         results = None
         try:
-            cursor = self.connector.cursor()
             cursor.execute(query, args)
             results = cursor.fetchall()           
         except mysql.connector.Error as err:
