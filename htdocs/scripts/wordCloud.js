@@ -57,8 +57,26 @@ var w = 650
 var h = 450
 
 drawWordcLOUD(w,h)
-console.log(document.getElementById('wordCloudContainer'))
 
+/* Each time the window gets resized, 
+*   1. get the new width and height of the container
+*   2. remove inner HTML of word cloud
+*   3. draw a new wordcloud
+/=*/ 
+function resize(){
+    // console.log(document.getElementById('wordCloudContainer').offsetWidth)
+    // console.log(document.getElementById('wordCloudContainer').offsetHeight)
+    w = document.getElementById('wordCloudContainer').offsetWidth;
+    h = document.getElementById('wordCloudContainer').offsetHeight;
+    removeWordCloud();
+    drawWordcLOUD(w,h);
+}
+
+function removeWordCloud(){
+    document.getElementById("wordCloudContainer").innerHTML = ""
+    // wordCloudContainer = d3.select("#wordCloudContainer");
+    // wordCloudContainer.selectAll("*").remove()
+}
 
 function drawWordcLOUD(){
     // set the dimensions and margins of the graph
@@ -98,7 +116,7 @@ function drawWordcLOUD(){
         .data(words)
         .enter().append("text")
         .style("font-size", function(d) { return d.size; })  
-        .style("fill", "#69b3a2")
+        .style("fill", color => randomColor())
         .attr("text-anchor", "middle")
         .style("font-family", "Impact")
         .attr("transform", function(d) {
@@ -107,3 +125,13 @@ function drawWordcLOUD(){
         .text(function(d) { return d.text; }) 
     }
 }
+
+function randomColor () {
+    var chars = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++)
+        color += chars[Math.floor(Math.random() * 16)];
+    return color;
+};
+
+$(window).resize(resize)
