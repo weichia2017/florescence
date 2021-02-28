@@ -1,2 +1,0 @@
-autocorrect
-Flask-Caching
