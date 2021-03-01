@@ -190,6 +190,7 @@ var width         = $(window).width(), height = $(window).height();
 
 function prepareWordCloud(){
     let response          = JSON.parse(jsonResponse).data;
+    console.log(response)
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
     for(x in response){
@@ -214,7 +215,7 @@ function prepareWordCloud(){
             let adjTwoSize   = wordCloudSize/6 *2;
             let adjThreeSize = wordCloudSize/6 *1.5;
 
-            fontFamily = 'Impact';
+            fontFamily = "'Anton', sans-serif";
             spaceBetweenNounAdj = 3;
             let nounLength = getTextLength(currentNoun,wordCloudSize,fontFamily) /2;
 
@@ -224,22 +225,23 @@ function prepareWordCloud(){
             let adjThreeX =  (nounLength + spaceBetweenNounAdj);
 
             // adj parameter 5: How much the adj shld move in the y axis
-            let adjOneY   = wordCloudSize/6 * 2.7;
-            let adjTwoY   = wordCloudSize/6 * 1.1;
-            let adjThreeY = 2;
+            let adjOneY   = wordCloudSize/6 * 3;
+            let adjTwoY   = wordCloudSize/6 * 1.2;
+            let adjThreeY = 3;
 
             accumulatedAdj[0].push(adjOneSize,adjOneX,adjOneY);
             accumulatedAdj[1].push(adjTwoSize,adjTwoX,adjTwoY);
             accumulatedAdj[2].push(adjThreeSize,adjThreeX,adjThreeY);
-
+            console.log(fontFamily)
 
             let newTempNoun = getNewNounDupe(accumulatedAdj,fontFamily,spaceBetweenNounAdj,nounLength,wordCloudSize,currentNoun);
             console.log(newTempNoun);
 
-            preparedData.push({ noun  :  newTempNoun,
-                                adj   :  accumulatedAdj,
-                                count :  totalCountForNoun,
-                                size  : wordCloudSize
+            preparedData.push({ noun  : newTempNoun,
+                                adj   : accumulatedAdj,
+                                count : totalCountForNoun,
+                                size  : wordCloudSize,
+                                font  : fontFamily
                             });
             totalCountForNoun = 0;
             accumulatedAdj    = [];
@@ -330,7 +332,7 @@ function randomColor () {
     return color;
 }
 
-function drawWordcLOUD(w,h){
+function drawWordcLOUD(w,h){     
     // set the dimensions and margins of the graph
     var margin = {top: 5, right: 5, bottom: 5, left: 5},
     width = w - margin.left - margin.right,
@@ -348,14 +350,13 @@ function drawWordcLOUD(w,h){
     // Wordcloud features that are different from one word to the other must be here
     var wordCloudSVG = d3.layout.cloud() 
     .size([width, height])
-    .words(preparedData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj}; }))
+    .words(preparedData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
     // .spiral("rectangular")
     .padding(10)       //space between words
     .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
     .fontSize(function(d) { return d.size})  // Originial is just d.size ...; Log Math.log10(d.size)*60; Initiall used Math.abs(d.size - average)/average * 60
-    .on("word", ({size, x, y, rotate, text, adjArray}) => {
+    .on("word", ({size, x, y, rotate, text, adjArray,fontFam}) => {
         // console.log(x)
-        console.log(size)
         let nounSize = size;
         let nounX    = x;
         let nounY    = y;
@@ -380,7 +381,7 @@ function drawWordcLOUD(w,h){
         svg.append("text")
           .attr("font-size", nounSize)
           .attr("text-anchor", "middle")
-          .style("font-family", 'Impact')
+          .style("font-family", fontFam)
           .attr("transform", `translate(${nounX},${nounY}) rotate(${rotate})`)
           .text(text.split(".")[1])
           .classed("click-only-text", true)
@@ -391,7 +392,7 @@ function drawWordcLOUD(w,h){
           .attr("font-size", adjOneSize)
           .attr("text-anchor", "end")
           .attr("id",  adjArray[0][2])
-          .style("font-family", 'Impact')
+          .style("font-family", fontFam)
           .attr("transform", `translate(${adjOneX},${adjOneY}) rotate(${rotate})`)
           .text(adjTextOne)
           .classed("click-only-text", true)
@@ -425,7 +426,7 @@ function drawWordcLOUD(w,h){
           .attr("font-size", adjTwoSize)
           .attr("text-anchor", "end")
           .attr("id",  adjArray[1][2])
-          .style("font-family", 'Impact')
+          .style("font-family", fontFam)
           .attr("transform", `translate(${adjTwoX},${adjTwoY}) rotate(${rotate})`)
           .text(adjTextTwo)
           .classed("click-only-text", true)
@@ -460,7 +461,7 @@ function drawWordcLOUD(w,h){
           .attr("font-size", adjThreeSize)
           .attr("text-anchor", "end")
           .attr("id",  adjArray[2][2])
-          .style("font-family", 'Impact')
+          .style("font-family", fontFam)
           .attr("transform", `translate(${adjThreeX},${adjThreeY}) rotate(${rotate})`)
           .text(adjTextThree)
           .classed("click-only-text", true)
