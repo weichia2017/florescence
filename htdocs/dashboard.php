@@ -1,3 +1,8 @@
+<?php  
+if( isset($_GET['storeID']) ){
+  $storeID = $_GET['storeID'];
+}
+?>
 <!Doctype html>
   <head>
     <meta charset="utf-8">
@@ -94,6 +99,12 @@
 
         <button class="btn btn-primary">Update</button>
       </div>
+
+      <form>
+        <input type="text" name=storeID>
+        <input type="submit">
+      </form>
+      <input type="hidden" value=<?= $storeID?>  id="getStoreID">
 
       <div class="container">
         <div class="row">

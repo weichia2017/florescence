@@ -1,9 +1,10 @@
-let shopID = 1;
-
 let preparedData  = [];
 var width         = $(window).width(), height = $(window).height();
 
 async function prepareWordCloud(){
+    let storeIDByUser = document.getElementById('getStoreID').value;
+    let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+
     var adjNounPairs      = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
     let response          = JSON.parse(adjNounPairs).data;
     console.log(response)
