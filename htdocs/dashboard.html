@@ -157,7 +157,36 @@
       </div>
     </main>
 
+  <script>
+    function makeRequest(url,method,values) {
+      return new Promise(function (resolve, reject) {
 
+        let request = new XMLHttpRequest();
+
+        request.open(method, url);
+        request.timeout = 20000;
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(request.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: request.statusText
+                });
+            }
+        };
+        request.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: request.statusText
+            });
+        };
+        // request.setRequestHeader('Authorization', 'Bearer ' + token)
+        // request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(values);
+      });
+    }
+  </script>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

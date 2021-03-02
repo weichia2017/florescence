@@ -1,195 +1,11 @@
-let jsonResponse = `
-    {
-        "data": [{
-                "ADJ": "good",
-                "COUNT": 11,
-                "NOUN": "wine",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 8,
-                "NOUN": "wine",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "expensive",
-                "COUNT": 4,
-                "NOUN": "wine",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "same",
-                "COUNT": 3,
-                "NOUN": "time",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "long",
-                "COUNT": 2,
-                "NOUN": "time",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "last",
-                "COUNT": 2,
-                "NOUN": "time",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "friendly",
-                "COUNT": 5,
-                "NOUN": "staff",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "knowledgeable",
-                "COUNT": 3,
-                "NOUN": "staff",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "expensive",
-                "COUNT": 1,
-                "NOUN": "staff",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 4,
-                "NOUN": "service",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "excellent",
-                "COUNT": 3,
-                "NOUN": "service",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "good",
-                "COUNT": 2,
-                "NOUN": "service",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "good",
-                "COUNT": 7,
-                "NOUN": "selection",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 5,
-                "NOUN": "selection",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "extensive",
-                "COUNT": 2,
-                "NOUN": "selection",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "reasonable",
-                "COUNT": 3,
-                "NOUN": "price",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "good",
-                "COUNT": 2,
-                "NOUN": "price",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "steep",
-                "COUNT": 1,
-                "NOUN": "price",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 7,
-                "NOUN": "place",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "good",
-                "COUNT": 5,
-                "NOUN": "place",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "cozy",
-                "COUNT": 4,
-                "NOUN": "place",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "extensive",
-                "COUNT": 5,
-                "NOUN": "list",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "wide",
-                "COUNT": 1,
-                "NOUN": "list",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "uptodate",
-                "COUNT": 1,
-                "NOUN": "list",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "good",
-                "COUNT": 10,
-                "NOUN": "food",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 5,
-                "NOUN": "food",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "delicious",
-                "COUNT": 2,
-                "NOUN": "food",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "best",
-                "COUNT": 2,
-                "NOUN": "bar",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "great",
-                "COUNT": 2,
-                "NOUN": "bar",
-                "REVIEWID": "1f23f23fff"
-            },
-            {
-                "ADJ": "little",
-                "COUNT": 2,
-                "NOUN": "bar",
-                "REVIEWID": "1f23f23fff"
-            }
-        ],
-        "datetime": "Sun, 28 Feb 2021 16:01:59 GMT"
-    }`;
-
+let shopID = 1;
 
 let preparedData  = [];
 var width         = $(window).width(), height = $(window).height();
 
-function prepareWordCloud(){
-    let response          = JSON.parse(jsonResponse).data;
+async function prepareWordCloud(){
+    var adjNounPairs      = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
+    let response          = JSON.parse(adjNounPairs).data;
     console.log(response)
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
@@ -232,10 +48,8 @@ function prepareWordCloud(){
             accumulatedAdj[0].push(adjOneSize,adjOneX,adjOneY);
             accumulatedAdj[1].push(adjTwoSize,adjTwoX,adjTwoY);
             accumulatedAdj[2].push(adjThreeSize,adjThreeX,adjThreeY);
-            console.log(fontFamily)
 
             let newTempNoun = getNewNounDupe(accumulatedAdj,fontFamily,spaceBetweenNounAdj,nounLength,wordCloudSize,currentNoun);
-            console.log(newTempNoun);
 
             preparedData.push({ noun  : newTempNoun,
                                 adj   : accumulatedAdj,
@@ -352,7 +166,7 @@ function drawWordcLOUD(w,h){
     .size([width, height])
     .words(preparedData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
     // .spiral("rectangular")
-    .padding(10)       //space between words
+    .padding(12)       //space between words
     .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
     .fontSize(function(d) { return d.size})  // Originial is just d.size ...; Log Math.log10(d.size)*60; Initiall used Math.abs(d.size - average)/average * 60
     .on("word", ({size, x, y, rotate, text, adjArray,fontFam}) => {
