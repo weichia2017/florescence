@@ -1,6 +1,9 @@
 <?php  
+$storeID = '1';
 if( isset($_GET['storeID']) ){
   $storeID = $_GET['storeID'];
+  if($storeID == '')
+    $storeID = '1';
 }
 ?>
 <!Doctype html>
@@ -56,7 +59,7 @@ if( isset($_GET['storeID']) ){
       }
 
       #wordCloudContainer{
-        border: 1px solid black;
+        border: 1px solid rgb(36, 36, 36);
       }
 
       .click-only-text {
@@ -129,7 +132,7 @@ if( isset($_GET['storeID']) ){
         </div>
 
         <div class="row">
-          <div class="col-lg-4 col-md-5 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
                 tag_faces
@@ -139,7 +142,7 @@ if( isset($_GET['storeID']) ){
               <div id="my_dataviz"></div>
             </div>
           </div>
-          <div class="col-lg-8 col-md-7 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">

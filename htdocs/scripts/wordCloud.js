@@ -7,6 +7,13 @@ async function prepareWordCloud(){
 
     var adjNounPairs      = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
     let response          = JSON.parse(adjNounPairs).data;
+    // let response          = JSON.parse(jsonResponse).data;
+
+    let fontsizeIdentifierCount = 0;
+    for(x in response){
+      fontsizeIdentifierCount += response[x].COUNT
+    }
+    fontsizeIdentifierCount /=10;
     console.log(response)
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
@@ -25,9 +32,31 @@ async function prepareWordCloud(){
 
         if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].NOUN) || 
             response[parseInt(x)+1] === undefined){
+            
+            console.log(fontsizeIdentifierCount);
+            let multiplier = 0
+            if(fontsizeIdentifierCount >30){
+              multiplier= 30;
+            }else if(fontsizeIdentifierCount >25){
+              multiplier= 35;
+            }else if(fontsizeIdentifierCount >20){
+              multiplier= 40;
+            }else if(fontsizeIdentifierCount >15){
+              multiplier= 45;
+            }else if(fontsizeIdentifierCount >10){
+              multiplier= 50;
+            }else if(fontsizeIdentifierCount >5){
+              multiplier = 65;
+            }else if(fontsizeIdentifierCount >1){
+              multiplier = 95;
+            }
+
+            if(totalCountForNoun==1){
+              totalCountForNoun = 2;
+            }
 
             // adj parameter 3: adj sizes
-            let wordCloudSize = Math.log10(totalCountForNoun)*60;
+            let wordCloudSize = Math.log10(totalCountForNoun)*multiplier;
             let adjOneSize   = wordCloudSize/6 *2.5;
             let adjTwoSize   = wordCloudSize/6 *2;
             let adjThreeSize = wordCloudSize/6 *1.5;
@@ -42,13 +71,27 @@ async function prepareWordCloud(){
             let adjThreeX =  (nounLength + spaceBetweenNounAdj);
 
             // adj parameter 5: How much the adj shld move in the y axis
-            let adjOneY   = wordCloudSize/6 * 3;
-            let adjTwoY   = wordCloudSize/6 * 1.2;
-            let adjThreeY = 3;
+
+            if(accumulatedAdj.length == 1){
+              var adjOneY   = wordCloudSize/6 * 1.5;
+            }
+
+            if(accumulatedAdj.length == 2){
+              var adjOneY   = wordCloudSize/6 * 2.2;
+              var adjTwoY   = wordCloudSize/6 * 0.3;
+            }
+            
+            if(accumulatedAdj.length == 3){
+              var adjOneY   = wordCloudSize/6 * 3;
+              var adjTwoY   = wordCloudSize/6 * 1.2;
+              var adjThreeY = 3;
+            }
 
             accumulatedAdj[0].push(adjOneSize,adjOneX,adjOneY);
-            accumulatedAdj[1].push(adjTwoSize,adjTwoX,adjTwoY);
-            accumulatedAdj[2].push(adjThreeSize,adjThreeX,adjThreeY);
+            if (accumulatedAdj[1] != undefined)
+              accumulatedAdj[1].push(adjTwoSize,adjTwoX,adjTwoY);
+            if (accumulatedAdj[2] != undefined)
+              accumulatedAdj[2].push(adjThreeSize,adjThreeX,adjThreeY);
 
             let newTempNoun = getNewNounDupe(accumulatedAdj,fontFamily,spaceBetweenNounAdj,nounLength,wordCloudSize,currentNoun);
 
@@ -155,8 +198,9 @@ function drawWordcLOUD(w,h){
 
     // append the svg object to the body of the page
     var svg = d3.select("#wordCloudContainer").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        // .attr("width", width + margin.left + margin.right)
+        // .attr("height", height + margin.top + margin.bottom)
+        .attr("viewBox", `0 0 ${w} ${h}`)
     .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -167,7 +211,7 @@ function drawWordcLOUD(w,h){
     .size([width, height])
     .words(preparedData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
     // .spiral("rectangular")
-    .padding(12)       //space between words
+    .padding(11)       //space between words
     .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
     .fontSize(function(d) { return d.size})  // Originial is just d.size ...; Log Math.log10(d.size)*60; Initiall used Math.abs(d.size - average)/average * 60
     .on("word", ({size, x, y, rotate, text, adjArray,fontFam}) => {
@@ -175,22 +219,6 @@ function drawWordcLOUD(w,h){
         let nounSize = size;
         let nounX    = x;
         let nounY    = y;
-
-        let adjTextOne   = adjArray[0][0];
-        let adjTextTwo   = adjArray[1][0];
-        let adjTextThree = adjArray[2][0];
-
-        let adjOneSize   = adjArray[0][3];
-        let adjTwoSize   = adjArray[1][3];
-        let adjThreeSize = adjArray[2][3];
-
-        let adjOneX   = x - adjArray[0][4];
-        let adjTwoX   = x - adjArray[1][4];
-        let adjThreeX = x - adjArray[2][4];
-
-        let adjOneY   = y - adjArray[0][5];
-        let adjTwoY   = y - adjArray[1][5];
-        let adjThreeY = y + adjArray[2][5];
 
         //NOUN
         svg.append("text")
@@ -203,6 +231,11 @@ function drawWordcLOUD(w,h){
           .style("fill", color => randomColor());
 
         //ADJ1
+        let adjTextOne   = adjArray[0][0];
+        let adjOneSize   = adjArray[0][3];
+        let adjOneX   = x - adjArray[0][4];
+        let adjOneY   = y - adjArray[0][5];
+
         svg.append("text")
           .attr("font-size", adjOneSize)
           .attr("text-anchor", "end")
@@ -237,7 +270,13 @@ function drawWordcLOUD(w,h){
           }
 
         //ADJ2
-        svg.append("text")
+        if (adjArray[1] != undefined){
+          let adjTextTwo   = adjArray[1][0];
+          let adjTwoSize   = adjArray[1][3];
+          let adjTwoX   = x - adjArray[1][4];
+          let adjTwoY   = y - adjArray[1][5];
+
+          svg.append("text")
           .attr("font-size", adjTwoSize)
           .attr("text-anchor", "end")
           .attr("id",  adjArray[1][2])
@@ -269,10 +308,16 @@ function drawWordcLOUD(w,h){
             console.log(e._groups[0][0].id)
             e.classed("word-selected", !e.classed("word-selected"));
           }
-
+        }
 
         //ADJ3
-        svg.append("text")
+        if (adjArray[2] != undefined){
+          let adjTextThree = adjArray[2][0];
+          let adjThreeSize = adjArray[2][3];
+          let adjThreeX = x - adjArray[2][4];
+          let adjThreeY = y + adjArray[2][5];
+
+          svg.append("text")
           .attr("font-size", adjThreeSize)
           .attr("text-anchor", "end")
           .attr("id",  adjArray[2][2])
@@ -304,10 +349,11 @@ function drawWordcLOUD(w,h){
             console.log(e._groups[0][0].id)
             e.classed("word-selected", !e.classed("word-selected"));
           }
+        }
       });
 
     wordCloudSVG.start();
 }
 
 $(document).ready(prepareWordCloud);
-$(window).resize(resize);
+// $(window).resize(resize);
