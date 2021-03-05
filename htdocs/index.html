@@ -2,11 +2,13 @@
 <!-- <html xmlns:th="http://www.thymeleaf.org"> -->
 
 <head>
-  <title>Flourishing Our Locale</title>
+  <title>Flourishing Our Locale: Login</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -21,9 +23,9 @@
 
     body {
       background-color: #F0F2F5;
-      background-image: url("images/TanjongPagarBg2.png");
+      background-image: url("images/FlourishingOurLocaleXs.jpg");
       background-size:cover;                   
-      background-repeat:   no-repeat;
+      background-repeat: no-repeat;
       background-position: center 40%;   
     }
 
@@ -43,7 +45,9 @@
     }
 
     .titleColor{
-        color:#8b8b8b
+        color:#5a5a5ae0;
+        font-family: 'Satisfy', cursive;
+        font-size: 2.5em;
     }
   </style>
 </head>
@@ -54,10 +58,10 @@
     <div class="container col-10 col-sm-6 col-md-6 col-lg-4 p-5 shadow-lg mx-auto d-block loginContainer">
       <!-- Vessel Image -->
 
-      <p class="text-center lead titleColor">Re-Discover Tanjong Pagar</p>
+      <p class="text-center titleColor">Flourishing Our Locale</p>
 
       <!-- Login Form -->
-      <form id="login-form" th:action="@{/authWeb}" method="post">
+      <form id="login-form" action="" method="POST">
 
         <!-- Username Field -->
         <div class="form-group">
