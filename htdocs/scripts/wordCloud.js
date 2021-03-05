@@ -1,5 +1,5 @@
 let preparedData  = [];
-var width         = $(window).width(), height = $(window).height();
+// var width         = $(window).width(), height = $(window).height();
 
 async function prepareWordCloud(){
     let storeIDByUser = document.getElementById('getStoreID').value;
@@ -11,26 +11,25 @@ async function prepareWordCloud(){
 
     let fontsizeIdentifierCount = 0;
     for(x in response){
-      fontsizeIdentifierCount += response[x].COUNT
+      fontsizeIdentifierCount += response[x].review_id.length
     }
     fontsizeIdentifierCount /=10;
-    console.log(response)
+    // console.log(fontsizeIdentifierCount)
+
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
+
     for(x in response){
-        let currentNoun   = response[x].NOUN;
-        let count         = response[x].COUNT;
-        let adj           = response[x].ADJ;
-        let reviewid      = 'N.A';
-        if(response[x].REVIEWID != undefined){
-            reviewid      = response[x].REVIEWID;
-        }
+        let currentNoun   = response[x].noun;
+        let count         = response[x].review_id.length;
+        let adj           = response[x].adj;
+        let reviewid      = response[x].review_id;
        
         totalCountForNoun += count;
         //adj parameter 0,1,2: the adj, the count of adj, the reviewID of adj
         accumulatedAdj.push([adj,count,reviewid]);
 
-        if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].NOUN) || 
+        if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].noun) || 
             response[parseInt(x)+1] === undefined){
             
             console.log(fontsizeIdentifierCount);
@@ -198,8 +197,8 @@ function drawWordcLOUD(w,h){
 
     // append the svg object to the body of the page
     var svg = d3.select("#wordCloudContainer").append("svg")
-        // .attr("width", width + margin.left + margin.right)
-        // .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
         .attr("viewBox", `0 0 ${w} ${h}`)
     .append("g")
         .attr("transform",
