@@ -5,8 +5,8 @@ async function prepareWordCloud(){
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-    var adjNounPairs      = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
-    let response          = JSON.parse(adjNounPairs).data;
+    var adjNounPairs = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
+    let response     = JSON.parse(adjNounPairs).data;
     // let response          = JSON.parse(jsonResponse).data;
 
     let fontsizeIdentifierCount = 0;
@@ -161,26 +161,26 @@ function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounS
     return "ll" + newNounText;
 }
 
-/* Each time the window gets resized, 
-*   1. get the new width and height of the container
-*   2. remove inner HTML of word cloud
-*   3. draw a new wordcloud
-/=*/ 
-function resize(){
-    // console.log(document.getElementById('wordCloudContainer').offsetWidth)
-    // console.log(document.getElementById('wordCloudContainer').offsetHeight)
-    w = document.getElementById('wordCloudContainer').offsetWidth;
-    h = document.getElementById('wordCloudContainer').offsetHeight;
+// /* Each time the window gets resized, 
+// *   1. get the new width and height of the container
+// *   2. remove inner HTML of word cloud
+// *   3. draw a new wordcloud
+// /=*/ 
+// function resize(){
+//     // console.log(document.getElementById('wordCloudContainer').offsetWidth)
+//     // console.log(document.getElementById('wordCloudContainer').offsetHeight)
+//     w = document.getElementById('wordCloudContainer').offsetWidth;
+//     h = document.getElementById('wordCloudContainer').offsetHeight;
 
-    if($(window).width() != width || $(window).height() != height){
-        removeWordCloud();
-        drawWordcLOUD(w,h);
-    }
-}
+//     if($(window).width() != width || $(window).height() != height){
+//         removeWordCloud();
+//         drawWordcLOUD(w,h);
+//     }
+// }
 
-function removeWordCloud(){
-    document.getElementById("wordCloudContainer").innerHTML = "";
-}
+// function removeWordCloud(){
+//     document.getElementById("wordCloudContainer").innerHTML = "";
+// }
 
 function randomColor () {
     var chars = '0123456789ABCDEF'.split('');

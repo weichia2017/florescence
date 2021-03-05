@@ -23,7 +23,7 @@ if( isset($_GET['storeID']) ){
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Load d3.js (External) -->
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
     <!-- Load Anton font from google fonts (External) -->
     <!-- https://fonts.google.com/specimen/Anton?preview.text_type=custom&sidebar.open=true&selection.family=Anton -->
@@ -35,6 +35,12 @@ if( isset($_GET['storeID']) ){
 
     <!-- Load wordcloud from scripts folder -->
     <script src="scripts/wordCloud.js" defer></script>
+
+    <!-- Load sentimentScore from scripts folder -->
+    <script src="scripts/sentimentScoreDonut.js" defer></script>
+
+    <!-- Jie Lin can put ur script here -->
+    <!-- Load sentimentScoreOverTime from scripts folder -->
 
     <style>
       .white-bg{
@@ -60,18 +66,12 @@ if( isset($_GET['storeID']) ){
 
       #wordCloudContainer{
         border: 1px solid rgb(36, 36, 36);
+        border-radius: 7px;
       }
 
-      .click-only-text {
-      cursor: pointer;
-      /* -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none; */
-      }
-      .click-only-text::selection {
-          background: none;
-        }
+      /* #sentimentScoreContainer{
+        /* height:500px; */
+      } */
 
       .word-default {
           fill: cadetblue;
@@ -79,12 +79,17 @@ if( isset($_GET['storeID']) ){
         }
       .word-hovered {
           fill: teal;
+          cursor: pointer;
           /* font-weight: bold; */
         }
       .word-selected {
           fill: darkslategrey;
           /* font-weight: bold; */
         }
+
+      .donut-hovered{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -138,8 +143,8 @@ if( isset($_GET['storeID']) ){
                 tag_faces
               </span>
               Sentiment Score
-              <!-- Create a div where the wordcloud will take place -->
-              <div id="my_dataviz"></div>
+              <!-- Create a div where the sentimentScore will be -->
+              <div class="container" id="sentimentScoreContainer"></div>
             </div>
           </div>
           <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
@@ -150,7 +155,7 @@ if( isset($_GET['storeID']) ){
               </span>
               Word Cloud
             </div>
-            <!-- Create a div where the wordcloud will take place -->
+            <!-- Create a div where the wordcloud will be -->
             <div class="container" id="wordCloudContainer"></div>
           </div>
         </div>
@@ -164,7 +169,7 @@ if( isset($_GET['storeID']) ){
               </span>
               Sentiment over time
               <!-- <div class="col-12 border"></div> -->
-              
+              <!-- Jie Lin can put ur Div here -->
             </div>
           </div>
         </div>
