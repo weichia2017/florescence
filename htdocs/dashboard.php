@@ -119,19 +119,21 @@ if( isset($_GET['storeID']) ){
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
-              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 rate_review
               </span>
-              501 Total Reviews
+              <!-- Create a div where the total number of reviews will be -->
+              <div class="float-left ml-1" >Total Reviews:</div> 
+              <div class="container float-left" id="totalNoOfReviewsContainer"></div>
             </div>
           </div>
 
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 auto_graph
               </span>
-              Overall Sentiment Score
+              <div class="float-left ml-1" >Overall Sentiment Score:</div> 
             </div>
           </div>
         </div>
@@ -139,24 +141,24 @@ if( isset($_GET['storeID']) ){
         <div class="row">
           <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 tag_faces
               </span>
-              Sentiment Score
+              <div class="float-left ml-1" >Sentiment Score:</div> 
               <!-- Create a div where the sentimentScore will be -->
-              <div class="container" id="sentimentScoreContainer"></div>
+              <div class="container float-left" id="sentimentScoreContainer"></div>
             </div>
           </div>
           <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 cloud 
               </span>
-              Word Cloud
+              <div class="float-left ml-1" >Word Cloud:</div> 
             </div>
             <!-- Create a div where the wordcloud will be -->
-            <div class="container" id="wordCloudContainer"></div>
+            <div class="container float-left" id="wordCloudContainer"></div>
           </div>
         </div>
 
@@ -164,10 +166,10 @@ if( isset($_GET['storeID']) ){
           <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 timeline
               </span>
-              Sentiment over time
+              <div class="float-left ml-1" >Sentiment Over Time:</div> 
               <!-- <div class="col-12 border"></div> -->
               <!-- Jie Lin can put ur Div here -->
             </div>
@@ -201,10 +203,26 @@ if( isset($_GET['storeID']) ){
             });
         };
         // request.setRequestHeader('Authorization', 'Bearer ' + token)
-        // request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.setRequestHeader("Content-type", "application/JSON");
+        request.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+        // request.withCredentials = false;
         request.send(values);
       });
     }
+
+
+    async function getSentimentScore(){
+      let storeIDByUser = document.getElementById('getStoreID').value;
+      let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+
+      var adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
+      let response     = JSON.parse(adjNounPairs).data;
+
+      // Total Reviews Number
+      document.getElementById("totalNoOfReviewsContainer").textContent = response.length ;
+
+      prepareSentimentDonut(response);
+    }  
   </script>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

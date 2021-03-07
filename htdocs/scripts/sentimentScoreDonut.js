@@ -1,12 +1,7 @@
-async function getSentimentScore(){
-  let storeIDByUser = document.getElementById('getStoreID').value;
-  let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
-  var adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
-  let response     = JSON.parse(adjNounPairs).data;
-  
-  console.log(response);  
+let sentimentDataForWordCloud = [];
 
-  let preparedData = [];
+function prepareSentimentDonut(response){
+  console.log(response);
   let pos          = [];
   let neg          = [];
   let neu          = [];
@@ -42,14 +37,14 @@ async function getSentimentScore(){
                   {label  : neutralLabelPercent.toFixed(2) + '% Neutral',
                   value: preparedData[0].Neu.length})
 
-  console.log(preparedData[0].Pos);
+  // console.log(preparedData[0].Pos);
 
   drawSentimentDonut(donutData);
 }
 
 
 function color(key){
-  console.log(key)
+  // console.log(key)
   if(key.includes("Positive"))
     return "#79a925";
   else if(key.includes("Negative")){
@@ -110,7 +105,7 @@ function drawSentimentDonut(){
       .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-
+      let increaseOuterRadiusBy = 8;
       svg.append('g')
         .attr('class', 'arc')
         .attr('transform', `translate(${width/2},${height/2})`)
@@ -122,7 +117,7 @@ function drawSentimentDonut(){
         .attr('d', arc)
         .style('fill', d => color(d.data.label))
         .on("click", function(d) {click(this, d,outerRadius, 150)})
-        .on("mouseover", function(d) {mouseover(this,d, outerRadius + 5, 0)})
+        .on("mouseover", function(d) {mouseover(this,d, outerRadius + increaseOuterRadiusBy, 0)})
         .on("mouseout", function(d) {mouseout(this,d, outerRadius, 150)});
        
       function mouseover(self,d,outerRadius, delay){
@@ -154,7 +149,7 @@ function drawSentimentDonut(){
       function click(self,d,outerRadius, delay){
           d.isClicked = d.isClicked ? false : true;  
           
-          console.log(valuesClicked);
+          // console.log(valuesClicked);
           if(!valuesClicked.includes(d.data.label.split(" ")[1])){
             valuesClicked.push(d.data.label.split(" ")[1]);
           }else{
@@ -163,6 +158,7 @@ function drawSentimentDonut(){
               valuesClicked.splice(index, 1);
             }
           }
+        
           console.log(valuesClicked);
 
           if(!d.isClicked || d.isClicked == undefined){
@@ -180,11 +176,10 @@ function drawSentimentDonut(){
             .transition()
             .delay(delay)
             .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius+5);
+              var i = d3.interpolate(d.outerRadius, outerRadius+increaseOuterRadiusBy );
               return function(t) { d.outerRadius = i(t); return arc(d); };
             });
           }
-
       }
 
       const legend = svg.append('g')
@@ -206,7 +201,7 @@ function drawSentimentDonut(){
 
       lg.append('text')
         .style('font-family', 'Georgia')
-        .style('font-size', '13px')
+        .style('font-size', '15px')
         .attr('x', 23)
         .attr('y', 15)
         .text(d => d.label);
