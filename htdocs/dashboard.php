@@ -88,8 +88,8 @@ if( isset($_GET['storeID']) ){
       }
 
       /* #sentimentScoreContainer{
-        /* height:500px; */
-      } */
+        height:500px;
+      }  */
 
       .word-default {
           fill: cadetblue;
@@ -113,7 +113,7 @@ if( isset($_GET['storeID']) ){
   <body>
     
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">SG Taps</a>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -198,6 +198,10 @@ if( isset($_GET['storeID']) ){
     </main>
 
   <script>
+
+    let storeIDByUser = document.getElementById('getStoreID').value;
+    let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+    
     function makeRequest(url,method,values) {
       return new Promise(function (resolve, reject) {
 
@@ -231,10 +235,7 @@ if( isset($_GET['storeID']) ){
 
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
-      let storeIDByUser = document.getElementById('getStoreID').value;
-      let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
-
-      var adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
+      let adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
 
       dataPrepForAllOtherThanWordCloud(response);
@@ -282,6 +283,15 @@ if( isset($_GET['storeID']) ){
       //Sentiment Score
       prepareSentimentDonut(totalReviews);
     }  
+
+    //Temporary till we have user Login Feature
+    async function getStoreName(){
+      let storeInfo = await makeRequest("http://35.175.55.18:5000/stores/" + shopID, "GET", "");
+      document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
+    }
+
+    getStoreName();
+    getSentimentScore();
   </script>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
