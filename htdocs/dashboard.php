@@ -34,6 +34,9 @@ if( isset($_GET['storeID']) ){
     <script src="scripts/d3.layout.cloud.js"></script>
 
     <!-- Load wordcloud from scripts folder -->
+    <script src="scripts/overallSentimentScore.js" defer></script>
+
+    <!-- Load wordcloud from scripts folder -->
     <script src="scripts/wordCloud.js" defer></script>
 
     <!-- Load sentimentScore from scripts folder -->
@@ -62,6 +65,21 @@ if( isset($_GET['storeID']) ){
 
       body{
         background-color: rgb(243, 243, 243);
+      }
+
+      .totalReviewValue{
+        font-family:'Anton', sans-serif;
+        color: rgb(92, 92, 92);
+        font-size: 1.8em;
+        float:left;
+        margin-left:25px;
+      }
+
+      .stars{
+        font-size:40px; 
+        color: #fdcc0d;
+        /* background-color:  */
+        /* border:1px solid black */
       }
 
       #wordCloudContainer{
@@ -124,7 +142,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <!-- Create a div where the total number of reviews will be -->
               <div class="float-left ml-1" >Total Reviews:</div> 
-              <div class="container float-left" id="totalNoOfReviewsContainer"></div>
+              <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
             </div>
           </div>
 
@@ -134,6 +152,7 @@ if( isset($_GET['storeID']) ){
                 auto_graph
               </span>
               <div class="float-left ml-1" >Overall Sentiment Score:</div> 
+              <div class="container float-left ml-3" id="overallSentimentScore"></div>
             </div>
           </div>
         </div>
@@ -210,7 +229,7 @@ if( isset($_GET['storeID']) ){
       });
     }
 
-
+    let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       let storeIDByUser = document.getElementById('getStoreID').value;
       let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
@@ -218,10 +237,50 @@ if( isset($_GET['storeID']) ){
       var adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
 
-      // Total Reviews Number
-      document.getElementById("totalNoOfReviewsContainer").textContent = response.length ;
+      dataPrepForAllOtherThanWordCloud(response);
+    }
 
-      prepareSentimentDonut(response);
+
+    function dataPrepForAllOtherThanWordCloud(response){
+      // Total Reviews Number
+      let totalReviews = response.length;
+      document.getElementById("totalNoOfReviewsContainer").textContent = totalReviews ;
+
+      // Sentiment Donut pos,neg,neu
+      let pos          = [];
+      let neg          = [];
+      let neu          = [];
+
+      //Overall Sentiment Score Accumulator
+      let totalCompoundScores = 0;
+
+      for(x in response){
+        totalCompoundScores += response[x].compound_score;
+
+        if(response[x].compound_score >= 0.05){
+          pos.push({review_id   : response[x].review_id,
+                    review_text : response[x].review_text});
+        }
+        else if(response[x].compound_score <= -0.05){
+          neg.push({review_id   : response[x].review_id,
+                    review_text : response[x].review_text});
+        }
+        else{
+          neu.push({review_id   : response[x].review_id,
+                    review_text : response[x].review_text});
+        }
+      }
+      sentimentDataForWordCloud.push({Positive :pos,
+                                      Negative :neg,
+                                      Neutral  :neu});
+
+
+      //Overall Sentiment Score 
+      let overallSentimentScore = totalCompoundScores/totalReviews;
+      displayStars(overallSentimentScore)
+            
+      //Sentiment Score
+      prepareSentimentDonut(totalReviews);
     }  
   </script>
 
