@@ -78,18 +78,12 @@ if( isset($_GET['storeID']) ){
       .stars{
         font-size:40px; 
         color: #fdcc0d;
-        /* background-color:  */
-        /* border:1px solid black */
       }
 
       #wordCloudContainer{
         border: 1px solid rgb(36, 36, 36);
         border-radius: 7px;
       }
-
-      /* #sentimentScoreContainer{
-        height:500px;
-      }  */
 
       .word-default {
           fill: cadetblue;
@@ -108,10 +102,39 @@ if( isset($_GET['storeID']) ){
       .donut-hovered{
         cursor: pointer;
       }
+      .main-overlay {
+        height: 100%;
+        width: 100%;
+        display: none;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.9);
+      }
+
+      .spinner{
+        position: absolute;
+        top: 50%;
+        left: 47%;
+      }
+
+      .wordCloudWhiteBackground{
+        background-image: url("images/white-bg.png");
+        /* background-size:cover;                   
+        background-repeat: no-repeat; */
+        height:400px;
+      }
+    }
     </style>
   </head>
   <body>
-    
+  <div id="myNav" class="main-overlay">
+    <div class="spinner-border text-light spinner" role="status"> </div>
+  </div>
+
+  </div>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,7 +146,7 @@ if( isset($_GET['storeID']) ){
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
 
-        <button class="btn btn-primary">Update</button>
+        <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button>
       </div>
 
       <form>
@@ -158,7 +181,7 @@ if( isset($_GET['storeID']) ){
         </div>
 
         <div class="row">
-          <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
             <div class="lead">
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 tag_faces
@@ -168,9 +191,10 @@ if( isset($_GET['storeID']) ){
               <div class="container float-left" id="sentimentScoreContainer"></div>
             </div>
           </div>
-          <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+
+          <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
             <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
+              <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 cloud 
               </span>
@@ -178,6 +202,10 @@ if( isset($_GET['storeID']) ){
             </div>
             <!-- Create a div where the wordcloud will be -->
             <div class="container float-left" id="wordCloudContainer"></div>
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="wordCloudWhiteBackground"></div>
+            <!-- Spinner -->
+            <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinner" role="status" ></div>
           </div>
         </div>
 
@@ -190,7 +218,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <div class="float-left ml-1" >Sentiment Over Time:</div> 
               <!-- <div class="col-12 border"></div> -->
-              <div id="test">
+              <div id="sentimentOverTimeContainerDiv">
                 <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400"></svg>
               </div>
               
@@ -205,7 +233,15 @@ if( isset($_GET['storeID']) ){
       </div>
     </main>
 
+    </div>
+
   <script>
+  
+   function test(){
+     console.log("hi")
+    //   document.getElementById("wordCloudContainer").style.display = "block";
+    //   document.getElementById("wordCloudContainerSpinner").style.display = "none";
+    }
 
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
@@ -243,18 +279,20 @@ if( isset($_GET['storeID']) ){
 
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
+      document.getElementById("myNav").style.display = "block";
       let adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
 
       dataPrepForAllOtherThanWordCloud(response);
       sentimentOverTimePrepareData(response);
+      document.getElementById("myNav").style.display = "none";
     }
 
 
     function dataPrepForAllOtherThanWordCloud(response){
       // Total Reviews Number
       let totalReviews = response.length;
-      document.getElementById("totalNoOfReviewsContainer").textContent = totalReviews ;
+      document.getElementById("totalNoOfReviewsContainer").textContent = totalReviews;
 
       // Sentiment Donut pos,neg,neu
       let pos          = [];

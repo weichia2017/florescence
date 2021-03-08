@@ -1,14 +1,21 @@
-let preparedData  = [];
-// var width         = $(window).width(), height = $(window).height();
+let wordCloudData  = [];
+var width          = $(window).width(), height = $(window).height();
 
-async function prepareWordCloud(){
-    let storeIDByUser = document.getElementById('getStoreID').value;
-    let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+async function retrieveWordCloudNounAdjPairs(url,method,values){
+    document.getElementById("wordCloudContainer").style.display = "none";
+    document.getElementById("wordCloudContainerSpinner").style.display = "block";
 
-    var adjNounPairs = await makeRequest("http://35.175.55.18:5000/adj_noun_pairs/" + shopID, "GET", "");
+    var adjNounPairs = await makeRequest(url, method, values);  
     let response     = JSON.parse(adjNounPairs).data;
-    // let response          = JSON.parse(jsonResponse).data;
+    prepareWordCloud(response)
+}
 
+function prepareWordCloud(response){
+    document.getElementById("wordCloudContainer").style.display = "block";
+    document.getElementById("wordCloudContainerSpinner").style.display = "none";
+    // console.log(response)
+    wordCloudData  = [];
+    document.getElementById("wordCloudContainer").innerHTML = "";
     let fontsizeIdentifierCount = 0;
     for(x in response){
       fontsizeIdentifierCount += response[x].review_id.length
@@ -32,7 +39,7 @@ async function prepareWordCloud(){
         if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].noun) || 
             response[parseInt(x)+1] === undefined){
             
-            console.log(fontsizeIdentifierCount);
+            // console.log(fontsizeIdentifierCount);
             let multiplier = 0
             if(fontsizeIdentifierCount >30){
               multiplier= 30;
@@ -53,12 +60,17 @@ async function prepareWordCloud(){
             if(totalCountForNoun==1){
               totalCountForNoun = 2;
             }
+     
 
             // adj parameter 3: adj sizes
             let wordCloudSize = Math.log10(totalCountForNoun)*multiplier;
             let adjOneSize   = wordCloudSize/6 *2.5;
             let adjTwoSize   = wordCloudSize/6 *2;
             let adjThreeSize = wordCloudSize/6 *1.5;
+
+            if(wordCloudSize<1){
+              wordCloudSize = 1
+            }
 
             fontFamily = "'Anton', sans-serif";
             spaceBetweenNounAdj = 3;
@@ -70,7 +82,6 @@ async function prepareWordCloud(){
             let adjThreeX =  (nounLength + spaceBetweenNounAdj);
 
             // adj parameter 5: How much the adj shld move in the y axis
-
             if(accumulatedAdj.length == 1){
               var adjOneY   = wordCloudSize/6 * 1.5;
             }
@@ -94,7 +105,7 @@ async function prepareWordCloud(){
 
             let newTempNoun = getNewNounDupe(accumulatedAdj,fontFamily,spaceBetweenNounAdj,nounLength,wordCloudSize,currentNoun);
 
-            preparedData.push({ noun  : newTempNoun,
+            wordCloudData.push({ noun  : newTempNoun,
                                 adj   : accumulatedAdj,
                                 count : totalCountForNoun,
                                 size  : wordCloudSize,
@@ -104,7 +115,7 @@ async function prepareWordCloud(){
             accumulatedAdj    = [];
         }
     }
-    console.log(preparedData)
+    // console.log(wordCloudData)
 
     let w = document.getElementById('wordCloudContainer').offsetWidth;
     let h = 450;
@@ -129,16 +140,19 @@ function getTextLength(text,size,fontFamily){
             context.font = fontSize + 'px ' + fontFace;
             return context.measureText(text).width;
         }
-    
         return {
             getWidth: getWidth
         };
     })();
-
+    // console.log(text)
+    // console.log(size)
+    // console.log(fontFamily)
+    // console.log(BrowserText.getWidth(text, size, fontFamily));
     return BrowserText.getWidth(text, size, fontFamily);
 }
 
 function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounSize,nounText){
+
     let longestAdj = 0;
     for (x in adjArray){
         length = getTextLength(adjArray[x][0],adjArray[x][3],fontFamily);
@@ -154,17 +168,18 @@ function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounS
 
     do{
         newNounText = "l" + newNounText;
+        // console.log(newNounText);
     }
     while (getTextLength(newNounText,nounSize,fontFamily) <= totalLength)
 
     return "ll" + newNounText;
 }
 
-// /* Each time the window gets resized, 
-// *   1. get the new width and height of the container
-// *   2. remove inner HTML of word cloud
-// *   3. draw a new wordcloud
-// /=*/ 
+/* Each time the window gets resized, 
+*   1. get the new width and height of the container
+*   2. remove inner HTML of word cloud
+*   3. draw a new wordcloud
+/=*/ 
 // function resize(){
 //     // console.log(document.getElementById('wordCloudContainer').offsetWidth)
 //     // console.log(document.getElementById('wordCloudContainer').offsetHeight)
@@ -197,8 +212,8 @@ function drawWordcLOUD(w,h){
 
     // append the svg object to the body of the page
     var svg = d3.select("#wordCloudContainer").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        // .attr("width", width + margin.left + margin.right)
+        // .attr("height", height + margin.top + margin.bottom)
         .attr("viewBox", `0 0 ${w} ${h}`)
     .append("g")
         .attr("transform",
@@ -208,7 +223,7 @@ function drawWordcLOUD(w,h){
     // Wordcloud features that are different from one word to the other must be here
     var wordCloudSVG = d3.layout.cloud() 
     .size([width, height])
-    .words(preparedData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
+    .words(wordCloudData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
     // .spiral("rectangular")
     .padding(11)       //space between words
     .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
@@ -218,6 +233,10 @@ function drawWordcLOUD(w,h){
         let nounSize = size;
         let nounX    = x;
         let nounY    = y;
+
+        // console.log(text)
+        // console.log(adjArray)
+        // console.log(size)
 
         //NOUN
         svg.append("text")
@@ -264,7 +283,7 @@ function drawWordcLOUD(w,h){
           
           function handleClick(d, i) {
             var e = d3.select(this);
-            console.log(e._groups[0][0].id)
+            // console.log(e._groups[0][0].id)
             e.classed("word-selected", !e.classed("word-selected"));
           }
 
@@ -304,7 +323,7 @@ function drawWordcLOUD(w,h){
           
           function handleClick(d, i) {
             var e = d3.select(this);
-            console.log(e._groups[0][0].id)
+            // console.log(e._groups[0][0].id)
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -345,7 +364,7 @@ function drawWordcLOUD(w,h){
           
           function handleClick(d, i) {
             var e = d3.select(this);
-            console.log(e._groups[0][0].id)
+            // console.log(e._groups[0][0].id)
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -354,5 +373,11 @@ function drawWordcLOUD(w,h){
     wordCloudSVG.start();
 }
 
-$(document).ready(prepareWordCloud);
+
+// let storeIDByUser = document.getElementById('getStoreID').value;
+// let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+
+let url = "http://35.175.55.18:5000/adj_noun_pairs/" + shopID;
+
+$(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
 // $(window).resize(resize);
