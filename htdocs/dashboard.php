@@ -42,8 +42,8 @@ if( isset($_GET['storeID']) ){
     <!-- Load sentimentScore from scripts folder -->
     <script src="scripts/sentimentScoreDonut.js" defer></script>
 
-    <!-- Jie Lin can put ur script here -->
     <!-- Load sentimentScoreOverTime from scripts folder -->
+    <script src="scripts/sentimentOverTime.js" defer></script>
 
     <style>
       .white-bg{
@@ -190,7 +190,15 @@ if( isset($_GET['storeID']) ){
               </span>
               <div class="float-left ml-1" >Sentiment Over Time:</div> 
               <!-- <div class="col-12 border"></div> -->
-              <!-- Jie Lin can put ur Div here -->
+              <div id="test">
+                <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400"></svg>
+              </div>
+              
+              <div class="ml-3"> 
+                Select year: <select id="year"></select>
+
+                <input type="checkbox" id="sort" class="ml-1">	Sort
+              </div>
             </div>
           </div>
         </div>
@@ -239,6 +247,7 @@ if( isset($_GET['storeID']) ){
       let response     = JSON.parse(adjNounPairs).data;
 
       dataPrepForAllOtherThanWordCloud(response);
+      sentimentOverTimePrepareData(response);
     }
 
 
