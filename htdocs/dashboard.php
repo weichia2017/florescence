@@ -126,6 +126,10 @@ if( isset($_GET['storeID']) ){
         background-repeat: no-repeat; */
         height:400px;
       }
+      .scrollReviews{
+        height:400px;
+        overflow-y: scroll;
+      }
     }
     </style>
   </head>
@@ -230,6 +234,27 @@ if( isset($_GET['storeID']) ){
             </div>
           </div>
         </div>
+
+        <div class="row" id="sentimentReviewsContainer">
+          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                rate_review
+              </span>
+              <div>Selected Reviews:</div> 
+              <hr>
+              <!-- <div class="col-12 border"></div> -->
+              <div id="sentimentOverTimeClickedReviews" class="scrollReviews">
+              <!-- Reviews gets Populated Here -->
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+
+
+
       </div>
     </main>
 
@@ -239,10 +264,12 @@ if( isset($_GET['storeID']) ){
   
    function test(){
      console.log("hi")
-    //   document.getElementById("wordCloudContainer").style.display = "block";
-    //   document.getElementById("wordCloudContainerSpinner").style.display = "none";
     }
 
+    document.getElementById("sentimentReviewsContainer").style.display = "none";
+    document.getElementById("wordCloudContainer").style.display = "block";
+    document.getElementById("wordCloudContainerSpinner").style.display = "none";
+    
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
     
@@ -321,6 +348,13 @@ if( isset($_GET['storeID']) ){
       sentimentDataForWordCloud.push({Positive :pos,
                                       Negative :neg,
                                       Neutral  :neu});
+
+      console.log(sentimentDataForWordCloud);
+
+
+      // dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0]['Negative'], 
+      //                                   ...sentimentDataForWordCloud[0]['Neutral'],
+      //                                   ...sentimentDataForWordCloud[0]['Positive'])
 
 
       //Overall Sentiment Score 

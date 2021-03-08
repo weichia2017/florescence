@@ -1,4 +1,5 @@
 function sentimentOverTimePrepareData(response){
+    
 
     // console.log(response)
     let setimentOverTimePrepared = [];
@@ -45,18 +46,24 @@ function sentimentOverTimePrepareData(response){
                 month.includes(setimentOverTimePrepared[y].Month)){
                 if(response[x].compound_score >= 0.05){
                     setimentOverTimePrepared[y].Pos += 1;
-                    setimentOverTimePrepared[y].PosR.push({review_id     : response[x].review_id,
-                                                            review_text  : response[x].review_text});
+                    setimentOverTimePrepared[y].PosR.push({review_id      : response[x].review_id,
+                                                           review_text    : response[x].review_text,
+                                                           review_date    : response[x].review_date,
+                                                           compound_score : response[x].compound_score});
                 } 
                 else if(response[x].compound_score <= -0.05){
                     setimentOverTimePrepared[y].Neg += 1;
                     setimentOverTimePrepared[y].NegR.push({review_id    : response[x].review_id,
-                                                            review_text : response[x].review_text});
+                                                           review_text  : response[x].review_text,
+                                                           review_date  : response[x].review_date,
+                                                           compound_score : response[x].compound_score});
                 }
                 else{
                     setimentOverTimePrepared[y].Neu += 1;
                     setimentOverTimePrepared[y].NeuR.push({review_id    : response[x].review_id,
-                                                            review_text : response[x].review_text});
+                                                           review_text  : response[x].review_text,
+                                                           review_date  : response[x].review_date,
+                                                           compound_score : response[x].compound_score});
                 }
             }
         }
@@ -71,11 +78,11 @@ function drawSentimentOverTimeStackedBarChart(data){
 
 var legendClassArray = []; //store legend classes to select bars in plotSingle()
 
-let w = document.getElementById('test').offsetWidth;
+let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
 let h = 400;
 
-console.log(document.getElementById('test').offsetWidth);
-console.log(h)
+// console.log(document.getElementById('sentimentOverTimeContainerDiv').offsetWidth);
+// console.log(h)
 
 chart(data,w,h)
 
@@ -88,7 +95,7 @@ $(window).resize(resizeSentimentOverTime);
 *   3. draw a new wordcloud
 */ 
 function resizeSentimentOverTime(){
-    w = document.getElementById('test').offsetWidth;
+    w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
     h = 400;
 
     if($(window).width() != width || $(window).height() != height){
@@ -102,9 +109,30 @@ function removeSentimentOverTimeChart(){
 }
 
 
+
+function displayReviewsBelowSentimentOverTime(chosenReviews){
+    document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+    for (x in chosenReviews){
+
+        document.getElementById("sentimentReviewsContainer").style.display = "block";
+        window.scrollBy(0, 500);
+
+        let formattedDate = new Date(chosenReviews[x].review_date);
+        // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
+        document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
+            `<div class="card mr-3 ml-3 mt-2">
+                <div class="card-body">
+                <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
+                <p class="card-text">${chosenReviews[x].review_text}</p>
+                </div>
+            </div>`;
+    }
+}
+
+
 function chart(csv,w,h) {
 	var keys = ["Pos", "Neg", "Neu"]
-    console.log(keys)
+    // console.log(keys)
 
 	var year   = [...new Set(csv.map(d => d.Year))]
 	var Months = [...new Set(csv.map(d => d.Month))]
@@ -232,11 +260,12 @@ function chart(csv,w,h) {
     }
 
     function showReviews(d,i){
-      console.log(d.data)
-      console.log(d[1]-d[0])
+    //   console.log(d.data)
+    //   console.log(d[1]-d[0])
       let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
-      console.log(selected)
+    //   console.log(selected)
       console.log(d.data[selected])
+      displayReviewsBelowSentimentOverTime(d.data[selected])
     }
 
     function getKeyByValue(object, value) {
