@@ -1,47 +1,23 @@
-let sentimentDataForWordCloud = [];
 
-function prepareSentimentDonut(response){
-  console.log(response);
-  let pos          = [];
-  let neg          = [];
-  let neu          = [];
-
-  for(x in response){
-    if(response[x].compound_score >= 0.05){
-      pos.push({review_id   : response[x].review_id,
-                review_text : response[x].review_text});
-    }
-    else if(response[x].compound_score <= -0.05){
-      neg.push({review_id   : response[x].review_id,
-                review_text : response[x].review_text});
-    }
-    else{
-      neu.push({review_id   : response[x].review_id,
-                review_text : response[x].review_text});
-    }
-  }
-  preparedData.push({Pos :pos,
-                     Neg :neg,
-                     Neu :neu});
+function prepareSentimentDonut(total){
 
   donutData=[]
-  total = preparedData[0].Pos.length + preparedData[0].Neg.length + preparedData[0].Neu.length 
-  postiveLabelPercent = 100/total *preparedData[0].Pos.length;
-  negativeLabelPercent = 100/total *preparedData[0].Neg.length;
-  neutralLabelPercent = 100/total *preparedData[0].Neu.length;
+  // total = sentimentDataForWordCloud[0].Positive.length + sentimentDataForWordCloud[0].Negative.length + sentimentDataForWordCloud[0].Neutral.length 
+  // console.log(total)
+  postiveLabelPercent  = 100/total *sentimentDataForWordCloud[0].Positive.length;
+  negativeLabelPercent = 100/total *sentimentDataForWordCloud[0].Negative.length;
+  neutralLabelPercent  = 100/total *sentimentDataForWordCloud[0].Neutral.length;
 
   donutData.push({label  : postiveLabelPercent.toFixed(2) + '% Positive',
-                  value: preparedData[0].Pos.length},
+                  value: sentimentDataForWordCloud[0].Positive.length},
                   {label  : negativeLabelPercent.toFixed(2) + '% Negative',
-                  value: preparedData[0].Neg.length},
+                  value: sentimentDataForWordCloud[0].Negative.length},
                   {label  : neutralLabelPercent.toFixed(2) + '% Neutral',
-                  value: preparedData[0].Neu.length})
+                  value: sentimentDataForWordCloud[0].Neutral.length})
 
-  // console.log(preparedData[0].Pos);
-
+  // console.log(donutData);
   drawSentimentDonut(donutData);
 }
-
 
 function color(key){
   // console.log(key)
@@ -88,10 +64,12 @@ function drawSentimentDonut(){
       // const cScale = d3.scaleOrdinal(d3.schemeCategory20b);
 
       var pie = d3.pie()
+      // var pie = d3.layout.pie()
       .padAngle(.02)
       .value(d => d.value);
 
       var arc = d3.arc()
+      // var arc = d3.svg.arc()
       .padRadius(outerRadius)
       .innerRadius(innerRadius);
 
@@ -159,8 +137,38 @@ function drawSentimentDonut(){
             }
           }
         
-          console.log(valuesClicked);
+          // console.log(valuesClicked);
+          let dataToBeSentToServer = [{data:[]}];
+          // Check if array is empty
+          if(valuesClicked.length != 0){
 
+            if(valuesClicked.length == 1){
+              // console.log(sentimentDataForWordCloud[0][valuesClicked[0]])
+              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]])
+            }
+            else if(valuesClicked.length == 2){
+              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]], 
+                                                ...sentimentDataForWordCloud[0][valuesClicked[1]],)
+            }
+            else{
+              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]], 
+                                                ...sentimentDataForWordCloud[0][valuesClicked[1]],
+                                                ...sentimentDataForWordCloud[0][valuesClicked[2]])
+            }
+            // console.log(JSON.stringify(dataToBeSentToServer[0]))
+
+
+            let url = "http://35.175.55.18:5000/adj_noun_pairs/";
+            retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
+          }
+          // If empty just get the default values for all sentiments
+          else{        
+            let storeIDByUser = document.getElementById('getStoreID').value;
+            let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+
+            let url = "http://35.175.55.18:5000/adj_noun_pairs/" + shopID;
+            retrieveWordCloudNounAdjPairs(url,"GET","");
+          }
           if(!d.isClicked || d.isClicked == undefined){
             d3.select(self)
             .classed("word-hovered", true)
@@ -226,5 +234,3 @@ function drawSentimentDonut(){
     data: donutData
   });
 }
-
-getSentimentScore();

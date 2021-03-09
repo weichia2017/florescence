@@ -13,9 +13,9 @@ function displayStars(overallSentimentScore){
       //0.8   to 0.99  4.5
       //1              5 
       // let overallSentimentScore = -1
-      console.log(overallSentimentScore);
+    //   console.log(overallSentimentScore);
       if(overallSentimentScore == 1){
-        console.log("5 Stars");
+        // console.log("5 Stars");
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -34,7 +34,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= 0.8){
-        console.log("4.5 Stars");
+        // console.log("4.5 Stars");
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -53,7 +53,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= 0.6){
-        console.log("4 Stars");  
+        // console.log("4 Stars");  
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -72,7 +72,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= 0.4){
-        console.log("3.5 Stars"); 
+        // console.log("3.5 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -91,7 +91,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= 0.2){
-        console.log("3 Stars"); 
+        // console.log("3 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -110,7 +110,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= -0.199999){
-        console.log("2.5 Stars"); 
+        // console.log("2.5 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -129,7 +129,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= -0.399999){
-        console.log("2 Stars"); 
+        // console.log("2 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -148,7 +148,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= -0.59999){
-        console.log("1.5 Stars"); 
+        // console.log("1.5 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -167,7 +167,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= -0.79999 ){
-        console.log("1 Stars"); 
+        // console.log("1 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star
@@ -186,7 +186,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore >= -0.99999 ){
-        console.log("0.5 Stars"); 
+        // console.log("0.5 Stars"); 
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star_half
@@ -205,7 +205,7 @@ function displayStars(overallSentimentScore){
         </span>`;
       }
       else if(overallSentimentScore == -1){
-        console.log("0 Stars");
+        // console.log("0 Stars");
         document.getElementById("overallSentimentScore").innerHTML =
         `<span class="material-icons stars">
         star_border

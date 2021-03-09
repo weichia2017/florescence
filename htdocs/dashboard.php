@@ -107,7 +107,7 @@ if( isset($_GET['storeID']) ){
         width: 100%;
         display: none;
         position: fixed;
-        z-index: 1;
+        z-index: 2;
         top: 0;
         left: 0;
         background-color: rgb(0,0,0);
@@ -130,6 +130,9 @@ if( isset($_GET['storeID']) ){
         height:400px;
         overflow-y: scroll;
       }
+      .closeReviews{
+        cursor: pointer;
+      }
     }
     </style>
   </head>
@@ -139,14 +142,14 @@ if( isset($_GET['storeID']) ){
   </div>
 
   </div>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
     </header>
 
-    <main class="container">
+    <main class="container" style="z-index: 0">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
 
@@ -213,6 +216,30 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
 
+        <div class="row" id="wordCloudReviewsContainer">
+          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                rate_review
+              </span>
+              <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                    onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
+                    class="material-icons float-right mr-2 closeReviews">
+              close
+              </span>
+              <div>Selected Reviews:</div> 
+            
+              <hr>
+              <!-- <div class="col-12 border"></div> -->
+              <div id="wordCloudClickedReviews" class="scrollReviews">
+              <!-- Reviews gets Populated Here -->
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
@@ -242,6 +269,11 @@ if( isset($_GET['storeID']) ){
               <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 rate_review
               </span>
+              <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                    onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
+                    class="material-icons float-right mr-2 closeReviews">
+              close
+              </span>
               <div>Selected Reviews:</div> 
               <hr>
               <!-- <div class="col-12 border"></div> -->
@@ -266,8 +298,9 @@ if( isset($_GET['storeID']) ){
      console.log("hi")
     }
 
+    document.getElementById("wordCloudReviewsContainer").style.display = "none";
     document.getElementById("sentimentReviewsContainer").style.display = "none";
-    document.getElementById("wordCloudContainer").style.display = "block";
+    document.getElementById("wordCloudContainer").style.display        = "block";
     document.getElementById("wordCloudContainerSpinner").style.display = "none";
     
     let storeIDByUser = document.getElementById('getStoreID').value;
@@ -349,7 +382,7 @@ if( isset($_GET['storeID']) ){
                                       Negative :neg,
                                       Neutral  :neu});
 
-      console.log(sentimentDataForWordCloud);
+      // console.log(sentimentDataForWordCloud);
 
 
       // dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0]['Negative'], 
@@ -363,7 +396,25 @@ if( isset($_GET['storeID']) ){
             
       //Sentiment Score
       prepareSentimentDonut(totalReviews);
+
+
+      //Preparing data for adj clicks to see review
+      refactorResponseForReviewsViaWordCloudAdjs(response);
     }  
+
+    let refactoredResponse = {};
+    function refactorResponseForReviewsViaWordCloudAdjs(response){
+      // console.log(response);
+      for (x in response){
+        refactoredResponse[response[x].review_id] = {
+                            compound_score : response[x].compound_score,
+                            review_text    : response[x].review_text,
+                            review_date    : response[x].review_date 
+                          }
+                              
+      }
+      // console.log(refactoredResponse)
+    }
 
     //Temporary till we have user Login Feature
     async function getStoreName(){

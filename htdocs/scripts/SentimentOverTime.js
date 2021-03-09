@@ -1,6 +1,5 @@
 function sentimentOverTimePrepareData(response){
     
-
     // console.log(response)
     let setimentOverTimePrepared = [];
     let years = [];
@@ -53,16 +52,16 @@ function sentimentOverTimePrepareData(response){
                 } 
                 else if(response[x].compound_score <= -0.05){
                     setimentOverTimePrepared[y].Neg += 1;
-                    setimentOverTimePrepared[y].NegR.push({review_id    : response[x].review_id,
-                                                           review_text  : response[x].review_text,
-                                                           review_date  : response[x].review_date,
+                    setimentOverTimePrepared[y].NegR.push({review_id      : response[x].review_id,
+                                                           review_text    : response[x].review_text,
+                                                           review_date    : response[x].review_date,
                                                            compound_score : response[x].compound_score});
                 }
                 else{
                     setimentOverTimePrepared[y].Neu += 1;
-                    setimentOverTimePrepared[y].NeuR.push({review_id    : response[x].review_id,
-                                                           review_text  : response[x].review_text,
-                                                           review_date  : response[x].review_date,
+                    setimentOverTimePrepared[y].NeuR.push({review_id      : response[x].review_id,
+                                                           review_text    : response[x].review_text,
+                                                           review_date    : response[x].review_date,
                                                            compound_score : response[x].compound_score});
                 }
             }
@@ -112,11 +111,10 @@ function removeSentimentOverTimeChart(){
 
 function displayReviewsBelowSentimentOverTime(chosenReviews){
     document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+    document.getElementById("sentimentReviewsContainer").style.display = "block";
+    window.scrollBy(0, 500);
+
     for (x in chosenReviews){
-
-        document.getElementById("sentimentReviewsContainer").style.display = "block";
-        window.scrollBy(0, 500);
-
         let formattedDate = new Date(chosenReviews[x].review_date);
         // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
         document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=

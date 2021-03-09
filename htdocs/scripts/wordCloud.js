@@ -204,6 +204,25 @@ function randomColor () {
     return color;
 }
 
+
+function displayReviewsBelowWordCloud(chosenReviews){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+
+  chosenReviews = chosenReviews.split(",");
+
+  for (x in chosenReviews){
+    let formattedDate = new Date(refactoredResponse[chosenReviews[x]]['review_date']);
+    document.getElementById("wordCloudClickedReviews").innerHTML +=
+            `<div class="card mr-3 ml-3 mt-2">
+                <div class="card-body">
+                <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
+                <p class="card-text">${refactoredResponse[chosenReviews[x]]['review_text']}</p>
+                </div>
+            </div>`;      
+  }
+}
+
 function drawWordcLOUD(w,h){     
     // set the dimensions and margins of the graph
     var margin = {top: 5, right: 5, bottom: 5, left: 5},
@@ -283,7 +302,9 @@ function drawWordcLOUD(w,h){
           
           function handleClick(d, i) {
             var e = d3.select(this);
-            // console.log(e._groups[0][0].id)
+            // console.log(e._groups[0].id)
+            window.scrollBy(0, 300);
+            displayReviewsBelowWordCloud(e._groups[0][0].id);
             e.classed("word-selected", !e.classed("word-selected"));
           }
 
@@ -324,6 +345,8 @@ function drawWordcLOUD(w,h){
           function handleClick(d, i) {
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
+            window.scrollBy(0, 200);
+            displayReviewsBelowWordCloud(e._groups[0][0].id);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -365,6 +388,8 @@ function drawWordcLOUD(w,h){
           function handleClick(d, i) {
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
+            window.scrollBy(0, 150);
+            displayReviewsBelowWordCloud(e._groups[0][0].id);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
