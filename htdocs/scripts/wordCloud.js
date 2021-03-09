@@ -211,13 +211,25 @@ function displayReviewsBelowWordCloud(chosenReviews){
 
   chosenReviews = chosenReviews.split(",");
 
+  let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
-    let formattedDate = new Date(refactoredResponse[chosenReviews[x]]['review_date']);
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
+                                    review_text : refactoredResponse[chosenReviews[x]]['review_text']})
+  }
+
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
+
+  //Display the values
+  for (x in chosenReviewsWithFullData){
     document.getElementById("wordCloudClickedReviews").innerHTML +=
             `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
-                <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
-                <p class="card-text">${refactoredResponse[chosenReviews[x]]['review_text']}</p>
+                <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
+                <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
                 </div>
             </div>`;      
   }

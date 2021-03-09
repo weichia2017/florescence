@@ -106,7 +106,9 @@ function drawSentimentDonut(){
           .attrTween("d", function(d) {
             var i = d3.interpolate(d.outerRadius, outerRadius);
             return function(t) { d.outerRadius = i(t); return arc(d); };
-          });
+          })
+          .attr("stroke","black")
+          .attr("stroke-width",1);
       }
 
       function mouseout(self, d, outerRadius, delay){
@@ -119,7 +121,9 @@ function drawSentimentDonut(){
           .attrTween("d", function(d) {
             var i = d3.interpolate(d.outerRadius, outerRadius);
             return function(t) { d.outerRadius = i(t); return arc(d); };
-          });
+          })
+          .attr("stroke","none")
+          .attr("stroke-width",0);
         }
       }
 

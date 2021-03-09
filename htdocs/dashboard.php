@@ -136,162 +136,161 @@ if( isset($_GET['storeID']) ){
     }
     </style>
   </head>
+
   <body>
   <div id="myNav" class="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
 
-  </div>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
-      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </header>
+  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </header>
 
-    <main class="container" style="z-index: 0">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+  <main class="container" style="z-index: 0">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Dashboard</h1>
 
-        <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button>
-      </div>
-
-      <form>
-        <input type="text" name=storeID>
-        <input type="submit">
-      </form>
-      <input type="hidden" value=<?= $storeID?>  id="getStoreID">
-
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
-              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                rate_review
-              </span>
-              <!-- Create a div where the total number of reviews will be -->
-              <div class="float-left ml-1" >Total Reviews:</div> 
-              <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
-            </div>
-          </div>
-
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="lead">
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                auto_graph
-              </span>
-              <div class="float-left ml-1" >Overall Sentiment Score:</div> 
-              <div class="container float-left ml-3" id="overallSentimentScore"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
-            <div class="lead">
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                tag_faces
-              </span>
-              <div class="float-left ml-1" >Sentiment Score:</div> 
-              <!-- Create a div where the sentimentScore will be -->
-              <div class="container float-left" id="sentimentScoreContainer"></div>
-            </div>
-          </div>
-
-          <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
-            <div class="lead">
-              <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                cloud 
-              </span>
-              <div class="float-left ml-1" >Word Cloud:</div> 
-            </div>
-            <!-- Create a div where the wordcloud will be -->
-            <div class="container float-left" id="wordCloudContainer"></div>
-            <!-- White background to the empty space of div when spinner is loading -->
-            <div class="wordCloudWhiteBackground"></div>
-            <!-- Spinner -->
-            <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinner" role="status" ></div>
-          </div>
-        </div>
-
-        <div class="row" id="wordCloudReviewsContainer">
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                rate_review
-              </span>
-              <span style="font-size:33px; color: rgb(92, 92, 92)" 
-                    onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
-                    class="material-icons float-right mr-2 closeReviews">
-              close
-              </span>
-              <div>Selected Reviews:</div> 
-            
-              <hr>
-              <!-- <div class="col-12 border"></div> -->
-              <div id="wordCloudClickedReviews" class="scrollReviews">
-              <!-- Reviews gets Populated Here -->
-              </div>
-              <hr>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                timeline
-              </span>
-              <div class="float-left ml-1" >Sentiment Over Time:</div> 
-              <!-- <div class="col-12 border"></div> -->
-              <div id="sentimentOverTimeContainerDiv">
-                <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400"></svg>
-              </div>
-              
-              <div class="ml-3"> 
-                Select year: <select id="year"></select>
-
-                <input type="checkbox" id="sort" class="ml-1">	Sort
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row" id="sentimentReviewsContainer">
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                rate_review
-              </span>
-              <span style="font-size:33px; color: rgb(92, 92, 92)" 
-                    onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
-                    class="material-icons float-right mr-2 closeReviews">
-              close
-              </span>
-              <div>Selected Reviews:</div> 
-              <hr>
-              <!-- <div class="col-12 border"></div> -->
-              <div id="sentimentOverTimeClickedReviews" class="scrollReviews">
-              <!-- Reviews gets Populated Here -->
-              </div>
-              <hr>
-            </div>
-          </div>
-        </div>
-
-
-
-      </div>
-    </main>
-
+      <!-- <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button> -->
     </div>
 
+    <!-- <form>
+      <input type="text" name=storeID>
+      <input type="submit">
+    </form> -->
+    <input type="hidden" value=<?= $storeID?>  id="getStoreID">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              rate_review
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <div class="float-left ml-1" >Total Reviews:</div> 
+            <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              auto_graph
+            </span>
+            <div class="float-left ml-1" >Overall Sentiment Score:</div> 
+            <div class="container float-left ml-3" id="overallSentimentScore"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
+          <div class="lead">
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              tag_faces
+            </span>
+            <div class="float-left ml-1" >Sentiment Score:</div> 
+            <!-- Create a div where the sentimentScore will be -->
+            <div class="container float-left" id="sentimentScoreContainer"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
+          <div class="lead">
+            <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              cloud 
+            </span>
+            <div class="float-left ml-1" >Word Cloud:</div> 
+          </div>
+          <!-- Create a div where the wordcloud will be -->
+          <div class="container float-left" id="wordCloudContainer"></div>
+          <!-- White background to the empty space of div when spinner is loading -->
+          <div class="wordCloudWhiteBackground"></div>
+          <!-- Spinner -->
+          <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinner" role="status" ></div>
+        </div>
+      </div>
+
+      <div class="row" id="wordCloudReviewsContainer">
+        <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              rate_review
+            </span>
+            <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                  onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
+                  class="material-icons float-right mr-2 closeReviews">
+            close
+            </span>
+            <div>Selected Reviews:</div> 
+          
+            <hr>
+            <!-- <div class="col-12 border"></div> -->
+            <div id="wordCloudClickedReviews" class="scrollReviews">
+            <!-- Reviews gets Populated Here -->
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              timeline
+            </span>
+            <div class="float-left ml-1" >Sentiment Over Time:</div> 
+            <br>
+            <hr>
+            <div class="ml-3"> 
+              Select year: <select id="year"></select>
+
+              <input type="checkbox" id="sort" class="ml-1">	Sort
+            </div>
+            <!-- <hr> -->
+            <!-- <div class="col-12 border"></div> -->
+            <div id="sentimentOverTimeContainerDiv">
+              <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400"></svg>
+            </div>
+            
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="row" id="sentimentReviewsContainer">
+        <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              rate_review
+            </span>
+            <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                  onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
+                  class="material-icons float-right mr-2 closeReviews">
+            close
+            </span>
+            <div>Selected Reviews:</div> 
+            <hr>
+            <!-- <div class="col-12 border"></div> -->
+            <div id="sentimentOverTimeClickedReviews" class="scrollReviews">
+            <!-- Reviews gets Populated Here -->
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
   <script>
   
    function test(){
@@ -347,7 +346,6 @@ if( isset($_GET['storeID']) ){
       sentimentOverTimePrepareData(response);
       document.getElementById("myNav").style.display = "none";
     }
-
 
     function dataPrepForAllOtherThanWordCloud(response){
       // Total Reviews Number

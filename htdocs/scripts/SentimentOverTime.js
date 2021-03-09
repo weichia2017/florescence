@@ -114,6 +114,10 @@ function displayReviewsBelowSentimentOverTime(chosenReviews){
     document.getElementById("sentimentReviewsContainer").style.display = "block";
     window.scrollBy(0, 500);
 
+    chosenReviews.sort(function(a,b){
+        return new Date(b.review_date) - new Date(a.review_date);
+      });
+
     for (x in chosenReviews){
         let formattedDate = new Date(chosenReviews[x].review_date);
         // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
