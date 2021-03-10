@@ -77,7 +77,6 @@ def adj_noun_pairs(store_id):
     return __response_ok(df)
 
 @app.route('/adj_noun_pairs/', methods=["POST"])
-@cache.cached(timeout=LESS_UPDATES)
 def get_adj_noun_pair():
     request_data = request.get_json()
     df = pd.json_normalize(request_data, record_path=['data'])
