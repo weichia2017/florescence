@@ -28,6 +28,7 @@ CREATE TABLE `florescence`.`tripadvisor_reviews` (
   `food_rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 CREATE TABLE `florescence`.`stores` ( 
   `id_store` INT NOT NULL AUTO_INCREMENT , 
   `store_name` VARCHAR(255) NOT NULL , 
@@ -35,14 +36,6 @@ CREATE TABLE `florescence`.`stores` (
   `tripadvisors_url` VARCHAR(255) NOT NULL , 
   PRIMARY KEY (`id_store`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `florescence`.`sentiment_scores` ( 
-  `review_id` varchar(255) NOT NULL PRIMARY KEY,
-  `negative` DECIMAL DEFAULT NULL,
-  `neutral` DECIMAL DEFAULT NULL, 
-  `positive` DECIMAL DEFAULT NULL, 
-  `compound` DECIMAL DEFAULT NULL 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Base Stores
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('Praelum Wine Bistro', 'https://www.google.com/maps/place/Praelum+Wine+Bistro/@1.2793238,103.8430118,15z/data=!4m2!3m1!1s0x0:0x49dd8f5ea10e0dc8?sa=X&ved=2ahUKEwiAzI6l9ertAhVUU30KHaMpBuAQ_BIwCnoECBYQBQ', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d5264234-Reviews-Praelum_Wine_Bistro-Singapore.html');
@@ -60,3 +53,51 @@ INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VAL
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('Kitchen Kumars', 'https://www.google.com/maps/place/Kitchen+Kumars/@1.2785261,103.8423165,19z/data=!3m1!4b1!4m5!3m4!1s0x31da1932922e76ed:0xcd9ffad00ac6783a!8m2!3d1.2785248!4d103.8428637', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d17676105-Reviews-Kitchen_Kumars-Singapore.html');
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('Parallel coffee roasters', 'https://www.google.com/maps/place/Parallel+Coffee+Roasters+(Duxton+Hill)/@1.278592,103.842847,15z/data=!4m2!3m1!1s0x0:0x92b985bf24286375?sa=X&ved=2ahUKEwjbstfk9urtAhUJcCsKHRydCsEQ_BIwCnoECBsQBQ', '');
 INSERT INTO `stores` (`store_name`, `googlereviews_url`, `tripadvisors_url`) VALUES ('Latteria mozzarella bar', 'https://www.google.com/maps/place/Latteria+Mozzarella+Bar/@1.2786122,103.8407543,17z/data=!3m1!4b1!4m5!3m4!1s0x31da196d6cb6855f:0xf193e727fc263c6d!8m2!3d1.2786068!4d103.842943', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d3136129-Reviews-Latteria_Mozzarella_Bar-Singapore.html');
+
+CREATE TABLE `florescence`.`sources` (
+  `source_id` int(11) NOT NULL,
+  `source_name` text DEFAULT NULL,
+  PRIMARY KEY (source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `sources` (`source_id`, `source_name`) VALUES (1, 'Google Reviews');
+INSERT INTO `sources` (`source_id`, `source_name`) VALUES (2, 'TripAdvisor');
+
+CREATE TABLE `florescence`.`raw_reviews` (
+  `review_id` varchar(255) NOT NULL,
+  `source_id` int(11) NOT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `review_text` text DEFAULT NULL,
+  `review_date` date DEFAULT NULL,
+  `retrieval_date` date DEFAULT NULL,
+  PRIMARY KEY (review_id, source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `florescence`.`sentiment_scores` ( 
+  `review_id` varchar(255) NOT NULL,
+  `source_id` int(11) NOT NULL,
+  `negative` DECIMAL DEFAULT NULL,
+  `neutral` DECIMAL DEFAULT NULL, 
+  `positive` DECIMAL DEFAULT NULL, 
+  `compound` DECIMAL DEFAULT NULL ,
+  PRIMARY KEY (review_id, source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `florescence`.`adj_noun_pairs` ( 
+  `pair_id` int(11) NOT NULL AUTO_INCREMENT,
+  `review_id` varchar(255) NOT NULL,
+  `source_id` int(11) NOT NULL,
+  `noun` varchar(255) NOT NULL,
+  `adj` varchar(255) NOT NULL,
+  PRIMARY KEY (review_id, source_id, pair_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `florescence`.`adj_noun_pairs` ( 
+  `pair_id` INT(11) NOT NULL AUTO_INCREMENT, 
+  `review_id` VARCHAR(255) NOT NULL, 
+  `source_id` INT(11) NOT NULL , 
+  `noun` VARCHAR(255) NOT NULL , 
+  `adj` VARCHAR(255) NOT NULL , 
+  PRIMARY KEY (pair_id, review_id, source_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
+
