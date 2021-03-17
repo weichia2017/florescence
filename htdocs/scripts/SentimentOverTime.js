@@ -112,7 +112,9 @@ function removeSentimentOverTimeChart(){
 function displayReviewsBelowSentimentOverTime(chosenReviews){
     document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
     document.getElementById("sentimentReviewsContainer").style.display = "block";
-    window.scrollBy(0, 500);
+    // window.scrollBy(0, 500);
+    document.getElementById('sentimentReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+
 
     chosenReviews.sort(function(a,b){
         return new Date(b.review_date) - new Date(a.review_date);

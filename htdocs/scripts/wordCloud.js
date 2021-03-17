@@ -216,6 +216,8 @@ function displayReviewsBelowWordCloud(chosenReviews,text){
   document.getElementById("wordCloudClickedReviews").innerHTML = '';
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
 
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+
   chosenReviews = chosenReviews.split(",");
 
   let chosenReviewsWithFullData = [];
@@ -322,7 +324,7 @@ function drawWordcLOUD(w,h){
           function handleClick(d, i) {
             var e = d3.select(this);
             // console.log(e.text())
-            window.scrollBy(0, 300);
+            // window.scrollBy(0, 300);
             displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
@@ -364,7 +366,7 @@ function drawWordcLOUD(w,h){
           function handleClick(d, i) {
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
-            window.scrollBy(0, 200);
+            // window.scrollBy(0, 200);
             displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
@@ -407,7 +409,7 @@ function drawWordcLOUD(w,h){
           function handleClick(d, i) {
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
-            window.scrollBy(0, 150);
+            // window.scrollBy(0, 150);
             displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
