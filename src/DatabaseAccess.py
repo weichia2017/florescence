@@ -45,49 +45,16 @@ class DataAccess:
         return True
 
     def getStores(self, return_as_dataframe = True):
-        """Fetches all rows from Stores table.
-        
-        Retrieves all rows from the Stores table that will return return
-        the Store's ID, Name, GoogleReview URL, and TripAdvisor URL.
-        The URLs may consist of empty Strings, indicating there's no URL.
-        
-        Args:
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-    
-        Returns:
-            Returns a nested list of stores and each row will consist of the following format
-            ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
-            If return_as_dataframe  is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         query = 'SELECT * FROM `stores`'
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
             return output
         else:
-            df = pandas.DataFrame(output, columns = STORE_HEADER)
+            df = pandas.DataFrame(output)
             df.set_index('store_id', inplace=True)
             return df
     
     def getStore(self, store_id, return_as_dataframe = True):
-        """Fetches a single row from Stores table.
-        
-        Retrieves a row from the Stores table from a provided store's ID.
-        This will return return the Store's ID, Name, GoogleReview URL, and TripAdvisor URL.
-        The URLs may consist of empty Strings, indicating there's no URL.
-        
-        Args:
-            store_id: Required; the store's id to be retrieved from the database.
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of stores and each row will consist of the following format
-            ['store_id', 'store_name', 'googlereviews_url','tripadvisor_url']
-            If return_as_dataframe  is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         if store_id == None:
             return None
         query = 'SELECT * FROM `stores` WHERE store_id = %s'
@@ -96,22 +63,12 @@ class DataAccess:
         if not return_as_dataframe:
             return output
         else:
-            df = pandas.DataFrame(output, columns = STORE_HEADER)
+            df = pandas.DataFrame(output)
             df.set_index('store_id', inplace=True)
             return df
 
+    #TODO: To be replaced with a universal write
     def writeGoogleReview(self, review):
-        """Write a row into Google Reviews table.
-        
-        Writes a single row into Google Reviews table.
-        Take note that review_id is a unique key therefore no duplicates are allowed.
-        
-        Args:
-            review: GoogleReview Class.
-            
-        Returns:
-            A boolean rather if the insertion was successful or not.
-        """
         query = '''
             INSERT INTO `google_reviews` 
             (`review_id`, `store_id`, `review_text`, `review_date`, `rating`, `username`, 
@@ -132,18 +89,8 @@ class DataAccess:
                 review.relative_date)
         return self.__executeInsertQuery(query, args)
 
+    #TODO: To be replaced with a universal write
     def writeTripAdvisorReview(self, review):
-        """Write a row into Tripadvisor table.
-        
-        Writes a single row into Tripadvisor Reviews table.
-        Take note that review_id is a unique key therefore no duplicates are allowed.
-        
-        Args:
-            review: Tripadvisor Class.
-            
-        Returns:
-            A boolean rather if the insertion was successful or not.
-        """
         query = '''
             INSERT INTO `tripadvisor_reviews` 
             (`review_id`, `store_id`, `review_text`, `review_date`, `rating`, `username`, 
@@ -165,23 +112,18 @@ class DataAccess:
                 review.atmosphere_rating,
                 review.service_rating,
                 review.food_rating)
-        
         return self.__executeInsertQuery(query, args)
 
+    def writeSentiments(self, row):
+        query = '''
+            INSERT INTO `sentiment_scores` (`review_id`, `source_id`, `negative`, `neutral`, `positive`, `compound`) 
+            VALUES (%s, %s, %s, %s, %s, %s)
+            '''
+        args = (row.review_id, row.source_id, row.negative, row.neutral, row.positive, row.compound)
+        return self.__executeInsertQuery(query, args)
+        
+    #TODO: To be replaced with a universal write
     def getAllGoogleReviews(self, return_as_dataframe = True):
-        """Retrieve all Google Reviews from the Database from All Stores
-        
-        Retrieves all rows from Google Reviews table.
-        
-        Args:
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from Google
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         query = 'SELECT * FROM `google_reviews`'
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
@@ -190,21 +132,9 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
             df.set_index('review_id', inplace=True)
             return df
-
+        
+    #TODO: To be replaced with a universal write
     def getAllTripAdvisorReviews(self, return_as_dataframe = True):
-        """Retrieve all Tripadvisor Reviews from the Database from All Stores
-        
-        Retrieves all rows from Tripadvisor Reviews table.
-        
-        Args:
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from Tripadvisor
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         query = 'SELECT * FROM `tripadvisor_reviews`'
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
@@ -213,26 +143,31 @@ class DataAccess:
             df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
             df.set_index('review_id', inplace=True)
             return df
-
+    
+    def getRawReviews(self, return_as_dataframe = True):
+        query = 'SELECT * FROM raw_reviews WHERE review_text != ""'
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
+            df.set_index('review_id', inplace=True)
+            return df
+        
+    def getRawReviews_UnProcessed(self, return_as_dataframe = True):
+        query = 'SELECT * FROM raw_reviews rr WHERE rr.review_text != "" AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)'
+        output = self.__executeSelectQuery(query)
+        if len(output) == 0:
+            return None
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            df.set_index('review_id', inplace=True)
+            return df
+        
+    #TODO: To replace with universal raw getter
     def getAllReviews(self, show_all = False, return_as_dataframe = True):
-        """Retrieve all reviews from the Database from specified store.
-        
-        Retrieve all reviews from both Tripadvisor and Google. Columns will be handled according to args provided.
-        A 'source' column was added to designate the origins of the review.
-        
-        Args:
-            show_all: Optional, default False; all columns are returned by default however since
-                reviews from both site are different, there will be np.NaN included.
-                if show_all is set to True, only columns that is used by the sources
-                columns will be returned.
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from all sources
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly, else a list is returned
-        """
         gdf = self.getAllGoogleReviews()
         gdf['source'] = "Google"
         tdf = self.getAllTripAdvisorReviews()
@@ -244,22 +179,9 @@ class DataAccess:
             return df
         else:
             return df.reset_index().values.tolist()
-
+        
+    #TODO: To replace with universal raw getter
     def getStoreGoogleReviews(self, store_id, return_as_dataframe = True):
-        """Retrieve all Google Reviews from the Database from specified store.
-        
-        Retrieves all rows from Google Reviews table for a specific store given by store_id args.
-        
-        Args:
-            store_id: the store id, getStores() to find the code ID.
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from Google
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         if store_id == None:
             return None
         query = 'SELECT * FROM `google_reviews` WHERE store_id = %s'
@@ -272,21 +194,8 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
     
+    #TODO: To replace with universal raw getter
     def getStoreTripAdvisorReviews(self, store_id, return_as_dataframe = True):
-        """Retrieve all Tripadvisor from the Database from specified store.
-        
-        Retrieves all rows from Tripadvisor table for a specific store given by store_id args.
-        
-        Args:
-            store_id: the store id, getStores() to find the code ID.
-            return_as_dataframe: Optional, default True; if return_as_dataframe is True, 
-                The returned object will be in a pandas.DataFrame format else a List.
-                
-        Returns:
-            Returns a nested list of reviews from Tripadvisor
-            If return_as_dataframe is set to True, a pandas.DataFrame object
-            is returned with the columns and indexes set accordingly.
-        """
         if store_id == None:
             return None
         query = 'SELECT * FROM `tripadvisor_reviews` WHERE store_id = %s'
@@ -299,6 +208,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
+    #TODO: To replace with universal raw getter
     def getStoreReviews(self, store_id, show_all = False, return_as_dataframe = True):
         gdf = self.getStoreGoogleReviews(store_id)
         gdf['source'] = "Google"
@@ -326,7 +236,7 @@ class DataAccess:
         return status
     
     def __executeSelectQuery(self, query, args=None):
-        cursor = self.connector.cursor()
+        cursor = self.connector.cursor(dictionary=True)
         results = None
         try:
             cursor.execute(query, args)

@@ -76,10 +76,10 @@ CREATE TABLE `florescence`.`raw_reviews` (
 CREATE TABLE `florescence`.`sentiment_scores` ( 
   `review_id` varchar(255) NOT NULL,
   `source_id` int(11) NOT NULL,
-  `negative` DECIMAL DEFAULT NULL,
-  `neutral` DECIMAL DEFAULT NULL, 
-  `positive` DECIMAL DEFAULT NULL, 
-  `compound` DECIMAL DEFAULT NULL ,
+  `negative` float(6,4) DEFAULT NULL,
+  `neutral` float(6,4) DEFAULT NULL, 
+  `positive` float(6,4) DEFAULT NULL, 
+  `compound` float(6,4) DEFAULT NULL ,
   PRIMARY KEY (review_id, source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
