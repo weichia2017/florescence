@@ -133,6 +133,9 @@ if( isset($_GET['storeID']) ){
       .closeReviews{
         cursor: pointer;
       }
+      .highLightedText{
+        background-color: #FFFF00
+      }
     }
     </style>
   </head>

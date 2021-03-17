@@ -204,8 +204,15 @@ function randomColor () {
     return color;
 }
 
+function highlight_word(searchpara,text)
+{
+  var pattern=new RegExp("\\b"+text+"\\b", "gi");
+  var new_text=searchpara.replace(pattern, "<mark class='highLightedText'>"+text+"</mark>");
+  return new_text
+}
 
-function displayReviewsBelowWordCloud(chosenReviews){
+
+function displayReviewsBelowWordCloud(chosenReviews,text){
   document.getElementById("wordCloudClickedReviews").innerHTML = '';
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
 
@@ -215,7 +222,7 @@ function displayReviewsBelowWordCloud(chosenReviews){
   for (x in chosenReviews){
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
                                     review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : refactoredResponse[chosenReviews[x]]['review_text']})
+                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],text)})
   }
 
   // Sort By Reviews By Date
@@ -314,9 +321,9 @@ function drawWordcLOUD(w,h){
           
           function handleClick(d, i) {
             var e = d3.select(this);
-            // console.log(e._groups[0].id)
+            // console.log(e.text())
             window.scrollBy(0, 300);
-            displayReviewsBelowWordCloud(e._groups[0][0].id);
+            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
 
@@ -358,7 +365,7 @@ function drawWordcLOUD(w,h){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             window.scrollBy(0, 200);
-            displayReviewsBelowWordCloud(e._groups[0][0].id);
+            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -401,7 +408,7 @@ function drawWordcLOUD(w,h){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             window.scrollBy(0, 150);
-            displayReviewsBelowWordCloud(e._groups[0][0].id);
+            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
