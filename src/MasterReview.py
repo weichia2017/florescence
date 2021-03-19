@@ -39,18 +39,18 @@ class Master:
         top_noun_adj_pair = pairs.groupby(['noun']).apply(lambda x: x.nlargest(num_of_adj_each,['count'], keep='first')).reset_index(drop=True).sort_values(['noun','count'], ascending=False).reset_index(drop=True)
         return top_noun_adj_pair[['noun', 'adj', 'review_id']]
     
-    def sentiment_scores(self):
-        self.__separateEmptyReview()
-        self.__remove_translated()
-        df = self.df.reset_index()
-        def vaderSent(text):
-            analyzer = SentimentIntensityAnalyzer()
-            vs = analyzer.polarity_scores(text)
-            return f"{vs['neg']},{vs['neu']},{vs['pos']},{vs['compound']}"
-        df['vader_score'] = np.vectorize(vaderSent)(df.review_text)
-        df[['neg','neu','pos','compound_score']] = df.vader_score.str.split(",",expand=True)
-        df[['neg','neu','pos','compound_score']] = df[['neg','neu','pos','compound_score']].astype(float)
-        return df[['review_id', 'review_date', 'review_text', 'compound_score']]
+#     def sentiment_scores(self):
+#         self.__separateEmptyReview()
+#         self.__remove_translated()
+#         df = self.df.reset_index()
+#         def vaderSent(text):
+#             analyzer = SentimentIntensityAnalyzer()
+#             vs = analyzer.polarity_scores(text)
+#             return f"{vs['neg']},{vs['neu']},{vs['pos']},{vs['compound']}"
+#         df['vader_score'] = np.vectorize(vaderSent)(df.review_text)
+#         df[['neg','neu','pos','compound_score']] = df.vader_score.str.split(",",expand=True)
+#         df[['neg','neu','pos','compound_score']] = df[['neg','neu','pos','compound_score']].astype(float)
+#         return df[['review_id', 'review_date', 'review_text', 'compound_score']]
 
     def __separateEmptyReview(self):
         self.df = self.df[self.df.review_text != ""].copy()

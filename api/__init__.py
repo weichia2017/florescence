@@ -52,14 +52,27 @@ def one_Store(store_id):
             return __response_error(e)
     return __response_ok(df)
 
+# @app.route('/reviews/<int:store_id>')
+# @cache.cached(timeout=LESS_UPDATES)
+# def sentiment(store_id):
+#     with DataAccess() as dao:
+#         if store_id not in dao.getStores().index.to_list():
+#             return __response_invalid("The store identifier was not found")
+#         try:
+#             df = Master(dao.getStoreReviews(store_id)).sentiment_scores()
+#         except Exception as e:
+#             return __response_error(e)
+#     return __response_ok(df)
+
 @app.route('/reviews/<int:store_id>')
 @cache.cached(timeout=LESS_UPDATES)
-def sentiment(store_id):
+def test(store_id):
+    df = None
     with DataAccess() as dao:
         if store_id not in dao.getStores().index.to_list():
             return __response_invalid("The store identifier was not found")
         try:
-            df = Master(dao.getStoreReviews(store_id)).sentiment_scores()
+            df = dao.getSentiments(store_id)
         except Exception as e:
             return __response_error(e)
     return __response_ok(df)

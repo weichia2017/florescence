@@ -121,6 +121,28 @@ class DataAccess:
             '''
         args = (row.review_id, row.source_id, row.negative, row.neutral, row.positive, row.compound)
         return self.__executeInsertQuery(query, args)
+    
+    def getSentiments(self, store_id, return_as_dataframe = True):
+        if store_id == None:
+            return None
+        query = '''
+            SELECT 
+                rr.review_id, 
+                rr.source_id, 
+                rr.review_text, 
+                rr.review_date,
+                ss.compound as "compound_score"
+            FROM raw_reviews rr JOIN sentiment_scores ss 
+            ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
+            WHERE rr.store_id = %s
+            '''
+        args = (store_id,)
+        output = self.__executeSelectQuery(query, args)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            return df
         
     #TODO: To be replaced with a universal write
     def getAllGoogleReviews(self, return_as_dataframe = True):
@@ -158,7 +180,7 @@ class DataAccess:
         query = 'SELECT * FROM raw_reviews rr WHERE rr.review_text != "" AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)'
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
-            return None
+            return pandas.DataFrame()
         if not return_as_dataframe:
             return output
         else:
@@ -166,21 +188,21 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
         
-    #TODO: To replace with universal raw getter
-    def getAllReviews(self, show_all = False, return_as_dataframe = True):
-        gdf = self.getAllGoogleReviews()
-        gdf['source'] = "Google"
-        tdf = self.getAllTripAdvisorReviews()
-        tdf['source'] = "Tripadvisor"
-        df = pandas.concat([gdf,tdf])
-        if not show_all:
-            df = df[SHARED_HEADER]
-        if return_as_dataframe:        
-            return df
-        else:
-            return df.reset_index().values.tolist()
+#     #TODO: To be replaced with a universal write
+#     def getAllReviews(self, show_all = False, return_as_dataframe = True):
+#         gdf = self.getAllGoogleReviews()
+#         gdf['source'] = "Google"
+#         tdf = self.getAllTripAdvisorReviews()
+#         tdf['source'] = "Tripadvisor"
+#         df = pandas.concat([gdf,tdf])
+#         if not show_all:
+#             df = df[SHARED_HEADER]
+#         if return_as_dataframe:        
+#             return df
+#         else:
+#             return df.reset_index().values.tolist()
         
-    #TODO: To replace with universal raw getter
+    #TODO: To be replaced with a universal write
     def getStoreGoogleReviews(self, store_id, return_as_dataframe = True):
         if store_id == None:
             return None
@@ -194,7 +216,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
     
-    #TODO: To replace with universal raw getter
+    #TODO: To be replaced with a universal write
     def getStoreTripAdvisorReviews(self, store_id, return_as_dataframe = True):
         if store_id == None:
             return None
@@ -208,7 +230,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    #TODO: To replace with universal raw getter
+    #TODO: To be replaced with a universal write
     def getStoreReviews(self, store_id, show_all = False, return_as_dataframe = True):
         gdf = self.getStoreGoogleReviews(store_id)
         gdf['source'] = "Google"
