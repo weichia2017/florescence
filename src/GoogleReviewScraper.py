@@ -18,23 +18,6 @@ DEFAULT_PULL = 100
 
 
 class GoogleReviewScraper:
-    """Scraper module for Scraping Data from Google Maps Reviews.
-
-    This scraper module will scrape from Google Maps and collect information based on a provided
-    URL specified by setURL() method. Because the Selenium Driver is running --headless mode, 
-    a Logger will record down all activity into 'logger.log' for tracking.
-
-    Typical usage example:
-        scraperObject = Scraper()
-        scraper.setURL(url="URL", name="Name")
-        scraper.sort_by_date()
-        offset = 0
-        LIMIT = 100
-        while offset <= LIMIT:
-            reviews = scraper.get_reviews(offset)
-            offset += reviews.length
-    """
-
     def __init__(self, debug=False):
         self.debug = debug
         self.driver = self.__get_driver()
@@ -52,31 +35,12 @@ class GoogleReviewScraper:
         return True
 
     def setURL(self, url, name=None):
-        """Sets the Selenium Driver to the provided URL
-
-        Sets the Selenium Driver to URL and load the page.
-
-        Args:
-            url: Required; a valid Google Maps URL.
-            name: Optional; Used for making logging clean.
-                If name is not set, URL will be logged.
-        """
         name = url if name == None else name
         self.logger.info('Attempting to load the Google Maps for '+name)
         self.driver.get(url)
         self.logger.info('Sucessfully navigated to '+name+' Google Maps page.')
 
     def sort_by_date(self):
-        """Sort the reviews by newest first
-
-        Have the Selenium Driver select 'Sort' button and then select 'Newest'
-        This method will attempt to sort by newest with the maximum of MAX_RETRY times.
-        If the method fails to sort, it will return a False boolean and the scrape should be terminated
-        as the reviews will be unsorted and only shows the more relevant reviews.
-
-        Returns:
-            A boolean if the Reviews has been sorted by Newest.
-        """
         wait = WebDriverWait(self.driver, MAX_WAIT)
         clicked = False
         tries = 0
@@ -104,21 +68,6 @@ class GoogleReviewScraper:
         return True
 
     def get_reviews(self, offset=0):
-        """Retrieve the reviews from the Google Maps Reviews
-
-        This method will scroll down and have the webpage fetch for reviews then retrieve 
-        the reviews between offset to the maxmium number of reviews visible on the webpage.
-        By using the returned list, you can get the length and add to the offset before 
-        running this method again to get the next batch of reviews.
-
-        Args:
-            offset: The starting point of the Scrape for Reviews
-
-        Returns:
-            A List of GoogleReview() objects. It will return reviews between
-            offset to the maximum number of reviews visible on the page.
-
-        """
         self.logger.info('Getting Review from Review '+str(offset)+' onwards.')
         self.__scroll()
         time.sleep(4)

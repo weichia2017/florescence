@@ -4,6 +4,7 @@ from DatabaseAccess import DataAccess
 import numpy as np
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
+
 class Processor:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
@@ -26,21 +27,25 @@ class Processor:
                 return None
         self.logger.info("Processing "+str(len(raw_df))+" Raw Reviews")
         df = __remove_translated(raw_df).reset_index()
+
         def vaderSent(text):
             analyzer = SentimentIntensityAnalyzer()
             vs = analyzer.polarity_scores(text)
             return f"{vs['neg']},{vs['neu']},{vs['pos']},{vs['compound']}"
         self.logger.info("Applying Vader Sentiment Analysis on Reviews")
         df['vader_score'] = np.vectorize(vaderSent)(df.review_text)
-        df[['negative','neutral','positive','compound']] = df.vader_score.str.split(",",expand=True).astype(float)
+        df[['negative', 'neutral', 'positive', 'compound']
+           ] = df.vader_score.str.split(",", expand=True).astype(float)
         self.logger.info("Vader Sentiment Analysis Completed")
-        rows = df[['review_id','source_id','negative','neutral','positive','compound']]
+        rows = df[['review_id', 'source_id', 'negative',
+                   'neutral', 'positive', 'compound']]
         self.logger.info("Inserting to Database")
         for row in rows.itertuples():
             try:
                 dao.writeSentiments(row)
             except:
-                self.logger.error("An error occurred for ("+ ','.join(row)+")")
+                self.logger.error(
+                    "An error occurred for (" + ','.join(row)+")")
             finally:
                 self.logger.info("Completed Database Insertions")
 

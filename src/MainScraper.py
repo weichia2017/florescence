@@ -32,7 +32,7 @@ class MainScraper:
                 if (row['googlereviews_url'] != ""):
                     self.logger.info("Executing Google Scraping Function")
                     self.__scrape_google(row, dao)
-                if (row['tripadvisor_url'] != ""):
+                if (row['tripadvisors_url'] != ""):
                     self.logger.info("Executing TripAdvisor Scraping Function")
                     self.__scrape_tripadvisor(row, dao)
         self.logger.info("Scrape completed")
@@ -52,7 +52,7 @@ class MainScraper:
                     reviews = scraper.get_reviews(n)
                     for r in reviews:
                         r.setStoreID(store_id)
-                        status = dao.writeGoogleReview(r)
+                        status = dao.writeRawReviews(r, 1)
                         if not status:
                             running = False
                             break
@@ -64,7 +64,7 @@ class MainScraper:
         dateUpdated = datetime.datetime.now().strftime("%Y:%m:%d")
         store_id = row['store_id']
         store_name = row['store_name']
-        store_url = row['tripadvisor_url']
+        store_url = row['tripadvisors_url']
         with TripAdvisorScraper(debug=self.debug_mode) as scraper:
             doesNotExistInDB = True
             scraper.setURL(url=store_url, name=store_name)
@@ -77,7 +77,7 @@ class MainScraper:
                 for review_object in list_of_review_objects:
                     review_object.store_name = store_name
                     review_object.retrieval_date = dateUpdated
-                    if not dao.writeTripAdvisorReview(review_object):
+                    if not dao.writeRawReviews(review_object, 2):
                         self.logger.info(
                             "Reviews scrape are all up to date. No (more) new Reviews found.")
                         doesNotExistInDB = False
@@ -87,5 +87,5 @@ class MainScraper:
                     if (nextButtonExist):
                         sleepTime = randrange(5, 15)
                         self.logger.info(
-                            "Sleeping for " + sleepTime + " seconds before next page")
+                            "Sleeping for " + str(sleepTime) + " seconds before next page")
                         time.sleep(sleepTime)
