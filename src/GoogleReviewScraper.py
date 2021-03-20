@@ -38,7 +38,7 @@ class GoogleReviewScraper:
         name = url if name == None else name
         self.logger.info('Attempting to load the Google Maps for '+name)
         self.driver.get(url)
-        self.logger.info('Sucessfully navigated to '+name+' Google Maps page.')
+        self.logger.info('Successfully navigated to '+name+' Google Maps page.')
 
     def sort_by_date(self):
         wait = WebDriverWait(self.driver, MAX_WAIT)
