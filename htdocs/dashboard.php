@@ -295,6 +295,8 @@ if( isset($_GET['storeID']) ){
     </div>
   </main>
   <script>
+
+   var hostname = "http://35.175.55.18:5000";
   
    function test(){
      console.log("hi")
@@ -333,7 +335,7 @@ if( isset($_GET['storeID']) ){
         };
         // request.setRequestHeader('Authorization', 'Bearer ' + token)
         request.setRequestHeader("Content-type", "application/JSON");
-        request.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+        request.setRequestHeader('Access-Control-Allow-Origin', '*');
         // request.withCredentials = false;
         request.send(values);
       });
@@ -342,7 +344,7 @@ if( isset($_GET['storeID']) ){
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       document.getElementById("myNav").style.display = "block";
-      let adjNounPairs = await makeRequest("http://35.175.55.18:5000/reviews/" + shopID, "GET", "");
+      let adjNounPairs = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
 
       dataPrepForAllOtherThanWordCloud(response);
@@ -419,7 +421,7 @@ if( isset($_GET['storeID']) ){
 
     //Temporary till we have user Login Feature
     async function getStoreName(){
-      let storeInfo = await makeRequest("http://35.175.55.18:5000/stores/" + shopID, "GET", "");
+      let storeInfo = await makeRequest(hostname + "/stores/" + shopID, "GET", "");
       document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
     }
 

@@ -162,7 +162,7 @@ function drawSentimentDonut(){
             // console.log(JSON.stringify(dataToBeSentToServer[0]))
 
 
-            let url = "http://35.175.55.18:5000/adj_noun_pairs/";
+            let url = hostname + "/adj_noun_pairs/";
             retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
           }
           // If empty just get the default values for all sentiments
@@ -170,7 +170,7 @@ function drawSentimentDonut(){
             let storeIDByUser = document.getElementById('getStoreID').value;
             let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-            let url = "http://35.175.55.18:5000/adj_noun_pairs/" + shopID;
+            let url = hostname + "/adj_noun_pairs/" + shopID;
             retrieveWordCloudNounAdjPairs(url,"GET","");
           }
           if(!d.isClicked || d.isClicked == undefined){

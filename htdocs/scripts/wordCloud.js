@@ -423,7 +423,7 @@ function drawWordcLOUD(w,h){
 // let storeIDByUser = document.getElementById('getStoreID').value;
 // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-let url = "http://35.175.55.18:5000/adj_noun_pairs/" + shopID;
+let url = hostname + "/adj_noun_pairs/" + shopID;
 
 $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
 // $(window).resize(resize);
