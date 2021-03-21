@@ -1,18 +1,18 @@
 
 function prepareSentimentDonut(total){
 
-  donutData=[]
+  let donutData=[]
   // total = sentimentDataForWordCloud[0].Positive.length + sentimentDataForWordCloud[0].Negative.length + sentimentDataForWordCloud[0].Neutral.length 
   // console.log(total)
   postiveLabelPercent  = 100/total *sentimentDataForWordCloud[0].Positive.length;
   negativeLabelPercent = 100/total *sentimentDataForWordCloud[0].Negative.length;
   neutralLabelPercent  = 100/total *sentimentDataForWordCloud[0].Neutral.length;
 
-  donutData.push({label  : postiveLabelPercent.toFixed(2) + '% Positive',
+  donutData.push({label  : postiveLabelPercent.toFixed(1) + '% Positive',
                   value: sentimentDataForWordCloud[0].Positive.length},
-                  {label  : negativeLabelPercent.toFixed(2) + '% Negative',
+                  {label  : negativeLabelPercent.toFixed(1) + '% Negative',
                   value: sentimentDataForWordCloud[0].Negative.length},
-                  {label  : neutralLabelPercent.toFixed(2) + '% Neutral',
+                  {label  : neutralLabelPercent.toFixed(1) + '% Neutral',
                   value: sentimentDataForWordCloud[0].Neutral.length})
 
   // console.log(donutData);
@@ -24,13 +24,13 @@ function color(key){
   if(key.includes("Positive"))
     return "#79a925";
   else if(key.includes("Negative")){
-    return "#f32c22";
+    return "#FF4136";
   }else{
-    return "#99bebe";
+    return "#AAAAAA";
   }
 }
 
-function drawSentimentDonut(){
+function drawSentimentDonut(donutData){
   class Donut {
       
     static get defaults() {
@@ -93,6 +93,7 @@ function drawSentimentDonut(){
       .append('path')
       .each(function(d) { d.outerRadius = outerRadius ;})
         .attr('d', arc)
+        .attr('id', d=>d.data.label.split(" ")[1]) //
         .style('fill', d => color(d.data.label))
         .on("click", function(d) {click(this, d,outerRadius, 150)})
         .on("mouseover", function(d) {mouseover(this,d, outerRadius + increaseOuterRadiusBy, 0)})
@@ -130,49 +131,77 @@ function drawSentimentDonut(){
       var valuesClicked = []
       function click(self,d,outerRadius, delay){
           d.isClicked = d.isClicked ? false : true;  
+
           
-          // console.log(valuesClicked);
-          if(!valuesClicked.includes(d.data.label.split(" ")[1])){
-            valuesClicked.push(d.data.label.split(" ")[1]);
-          }else{
-            let index = valuesClicked.indexOf(d.data.label.split(" ")[1]);
-            if (index > -1) {
-              valuesClicked.splice(index, 1);
-            }
+          if(self.id != 'Positive'){
+            // console.log("removing positive")
+            d3.select('#Positive')['_groups'][0][0]['__data__']['isClicked'] = false;
+            d3.select('#Positive')
+            .classed("word-hovered", true)
+            .transition()
+            .delay(delay)
+            .attrTween("d", function(d) {
+              var i = d3.interpolate(d.outerRadius, outerRadius);
+              return function(t) { d.outerRadius = i(t); return arc(d); };
+            })
+            .attr("stroke","none")
+            .attr("stroke-width",0);
           }
-        
-          // console.log(valuesClicked);
+
+          if(self.id != 'Negative'){
+            // console.log("removing negative")
+            d3.select('#Negative')['_groups'][0][0]['__data__']['isClicked'] = false;
+            d3.select('#Negative')
+            .classed("word-hovered", true)
+            .transition()
+            .delay(delay)
+            .attrTween("d", function(d) {
+              var i = d3.interpolate(d.outerRadius, outerRadius);
+              return function(t) { d.outerRadius = i(t); return arc(d); };
+            })
+            .attr("stroke","none")
+            .attr("stroke-width",0);
+          }
+
+          if(self.id != 'Neutral'){
+            // console.log("removing neutral")
+            d3.select('#Neutral')['_groups'][0][0]['__data__']['isClicked'] = false;
+            d3.select('#Neutral')
+            .classed("word-hovered", true)
+            .transition()
+            .delay(delay)
+            .attrTween("d", function(d) {
+              var i = d3.interpolate(d.outerRadius, outerRadius);
+              return function(t) { d.outerRadius = i(t); return arc(d); };
+            })
+            .attr("stroke","none")
+            .attr("stroke-width",0);
+          }
+    
+          // console.log(d.data.label.split(" ")[1])
           let dataToBeSentToServer = [{data:[]}];
-          // Check if array is empty
-          if(valuesClicked.length != 0){
+          
+          if(valuesClicked[0] == self.id){
+            valuesClicked = []
 
-            if(valuesClicked.length == 1){
-              // console.log(sentimentDataForWordCloud[0][valuesClicked[0]])
-              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]])
-            }
-            else if(valuesClicked.length == 2){
-              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]], 
-                                                ...sentimentDataForWordCloud[0][valuesClicked[1]],)
-            }
-            else{
-              dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][valuesClicked[0]], 
-                                                ...sentimentDataForWordCloud[0][valuesClicked[1]],
-                                                ...sentimentDataForWordCloud[0][valuesClicked[2]])
-            }
-            // console.log(JSON.stringify(dataToBeSentToServer[0]))
-
-
-            let url = hostname + "/adj_noun_pairs/";
-            retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
-          }
-          // If empty just get the default values for all sentiments
-          else{        
             let storeIDByUser = document.getElementById('getStoreID').value;
             let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
             let url = hostname + "/adj_noun_pairs/" + shopID;
             retrieveWordCloudNounAdjPairs(url,"GET","");
+
+          }else{
+            valuesClicked = []
+            valuesClicked.push(self.id)
+
+            dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
+
+            let url = hostname + "/adj_noun_pairs/";
+            retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
           }
+          
+          
+  
           if(!d.isClicked || d.isClicked == undefined){
             d3.select(self)
             .classed("word-hovered", true)
@@ -192,12 +221,14 @@ function drawSentimentDonut(){
               return function(t) { d.outerRadius = i(t); return arc(d); };
             });
           }
+
       }
 
       const legend = svg.append('g')
         .attr('class', 'legend')
         .attr('transform', 'translate(0,0)');
 
+      // legend.selectAll('g').data(console.log(data))
       const lg = legend.selectAll('g')
         .data(data)
         .enter()
@@ -217,6 +248,14 @@ function drawSentimentDonut(){
         .attr('x', 23)
         .attr('y', 15)
         .text(d => d.label);
+        
+      // lg.append('text')
+      //   .style('font-family', 'Georgia')
+      //   .style('font-size', '15px')
+      //   .attr('x', 23)
+      //   .attr('y', 17)
+      //   .text(d => d.value + " Reviews");
+      
 
       let offset = 0;
       lg.attr('transform', function(d, i) {
@@ -231,6 +270,8 @@ function drawSentimentDonut(){
     }
     render(){};
   }
+
+  // console.log(donutData)
 
   new Donut({
     element: 'body',
