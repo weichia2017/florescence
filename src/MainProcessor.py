@@ -1,5 +1,6 @@
+from datetime import datetime
 import Logger
-import traceback
+import traceback 
 from DatabaseAccess import DataAccess
 import numpy as np
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -42,7 +43,7 @@ class Processor:
         for row in rows.itertuples():
             with DataAccess() as dao:
                 try:
-                    dao.writeSentiments(row)
+                    dao.writeSentiments(row, datetime.now())
                 except:
                     self.logger.error("An error occurred for (" + ','.join(row)+")")
         self.logger.info("Sentiments Process completed")

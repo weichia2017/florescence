@@ -33,7 +33,7 @@ CREATE TABLE `florescence`.`sentiment_scores` (
   `neutral` float(6,4) DEFAULT NULL, 
   `positive` float(6,4) DEFAULT NULL, 
   `compound` float(6,4) DEFAULT NULL,
-  `review_date` date DEFAULT NULL,
+  `processed_date` date DEFAULT NULL,
   PRIMARY KEY (review_id, source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
