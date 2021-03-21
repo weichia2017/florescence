@@ -22,7 +22,7 @@ class Processor:
         with DataAccess() as dao:
             raw_df = dao.getRawReviews_UnProcessed()
             if raw_df.empty:
-                self.logger.info("No reviews to process, halting processing")
+                self.logger.info("No new review to generate sentiments, halting processing")
                 return None
         self.logger.info("Processing "+str(len(raw_df))+" Raw Reviews")
         df = self.__remove_translated(raw_df).reset_index()
@@ -42,12 +42,10 @@ class Processor:
         for row in rows.itertuples():
             with DataAccess() as dao:
                 try:
-                        dao.writeSentiments(row)
+                    dao.writeSentiments(row)
                 except:
-                    self.logger.error(
-                        "An error occurred for (" + ','.join(row)+")")
-                finally:
-                    self.logger.info("Completed Database (" + ','.join(row)+")"))
+                    self.logger.error("An error occurred for (" + ','.join(row)+")")
+        self.logger.info("Sentiments Process completed")
 
     def __remove_translated(self, df):
         def __function(input_text):
