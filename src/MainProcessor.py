@@ -4,7 +4,6 @@ from DatabaseAccess import DataAccess
 import numpy as np
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-
 class Processor:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
@@ -26,7 +25,7 @@ class Processor:
                 self.logger.info("No reviews to process, halting processing")
                 return None
         self.logger.info("Processing "+str(len(raw_df))+" Raw Reviews")
-        df = __remove_translated(raw_df).reset_index()
+        df = self.__remove_translated(raw_df).reset_index()
 
         def vaderSent(text):
             analyzer = SentimentIntensityAnalyzer()
@@ -41,13 +40,14 @@ class Processor:
                    'neutral', 'positive', 'compound']]
         self.logger.info("Inserting to Database")
         for row in rows.itertuples():
-            try:
-                dao.writeSentiments(row)
-            except:
-                self.logger.error(
-                    "An error occurred for (" + ','.join(row)+")")
-            finally:
-                self.logger.info("Completed Database Insertions")
+            with DataAccess() as dao:
+                try:
+                        dao.writeSentiments(row)
+                except:
+                    self.logger.error(
+                        "An error occurred for (" + ','.join(row)+")")
+                finally:
+                    self.logger.info("Completed Database (" + ','.join(row)+")"))
 
     def __remove_translated(self, df):
         def __function(input_text):

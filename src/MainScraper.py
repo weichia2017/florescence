@@ -7,8 +7,7 @@ from GoogleReviewScraper import GoogleReviewScraper
 from TripAdvisorScraper import TripAdvisorScraper
 from DatabaseAccess import DataAccess
 
-
-class MainScraper:
+class Scraper:
     def __init__(self, debug_mode=False):
         self.debug_mode = debug_mode
         self.logger = Logger.get_logger(__name__)
