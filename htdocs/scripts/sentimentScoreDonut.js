@@ -101,15 +101,17 @@ function drawSentimentDonut(donutData){
        
       function mouseover(self,d,outerRadius, delay){
         // console.log('MOUSEOVER')
-          d3.select(self)
-          .transition()
-          .delay(delay)
-          .attrTween("d", function(d) {
-            var i = d3.interpolate(d.outerRadius, outerRadius);
-            return function(t) { d.outerRadius = i(t); return arc(d); };
-          })
-          .attr("stroke","black")
-          .attr("stroke-width",1);
+        d3.select(self)
+        .transition()
+        .delay(delay)
+        .attrTween("d", function(d) {
+          var i = d3.interpolate(d.outerRadius, outerRadius);
+          return function(t) { d.outerRadius = i(t); return arc(d); };
+        })
+        .attr("stroke","black")
+        .attr("stroke-width",1);
+
+        showToolTip(d)
       }
 
       function mouseout(self, d, outerRadius, delay){
@@ -126,102 +128,136 @@ function drawSentimentDonut(donutData){
           .attr("stroke","none")
           .attr("stroke-width",0);
         }
+
+        hideToolTip()
       }
 
       var valuesClicked = []
       function click(self,d,outerRadius, delay){
-          d.isClicked = d.isClicked ? false : true;  
+        d.isClicked = d.isClicked ? false : true;  
 
-          
-          if(self.id != 'Positive'){
-            // console.log("removing positive")
-            d3.select('#Positive')['_groups'][0][0]['__data__']['isClicked'] = false;
-            d3.select('#Positive')
-            .classed("word-hovered", true)
-            .transition()
-            .delay(delay)
-            .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius);
-              return function(t) { d.outerRadius = i(t); return arc(d); };
-            })
-            .attr("stroke","none")
-            .attr("stroke-width",0);
-          }
+        if(self.id != 'Positive'){
+          // console.log("removing positive")
+          d3.select('#Positive')['_groups'][0][0]['__data__']['isClicked'] = false;
+          d3.select('#Positive')
+          .classed("word-hovered", true)
+          .transition()
+          .delay(delay)
+          .attrTween("d", function(d) {
+            var i = d3.interpolate(d.outerRadius, outerRadius);
+            return function(t) { d.outerRadius = i(t); return arc(d); };
+          })
+          .attr("stroke","none")
+          .attr("stroke-width",0);
+        }
 
-          if(self.id != 'Negative'){
-            // console.log("removing negative")
-            d3.select('#Negative')['_groups'][0][0]['__data__']['isClicked'] = false;
-            d3.select('#Negative')
-            .classed("word-hovered", true)
-            .transition()
-            .delay(delay)
-            .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius);
-              return function(t) { d.outerRadius = i(t); return arc(d); };
-            })
-            .attr("stroke","none")
-            .attr("stroke-width",0);
-          }
+        if(self.id != 'Negative'){
+          // console.log("removing negative")
+          d3.select('#Negative')['_groups'][0][0]['__data__']['isClicked'] = false;
+          d3.select('#Negative')
+          .classed("word-hovered", true)
+          .transition()
+          .delay(delay)
+          .attrTween("d", function(d) {
+            var i = d3.interpolate(d.outerRadius, outerRadius);
+            return function(t) { d.outerRadius = i(t); return arc(d); };
+          })
+          .attr("stroke","none")
+          .attr("stroke-width",0);
+        }
 
-          if(self.id != 'Neutral'){
-            // console.log("removing neutral")
-            d3.select('#Neutral')['_groups'][0][0]['__data__']['isClicked'] = false;
-            d3.select('#Neutral')
-            .classed("word-hovered", true)
-            .transition()
-            .delay(delay)
-            .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius);
-              return function(t) { d.outerRadius = i(t); return arc(d); };
-            })
-            .attr("stroke","none")
-            .attr("stroke-width",0);
-          }
-    
-          // console.log(d.data.label.split(" ")[1])
-          let dataToBeSentToServer = [{data:[]}];
-          
-          if(valuesClicked[0] == self.id){
-            valuesClicked = []
-
-            let storeIDByUser = document.getElementById('getStoreID').value;
-            let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
-
-            let url = hostname + "/adj_noun_pairs/" + shopID;
-            retrieveWordCloudNounAdjPairs(url,"GET","");
-
-          }else{
-            valuesClicked = []
-            valuesClicked.push(self.id)
-
-            dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
-
-            let url = hostname + "/adj_noun_pairs/";
-            retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
-          }
-          
-          
+        if(self.id != 'Neutral'){
+          // console.log("removing neutral")
+          d3.select('#Neutral')['_groups'][0][0]['__data__']['isClicked'] = false;
+          d3.select('#Neutral')
+          .classed("word-hovered", true)
+          .transition()
+          .delay(delay)
+          .attrTween("d", function(d) {
+            var i = d3.interpolate(d.outerRadius, outerRadius);
+            return function(t) { d.outerRadius = i(t); return arc(d); };
+          })
+          .attr("stroke","none")
+          .attr("stroke-width",0);
+        }
   
-          if(!d.isClicked || d.isClicked == undefined){
-            d3.select(self)
-            .classed("word-hovered", true)
-            .transition()
-            .delay(delay)
-            .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius);
-              return function(t) { d.outerRadius = i(t); return arc(d); };
-            });
-          }else{
-            d3.select(self)
-            .classed("word-hovered", true)
-            .transition()
-            .delay(delay)
-            .attrTween("d", function(d) {
-              var i = d3.interpolate(d.outerRadius, outerRadius+increaseOuterRadiusBy );
-              return function(t) { d.outerRadius = i(t); return arc(d); };
-            });
-          }
+        // console.log(d.data.label.split(" ")[1])
+        let dataToBeSentToServer = [{data:[]}];
+        
+        if(valuesClicked[0] == self.id){
+          valuesClicked = []
 
+          let storeIDByUser = document.getElementById('getStoreID').value;
+          let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+
+          let url = hostname + "/adj_noun_pairs/" + shopID;
+          retrieveWordCloudNounAdjPairs(url,"GET","");
+
+        }
+        else{
+          valuesClicked = []
+          valuesClicked.push(self.id)
+
+          dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
+
+          let url = hostname + "/adj_noun_pairs/";
+          retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
+        }
+        
+    
+        if(!d.isClicked || d.isClicked == undefined){
+          d3.select(self)
+          .classed("word-hovered", true)
+          .transition()
+          .delay(delay)
+          .attrTween("d", function(d) {
+            var i = d3.interpolate(d.outerRadius, outerRadius);
+            return function(t) { d.outerRadius = i(t); return arc(d); };
+          });
+        }else{
+          d3.select(self)
+          .classed("word-hovered", true)
+          .transition()
+          .delay(delay)
+          .attrTween("d", function(d) {
+            var i = d3.interpolate(d.outerRadius, outerRadius+increaseOuterRadiusBy );
+            return function(t) { d.outerRadius = i(t); return arc(d); };
+          });
+        }
+      }
+      
+      // Show Tooltip
+      function showToolTip(d, i) {
+        let addSpaceFromLeft = 0
+        if(d.data.value < 10){
+          addSpaceFromLeft = 10
+        }else if(d.data.value < 100){
+          addSpaceFromLeft = 5
+        }else if(d.data.value < 1000){
+          addSpaceFromLeft = 2
+        }
+
+        var tooltip = svg.append("g")
+          .attr("class", "ToolTip")
+              
+          tooltip.append("rect")
+          .attr("width", 130)
+          .attr("height", 35)
+          .attr("x",140)
+          .attr("y",170)
+          .attr("fill", "black")
+          .style("opacity", 0.75);
+
+          tooltip.append("text")
+          .attr("x",145+addSpaceFromLeft)
+          .attr("y",194)
+          .attr("fill","white")
+          .text(d.data.value + " Review(s)");
+      }
+      
+      // Hide the Tooltip
+      function hideToolTip(d, i) {
+        svg.select(".ToolTip").remove();
       }
 
       const legend = svg.append('g')
@@ -247,15 +283,7 @@ function drawSentimentDonut(donutData){
         .style('font-size', '15px')
         .attr('x', 23)
         .attr('y', 15)
-        .text(d => d.label);
-        
-      // lg.append('text')
-      //   .style('font-family', 'Georgia')
-      //   .style('font-size', '15px')
-      //   .attr('x', 23)
-      //   .attr('y', 17)
-      //   .text(d => d.value + " Reviews");
-      
+        .text(d => d.label);      
 
       let offset = 0;
       lg.attr('transform', function(d, i) {
