@@ -61,8 +61,6 @@ class Processor:
         self.logger.info(str(len(raw_df))+" reviews pending for Adjective-Noun Analysis")
         df = self.__remove_translated(raw_df).reset_index()
         self.logger.info("Loading Resources and Setting Parameters")
-        num_of_noun = 10
-        num_of_adj_each = 3
         nlp = spacy.load('en_core_web_sm')
         lemmatizer = nlp.get_pipe("lemmatizer")
         def spcy(row):
