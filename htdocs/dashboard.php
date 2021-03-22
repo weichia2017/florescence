@@ -195,7 +195,12 @@ if( isset($_GET['storeID']) ){
             <!-- Create a div where the total number of reviews will be -->
             <div class="float-left ml-1" >Total Reviews:</div> 
             <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex" title="Total Reviews" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+            <a tabindex="0" class="float-right popoverzindex" 
+                title="Total Reviews" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="focus" 
+                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews.">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
@@ -213,7 +218,12 @@ if( isset($_GET['storeID']) ){
             </span>
             <div class="float-left ml-1" >Overall Sentiment Score:</div> 
             <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex"  title="Overall Sentiment Score" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+            <a tabindex="0" class="float-right popoverzindex"  
+                title="Overall Sentiment Score" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="focus" 
+                data-content="Higher the number of stars,the more positive customers feel about the store.">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
@@ -235,7 +245,16 @@ if( isset($_GET['storeID']) ){
             </span>
             <div class="float-left ml-1" >Sentiment Score:</div> 
             <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex"  title="Sentiment Score" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+            <a tabindex="0" class="float-right popoverzindex"  
+                title="Sentiment Score" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="focus" 
+                data-content="Proportion of positive, negative and neutral reviews (in terms of percent).
+                <ul>
+                  <li>Hovering over the donut chart will display the number of reviews for each sentiment </li>
+                  <li>Clicking on the donut(E.g. Positive), brings up the most frequent noun-adjectives pairs for those reviews (E.g.positive reviews).</li>
+                </ul>">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
@@ -256,7 +275,18 @@ if( isset($_GET['storeID']) ){
             </span>
             <div class="float-left ml-1">Word Cloud:</div> 
             <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex"  title="Word Cloud" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+            <a tabindex="0" class="float-right popoverzindex"  
+                title="Word Cloud" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="focus" 
+                data-content="Displays the most frequent nouns with their most frequent adjectives(descriptors).
+                  <ul>
+                    <li>Nouns are the bigger words on the right</li>
+                    <li>Adjectives(Descriptors) are the smaller words on the left</li>
+                    <li>Clicking on the adjectives(descriptors), allow users to view the review(s) with those noun and adjectives pairs</li>
+                  </ul>
+                  ">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
@@ -301,7 +331,7 @@ if( isset($_GET['storeID']) ){
                 <span class="ml-3 highLightedNoun float-left">Noun</span>
               </div>
             </div>
-            
+
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
                   onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
                   class="material-icons mr-2 pointer">
@@ -331,7 +361,18 @@ if( isset($_GET['storeID']) ){
             </span>
             <div class="float-left ml-1" >Sentiment Over Time:</div> 
             <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex"  title="Sentiment Over Time" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+            <a tabindex="0" class="float-right popoverzindex"  
+                title="Sentiment Over Time" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="focus" 
+                data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                  <ul>
+                    <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                    <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                    <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                    <li>Clicking on a particular stacked bar shows the review(s) for that sentiment on that particular month.</li>
+                  </ul>">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
@@ -395,7 +436,12 @@ if( isset($_GET['storeID']) ){
 
     // Popover
     $(document).ready(function(){
-        $('[data-toggle="popover"]').popover();   
+        $('[data-toggle="popover"]').popover({ 
+      html : true, 
+      content: function() {
+        return $('#popover_content_wrapper').html();
+      }
+    });   
     });
   
     // function test(){
