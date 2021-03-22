@@ -86,6 +86,7 @@ function drawSentimentDonut(donutData){
       let increaseOuterRadiusBy = 8;
       svg.append('g')
         .attr('class', 'arc')
+        .attr('class', 'pointer')
         .attr('transform', `translate(${width/2},${height/2})`)
         .selectAll('path')
         .data(pie(data))

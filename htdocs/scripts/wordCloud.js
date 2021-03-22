@@ -232,9 +232,6 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
   document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
   document.getElementById("displayLegend").style.display = "none";
-  window.scroll({
-    behavior: 'smooth'
-  });
   
   chosenReviews.sort(function(a,b){
     return new Date(b.review_date) - new Date(a.review_date);
