@@ -43,6 +43,7 @@ CREATE TABLE `florescence`.`adj_noun_pairs` (
   `source_id` int(11) NOT NULL,
   `noun` varchar(255) NOT NULL,
   `adj` varchar(255) NOT NULL,
+  `processed_date` date DEFAULT NULL,
   PRIMARY KEY (review_id, source_id, pair_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

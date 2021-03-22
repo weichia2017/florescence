@@ -32,6 +32,8 @@ class DataAccess:
         self.logger.handlers.clear()
         return True
 
+    ## Store Information Functions
+    
     def getStores(self, return_as_dataframe = True):
         query = 'SELECT * FROM `stores`'
         output = self.__executeSelectQuery(query)
@@ -55,20 +57,7 @@ class DataAccess:
             df.set_index('store_id', inplace=True)
             return df
 
-    def writeRawReviews(self, review, source_id):
-        query = '''
-            INSERT INTO `raw_reviews` 
-            (`review_id`, `source_id`, `store_id`, `review_text`, `review_date`, `retrieval_date`) 
-            VALUES 
-            (%s, %s, %s, %s, %s, %s)
-            '''
-        args = (review.review_id,
-                source_id,
-                review.store_id,
-                review.review_text, 
-                review.review_date,  
-                review.retrieval_date)
-        return self.__executeInsertQuery(query, args)
+    ## Sentiment Functions
     
     def writeSentiments(self, row, datetime):
         query = '''
@@ -100,40 +89,49 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
         
-    #TODO: To be replaced with a universal write
-    def getAllGoogleReviews(self, return_as_dataframe = True):
-        query = 'SELECT * FROM `google_reviews`'
+    def getRawReviews_UnProcessed_Sentiments(self, return_as_dataframe = True):
+        query = '''
+            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
+            AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
+        '''
         output = self.__executeSelectQuery(query)
+        if len(output) == 0:
+            return pandas.DataFrame()
         if not return_as_dataframe:
             return output
         else:
-            df = pandas.DataFrame(output, columns = GOOGLE_REVIEW_HEADER)
+            df = pandas.DataFrame(output)
             df.set_index('review_id', inplace=True)
             return df
-        
-    #TODO: To be replaced with a universal write
-    def getAllTripAdvisorReviews(self, return_as_dataframe = True):
-        query = 'SELECT * FROM `tripadvisor_reviews`'
-        output = self.__executeSelectQuery(query)
+            
+    ## Adjective Noun Pairs Functions
+    
+    def writeAdjNounPairs(self, row, datetime):
+        query = '''
+            INSERT INTO `adj_noun_pairs` (`pair_id`, `review_id`, `source_id`, `noun`, `adj`, `processed_date`) 
+            VALUES (NULL, %s, %s, %s, %s, %s)
+        '''
+        args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
+        return self.__executeInsertQuery(query, args)
+    
+    def getAdjNounPairs(self, store_id, return_as_dataframe = True):
+        query = '''
+        SELECT anp.review_id, anp.source_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
+            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE rr.store_id = 1
+            '''
+        args = (store_id,)
+        output = self.__executeSelectQuery(query, args)
         if not return_as_dataframe:
             return output
         else:
-            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
-            df.set_index('review_id', inplace=True)
+            df = pandas.DataFrame(output)
             return df
     
-    def getRawReviews(self, return_as_dataframe = True):
-        query = 'SELECT * FROM raw_reviews WHERE review_text != ""'
-        output = self.__executeSelectQuery(query)
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
-            df.set_index('review_id', inplace=True)
-            return df
-        
-    def getRawReviews_UnProcessed(self, return_as_dataframe = True):
-        query = 'SELECT * FROM raw_reviews rr WHERE rr.review_text != "" AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)'
+    def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe = True):
+        query = '''
+            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
+            AND NOT EXISTS (SELECT 1 FROM adj_noun_pairs ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
+        '''
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
             return pandas.DataFrame()
@@ -144,19 +142,33 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
         
-#     #TODO: To be replaced with a universal write
-#     def getAllReviews(self, show_all = False, return_as_dataframe = True):
-#         gdf = self.getAllGoogleReviews()
-#         gdf['source'] = "Google"
-#         tdf = self.getAllTripAdvisorReviews()
-#         tdf['source'] = "Tripadvisor"
-#         df = pandas.concat([gdf,tdf])
-#         if not show_all:
-#             df = df[SHARED_HEADER]
-#         if return_as_dataframe:        
-#             return df
-#         else:
-#             return df.reset_index().values.tolist()
+    ## Review Functions
+    
+    def writeRawReviews(self, review, source_id):
+        query = '''
+            INSERT INTO `raw_reviews` 
+            (`review_id`, `source_id`, `store_id`, `review_text`, `review_date`, `retrieval_date`) 
+            VALUES 
+            (%s, %s, %s, %s, %s, %s)
+            '''
+        args = (review.review_id,
+                source_id,
+                review.store_id,
+                review.review_text, 
+                review.review_date,  
+                review.retrieval_date)
+        return self.__executeInsertQuery(query, args)
+   
+    def getRawReviews(self, return_as_dataframe = True):
+        query = 'SELECT * FROM raw_reviews WHERE review_text != ""'
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output, columns = TRIP_ADVISOR_HEADER)
+            df.set_index('review_id', inplace=True)
+            return df
+        
         
     #TODO: To be replaced with a universal write
     def getStoreGoogleReviews(self, store_id, return_as_dataframe = True):
