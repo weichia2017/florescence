@@ -47,12 +47,3 @@ CREATE TABLE `florescence`.`adj_noun_pairs` (
   PRIMARY KEY (review_id, source_id, pair_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `florescence`.`adj_noun_pairs` ( 
-  `pair_id` INT(11) NOT NULL AUTO_INCREMENT, 
-  `review_id` VARCHAR(255) NOT NULL, 
-  `source_id` INT(11) NOT NULL , 
-  `noun` VARCHAR(255) NOT NULL , 
-  `adj` VARCHAR(255) NOT NULL , 
-  PRIMARY KEY (pair_id, review_id, source_id)
-) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
-
