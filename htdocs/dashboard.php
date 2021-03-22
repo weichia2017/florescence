@@ -180,8 +180,12 @@ if( isset($_GET['storeID']) ){
     </form> -->
     <input type="hidden" value=<?= $storeID?>  id="getStoreID">
 
-    <div class="container">
+    <div class="container mb-5">
+      <!-- ROW 1 -->
       <div class="row">
+        <!-- ====================== -->
+        <!--     TOTAL REVIEWS      -->
+        <!-- ====================== -->
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
           <div class="lead">
             <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
@@ -199,7 +203,9 @@ if( isset($_GET['storeID']) ){
             <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
           </div>
         </div>
-
+        <!-- ========================= -->   
+        <!--  OVERALL SENTIMENT SCORE  -->
+        <!-- ========================= -->
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
           <div class="lead">
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -217,7 +223,11 @@ if( isset($_GET['storeID']) ){
         </div>
       </div>
 
+      <!-- ROW 2 -->
       <div class="row">
+        <!-- ========================= -->   
+        <!--      SENTIMENT SCORE      -->
+        <!-- ========================= -->
         <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
           <div class="lead">
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -235,6 +245,9 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
 
+        <!-- ========================= -->   
+        <!--        WORD CLOUD         -->
+        <!-- ========================= -->
         <div class="col-lg-7 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
           <div class="lead">
             <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
@@ -267,6 +280,9 @@ if( isset($_GET['storeID']) ){
         </div>
       </div>
 
+      <!-- ================================ -->   
+      <!--   WORD CLOUD REVIEWS CONTAINER   -->
+      <!-- ================================ -->
       <div class="row" id="wordCloudReviewsContainer">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
           
@@ -279,15 +295,13 @@ if( isset($_GET['storeID']) ){
               <span class="lead float-left">
                 Selected Reviews:
                </span>
-           
+              <!-- Legend for Noun Adj Highlted colors -->
               <div id="displayLegend" class="float-left">
                 <span class="ml-3 highLightedAdj float-left">Adj</span>
                 <span class="ml-3 highLightedNoun float-left">Noun</span>
               </div>
             </div>
-
-           
-
+            
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
                   onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
                   class="material-icons mr-2 pointer">
@@ -304,7 +318,11 @@ if( isset($_GET['storeID']) ){
         </div>
       </div>
 
+      <!-- ROW 3 -->
       <div class="row">
+        <!-- ================================ -->   
+        <!--    SENTIMENT OVER TIME CHART     -->
+        <!-- ================================ -->
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
           <div class="lead">
             <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
@@ -328,14 +346,16 @@ if( isset($_GET['storeID']) ){
             <!-- <hr> -->
             <!-- <div class="col-12 border"></div> -->
             <div id="sentimentOverTimeContainerDiv">
-              <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400"></svg>
+              <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400">
+                <!-- SOT chart populates here -->
+              </svg>
             </div>
-            
-            
           </div>
         </div>
       </div>
-
+      <!-- ================================ -->   
+      <!--      SOT REVIEWS CONTAINER       -->
+      <!-- ================================ -->
       <div class="row" id="sentimentReviewsContainer">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
           <div class="lead">
