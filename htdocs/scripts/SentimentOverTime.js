@@ -90,8 +90,8 @@ $(window).resize(resizeSentimentOverTime);
 /* 
 *   Each time the window gets resized, 
 *   1. get the new width and height of the container
-*   2. remove inner HTML of word cloud
-*   3. draw a new wordcloud
+*   2. remove inner HTML of sentiment over time chart
+*   3. draw a new sentiment over time chart
 */ 
 function resizeSentimentOverTime(){
     w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
@@ -118,7 +118,7 @@ function displayReviewsBelowSentimentOverTime(chosenReviews){
 
     chosenReviews.sort(function(a,b){
         return new Date(b.review_date) - new Date(a.review_date);
-      });
+    });
 
     for (x in chosenReviews){
         let formattedDate = new Date(chosenReviews[x].review_date);
@@ -168,7 +168,7 @@ function chart(csv,w,h) {
 		.attr("class", "y-axis")
 
 	var z = d3.scaleOrdinal()
-		.range(["#79a925", "#f32c22", "#99bebe"])
+		.range(["#79a925", "#FF4136", "#AAAAAA"])
 		.domain(keys);
 
 	update(d3.select("#year").property("value"), 0)
