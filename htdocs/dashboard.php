@@ -30,6 +30,11 @@ if( isset($_GET['storeID']) ){
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 
+    <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
+    <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js"
+    data-seamless></script>
+
     <!-- Load d3-cloud from scripts folder -->
     <script src="scripts/d3.layout.cloud.js"></script>
 
