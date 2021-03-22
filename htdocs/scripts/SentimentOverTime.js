@@ -182,12 +182,13 @@ function chart(csv,w,h) {
 			return d
 		})
 
-		y.domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice();
-
+        // As identified values 7 and below produce floats, thus if value is below 8 we set max to be 8
+        max = d3.max(data, d => d3.sum(keys, k => +d[k]));
+        max = max < 8 ? 8 : max;
+		y.domain([0, max]);
         
 		svg.selectAll(".y-axis").transition().duration(speed)
-			.call(d3.axisLeft(y).ticks(null, "s"))
-
+			.call(d3.axisLeft(y).ticks(null,'s'))
 
 		data.sort(d3.select("#sort").property("checked")
 			? (a, b) => b.total - a.total
