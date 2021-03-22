@@ -110,7 +110,7 @@ function drawSentimentDonut(donutData){
         })
         .attr("stroke","black")
         .attr("stroke-width",1);
-
+        
         showToolTip(d)
       }
 
@@ -181,9 +181,11 @@ function drawSentimentDonut(donutData){
           .attr("stroke-width",0);
         }
   
-        // console.log(d.data.label.split(" ")[1])
+        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+        document.getElementById("wordCloudContainer").style.display             = "block";
+
         let dataToBeSentToServer = [{data:[]}];
-        
+        // Show all reviews wordCloud if nothing selected
         if(valuesClicked[0] == self.id){
           valuesClicked = []
 
@@ -192,16 +194,38 @@ function drawSentimentDonut(donutData){
 
           let url = hostname + "/adj_noun_pairs/" + shopID;
           retrieveWordCloudNounAdjPairs(url,"GET","");
+          hideToolTip() 
 
         }
+        // Show just the wordCloud for selected sentiment
         else{
+          document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
+
           valuesClicked = []
           valuesClicked.push(self.id)
-
-          dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
-
-          let url = hostname + "/adj_noun_pairs/";
-          retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
+          if(sentimentDataForWordCloud[0][self.id].length > 10){
+            dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
+            let url = hostname + "/adj_noun_pairs/";
+            retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
+          }
+          else{
+            // console.log(sentimentDataForWordCloud[0][self.id])
+            selectedReview = sentimentDataForWordCloud[0][self.id] //the main variable is in the first few lines of dashboard.php
+            console.log("throw warning")
+            document.getElementById("wordCloudContainer").style.display          = "none";
+            document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
+            `<!-- Triangle with exclamation icon -->
+            <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 40%;left: 46%;" class="material-icons">
+                  warning_amber  
+            </div>
+            <!-- Warning message that goes along with the above icon -->
+            <div class='ml-5 mr-5 text-center' style='position: absolute;top: 52%'>
+              Not enough reviews to display wordcloud. 
+              Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
+               to view the ${sentimentDataForWordCloud[0][self.id].length} ${(self.id).toLowerCase()} reviews instead
+            </div>`
+            document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "block";
+          }
         }
         
     
@@ -213,7 +237,9 @@ function drawSentimentDonut(donutData){
           .attrTween("d", function(d) {
             var i = d3.interpolate(d.outerRadius, outerRadius);
             return function(t) { d.outerRadius = i(t); return arc(d); };
-          });
+          })
+          .attr("stroke","none")
+          .attr("stroke-width",0);
         }else{
           d3.select(self)
           .classed("word-hovered", true)

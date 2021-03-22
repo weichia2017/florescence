@@ -90,7 +90,7 @@ if( isset($_GET['storeID']) ){
           font-weight: normal;
         }
       .word-hovered {
-          fill: teal;
+          /* fill: teal; */
           cursor: pointer;
           /* font-weight: bold; */
         }
@@ -130,11 +130,22 @@ if( isset($_GET['storeID']) ){
         height:400px;
         overflow-y: scroll;
       }
-      .closeReviews{
+      .pointer{
         cursor: pointer;
       }
-      .highLightedText{
-        background-color: #FFFF00
+
+      .highLightedNoun{
+        /* Olive */
+        background-color: #3D9970;
+        padding: 0.1em 0.1em;
+        /* color:white */
+      }
+
+      .highLightedAdj{
+        /* Teal */
+        padding: 0.1em 0.1em;
+        background-color: #39CCCC;
+        /* color:white */
       }
     }
     </style>
@@ -155,7 +166,6 @@ if( isset($_GET['storeID']) ){
   <main class="container" style="z-index: 0">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Dashboard</h1>
-
       <!-- <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button> -->
     </div>
 
@@ -175,6 +185,12 @@ if( isset($_GET['storeID']) ){
             </span>
             <!-- Create a div where the total number of reviews will be -->
             <div class="float-left ml-1" >Total Reviews:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex" title="Total Reviews" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
             <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
           </div>
         </div>
@@ -185,6 +201,12 @@ if( isset($_GET['storeID']) ){
               auto_graph
             </span>
             <div class="float-left ml-1" >Overall Sentiment Score:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex"  title="Overall Sentiment Score" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
             <div class="container float-left ml-3" id="overallSentimentScore"></div>
           </div>
         </div>
@@ -197,6 +219,12 @@ if( isset($_GET['storeID']) ){
               tag_faces
             </span>
             <div class="float-left ml-1" >Sentiment Score:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex"  title="Sentiment Score" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
             <!-- Create a div where the sentimentScore will be -->
             <div class="container float-left" id="sentimentScoreContainer"></div>
           </div>
@@ -208,38 +236,66 @@ if( isset($_GET['storeID']) ){
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
               cloud 
             </span>
-            <div class="float-left ml-1" >Word Cloud:</div> 
+            <div class="float-left ml-1">Word Cloud:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex"  title="Word Cloud" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
           </div>
           <!-- Create a div where the wordcloud will be -->
-          <div class="container float-left" id="wordCloudContainer"></div>
+          <div class="container float-left" id="wordCloudContainer">
+            <!-- Noun Adj's displayed in here -->
+          </div>
+
           <!-- White background to the empty space of div when spinner is loading -->
           <div class="wordCloudWhiteBackground"></div>
-          <!-- Spinner -->
+         
+          <!-- The yellow exclamaintion mark triangle along with the text  -->
+          <div id="wordCloudNotEnoughWordsWarning">
+            <!-- values populated in sentimentScoreDonut -->
+          </div>
+          
+          <!-- Spinner that only shows when loading -->
           <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinner" role="status" ></div>
         </div>
       </div>
 
       <div class="row" id="wordCloudReviewsContainer">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-          <div class="lead">
+          
+          <div class="d-flex justify-content-between">
             <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-              rate_review
-            </span>
+            <div >
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                rate_review
+              </span>
+              <span class="lead float-left">
+                Selected Reviews:
+               </span>
+           
+              <div id="displayLegend" class="float-left">
+                <span class="ml-3 highLightedAdj float-left">Adj</span>
+                <span class="ml-3 highLightedNoun float-left">Noun</span>
+              </div>
+            </div>
+
+           
+
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
                   onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
-                  class="material-icons float-right mr-2 closeReviews">
+                  class="material-icons mr-2 pointer">
             close
             </span>
-            <div>Selected Reviews:</div> 
-          
-            <hr>
-            <!-- <div class="col-12 border"></div> -->
-            <div id="wordCloudClickedReviews" class="scrollReviews">
-            <!-- Reviews gets Populated Here -->
-            </div>
-            <hr>
           </div>
+
+            <hr>
+              <!-- <div class="col-12 border"></div> -->
+              <div id="wordCloudClickedReviews" class="scrollReviews">
+              <!-- Reviews gets Populated Here -->
+              </div>
+              <hr>
         </div>
       </div>
 
@@ -251,6 +307,12 @@ if( isset($_GET['storeID']) ){
               timeline
             </span>
             <div class="float-left ml-1" >Sentiment Over Time:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex"  title="Sentiment Over Time" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="This is about...">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
             <br>
             <hr>
             <div class="ml-3"> 
@@ -278,7 +340,7 @@ if( isset($_GET['storeID']) ){
             </span>
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
                   onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
-                  class="material-icons float-right mr-2 closeReviews">
+                  class="material-icons float-right mr-2 pointer">
             close
             </span>
             <div>Selected Reviews:</div> 
@@ -294,18 +356,32 @@ if( isset($_GET['storeID']) ){
 
     </div>
   </main>
+
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+
   <script>
 
-   var hostname = "http://35.175.55.18:5000";
-  
-   function test(){
-     console.log("hi")
-    }
+    var hostname = "http://35.175.55.18:5000";
+    selectedReview='';
 
-    document.getElementById("wordCloudReviewsContainer").style.display = "none";
-    document.getElementById("sentimentReviewsContainer").style.display = "none";
-    document.getElementById("wordCloudContainer").style.display        = "block";
-    document.getElementById("wordCloudContainerSpinner").style.display = "none";
+    // Popover
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();   
+    });
+  
+    // function test(){
+    //  console.log("hi")
+    // }
+
+    document.getElementById("wordCloudReviewsContainer").style.display      = "none";
+    document.getElementById("sentimentReviewsContainer").style.display      = "none";
+    document.getElementById("wordCloudContainer").style.display             = "block";
+    document.getElementById("wordCloudContainerSpinner").style.display      = "none";
+    document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
     
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
@@ -341,11 +417,14 @@ if( isset($_GET['storeID']) ){
       });
     }
 
+    // The main call to retrieve values for all charts other than wordcloud
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       document.getElementById("myNav").style.display = "block";
       let adjNounPairs = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
+
+      // console.log(response);
 
       dataPrepForAllOtherThanWordCloud(response);
       sentimentOverTimePrepareData(response);
@@ -370,22 +449,28 @@ if( isset($_GET['storeID']) ){
 
         if(response[x].compound_score >= 0.05){
           pos.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text});
+                    review_text : response[x].review_text,
+                    review_date : response[x].review_date
+                  });
         }
         else if(response[x].compound_score <= -0.05){
           neg.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text});
+                    review_text : response[x].review_text,
+                    review_date : response[x].review_date
+                  });
         }
         else{
           neu.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text});
+                    review_text : response[x].review_text,
+                    review_date : response[x].review_date
+                  });
         }
       }
       sentimentDataForWordCloud.push({Positive :pos,
                                       Negative :neg,
                                       Neutral  :neu});
 
-      // console.log(sentimentDataForWordCloud);
+      console.log(sentimentDataForWordCloud);
 
 
       // dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0]['Negative'], 
@@ -400,11 +485,24 @@ if( isset($_GET['storeID']) ){
       //Sentiment Score
       prepareSentimentDonut(totalReviews);
 
-
       //Preparing data for adj clicks to see review
       refactorResponseForReviewsViaWordCloudAdjs(response);
     }  
 
+    /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
+       its reviewid can be used to do a search in O(1) using key value pairs rather than O(n^2) using nested for loops
+       From this: {
+                    compound_score: xxx,
+                    review_data   : xxx,
+                    review_id     : xxx,
+                    review_text   : xxx
+                    }
+       To this: review_id :{
+                    compound_score: xxx,
+                    review_data   : xxx,
+                    review_text   : xxx
+                    }
+    */
     let refactoredResponse = {};
     function refactorResponseForReviewsViaWordCloudAdjs(response){
       // console.log(response);
@@ -429,10 +527,6 @@ if( isset($_GET['storeID']) ){
     getSentimentScore();
   </script>
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
+  
   </body>
 </html>

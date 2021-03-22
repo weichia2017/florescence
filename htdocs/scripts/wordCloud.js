@@ -7,7 +7,20 @@ async function retrieveWordCloudNounAdjPairs(url,method,values){
 
     var adjNounPairs = await makeRequest(url, method, values);  
     let response     = JSON.parse(adjNounPairs).data;
-    prepareWordCloud(response)
+
+  
+    if(method == "POST"){
+      if( document.getElementById("wordCloudNotEnoughWordsWarning").style.display != "block"){
+        prepareWordCloud(response) 
+      }else{
+        // console.log("oops blocked")
+        document.getElementById("wordCloudContainerSpinner").style.display = "none";
+      }
+        
+    }else{
+      prepareWordCloud(response)
+    }
+    
 }
 
 function prepareWordCloud(response){
@@ -204,19 +217,50 @@ function randomColor () {
     return color;
 }
 
-function highlight_word(searchpara,text)
+function highlight_word(searchpara,adj,noun)
 {
-  var pattern=new RegExp("\\b"+text+"\\b", "gi");
-  var new_text=searchpara.replace(pattern, "<mark class='highLightedText'>"+text+"</mark>");
+  var pattern=new RegExp("\\b"+adj+"\\b", "gi");
+  var new_text=searchpara.replace(pattern, "<mark class='highLightedAdj'>"+adj+"</mark>");   // Teal
+
+  var pattern=new RegExp(noun, "gi");
+  new_text=new_text.replace(pattern, "<mark class='highLightedNoun'>"+noun+"</mark>"); // Olive
   return new_text
 }
 
-
-function displayReviewsBelowWordCloud(chosenReviews,text){
+function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   document.getElementById("wordCloudClickedReviews").innerHTML = '';
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
-
   document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "none";
+  window.scroll({
+    behavior: 'smooth'
+  });
+  
+  chosenReviews.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
+
+  for (x in chosenReviews){
+    console.log(x)
+      let formattedDate = new Date(chosenReviews[x].review_date);
+      // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
+      document.getElementById("wordCloudClickedReviews").innerHTML +=
+          `<div class="card mr-3 ml-3 mt-2">
+              <div class="card-body">
+              <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
+              <p class="card-text">${chosenReviews[x].review_text}</p>
+              </div>
+          </div>`;
+  }
+
+}
+
+
+function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "block";
 
   chosenReviews = chosenReviews.split(",");
 
@@ -224,7 +268,7 @@ function displayReviewsBelowWordCloud(chosenReviews,text){
   for (x in chosenReviews){
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
                                     review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],text)})
+                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun)})
   }
 
   // Sort By Reviews By Date
@@ -325,7 +369,7 @@ function drawWordcLOUD(w,h){
             var e = d3.select(this);
             // console.log(e.text())
             // window.scrollBy(0, 300);
-            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
             e.classed("word-selected", !e.classed("word-selected"));
           }
 
@@ -367,7 +411,7 @@ function drawWordcLOUD(w,h){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             // window.scrollBy(0, 200);
-            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -410,7 +454,7 @@ function drawWordcLOUD(w,h){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             // window.scrollBy(0, 150);
-            displayReviewsBelowWordCloud(e._groups[0][0].id,e.text());
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
