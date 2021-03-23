@@ -1,8 +1,7 @@
 from datetime import datetime, timezone
 import pandas as pd
 import numpy as np
-import os
-import sys
+import os, sys
 from flask import request
 from flask_cors import CORS
 from flask_caching import Cache
@@ -99,7 +98,7 @@ def test_adj_noun_pairs(store_id):
             filtered_nouns = all_pairs[all_pairs.noun.isin(top_noun.noun.to_list())]
             noun_top_adj_ranking = filtered_nouns.groupby(['noun','adj']).size().reset_index(name='count').sort_values(['count'], ascending=False)
             filtered_adj = filtered_nouns[filtered_nouns.adj.isin(noun_top_adj_ranking.adj.to_list())]
-            pairs = filtered_adj.groupby(['noun','adj'])['review_id'].apply(', '.join).reset_index()
+            pairs = filtered_adj.groupby(['noun','adj'])['review_id'].apply(','.join).reset_index()
             pairs['review_id'] = pairs.review_id.apply(lambda x: x.split(","))
             pairs['count'] = pairs.review_id.apply(lambda x: len(x))
             df = pairs.groupby(['noun']).apply(lambda x: x.nlargest(num_of_adj_each,['count'], keep='first')).reset_index(drop=True).sort_values(['noun','count'], ascending=False).reset_index(drop=True)
