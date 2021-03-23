@@ -101,11 +101,12 @@ def get_adj_noun_pair():
     df = Master(df).adj_noun_pairs()
     return __response_ok(df)
 
-#TODO: remove test function
+# TODO: To be removed soon!
 @app.route('/test/adj_noun_pairs/<int:store_id>')
 @cache.cached(timeout=LESS_UPDATES)
 def test_adj_noun_pairs(store_id):
     return adj_noun_pairs(store_id)
+
 
 def __response_invalid(msg):
     return jsonify(error=msg), 500
