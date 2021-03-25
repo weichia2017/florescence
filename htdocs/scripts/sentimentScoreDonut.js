@@ -119,7 +119,7 @@ function drawSentimentDonut(donutData){
         // console.log('MOUSEOUT')
         if(!d.isClicked || d.isClicked == undefined){
           d3.select(self)
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {
@@ -141,7 +141,7 @@ function drawSentimentDonut(donutData){
           // console.log("removing positive")
           d3.select('#Positive')['_groups'][0][0]['__data__']['isClicked'] = false;
           d3.select('#Positive')
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {
@@ -156,7 +156,7 @@ function drawSentimentDonut(donutData){
           // console.log("removing negative")
           d3.select('#Negative')['_groups'][0][0]['__data__']['isClicked'] = false;
           d3.select('#Negative')
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {
@@ -171,7 +171,7 @@ function drawSentimentDonut(donutData){
           // console.log("removing neutral")
           d3.select('#Neutral')['_groups'][0][0]['__data__']['isClicked'] = false;
           d3.select('#Neutral')
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {
@@ -207,6 +207,7 @@ function drawSentimentDonut(donutData){
           if(sentimentDataForWordCloud[0][self.id].length > 10){
             dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
             let url = hostname + "/adj_noun_pairs/";
+            console.log(dataToBeSentToServer[0])
             retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]));
           }
           else{
@@ -232,7 +233,7 @@ function drawSentimentDonut(donutData){
     
         if(!d.isClicked || d.isClicked == undefined){
           d3.select(self)
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {
@@ -243,7 +244,7 @@ function drawSentimentDonut(donutData){
           .attr("stroke-width",0);
         }else{
           d3.select(self)
-          .classed("word-hovered", true)
+          .classed("pointer", true)
           .transition()
           .delay(delay)
           .attrTween("d", function(d) {

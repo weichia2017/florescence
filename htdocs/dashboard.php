@@ -11,7 +11,7 @@ if( isset($_GET['storeID']) ){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>Company's Name Dashboard</title>
+    <title>Flourishing Our Locale</title>
 
     <!-- Fontwesome -->
     <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/> -->
@@ -55,6 +55,18 @@ if( isset($_GET['storeID']) ){
         background-color: white;
       }
 
+      #main-overlay {
+        height: 100%;
+        width: 100%;
+        display: none;
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.9);
+      }
+
       .navbar-brand {
         padding-top: .75rem;
         padding-bottom: .75rem;
@@ -72,7 +84,7 @@ if( isset($_GET['storeID']) ){
         background-color: rgb(243, 243, 243);
       }
 
-      .totalReviewValue{
+      #totalNoOfReviewsContainer {
         font-family:'Anton', sans-serif;
         color: rgb(92, 92, 92);
         font-size: 1.8em;
@@ -85,38 +97,9 @@ if( isset($_GET['storeID']) ){
         color: #fdcc0d;
       }
 
-      #wordCloudContainer{
+      #wordCloudContainer {
         border: 1px solid rgb(36, 36, 36);
         border-radius: 7px;
-      }
-
-      .word-default {
-          fill: cadetblue;
-          font-weight: normal;
-        }
-      .word-hovered {
-          /* fill: teal; */
-          cursor: pointer;
-          /* font-weight: bold; */
-        }
-      .word-selected {
-          fill: darkslategrey;
-          /* font-weight: bold; */
-        }
-
-      .donut-hovered{
-        cursor: pointer;
-      }
-      .main-overlay {
-        height: 100%;
-        width: 100%;
-        display: none;
-        position: fixed;
-        z-index: 2;
-        top: 0;
-        left: 0;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0, 0.9);
       }
 
       .spinner{
@@ -127,14 +110,14 @@ if( isset($_GET['storeID']) ){
 
       .wordCloudWhiteBackground{
         background-image: url("images/white-bg.png");
-        /* background-size:cover;                   
-        background-repeat: no-repeat; */
         height:400px;
       }
+
       .scrollReviews{
         height:400px;
         overflow-y: scroll;
       }
+
       .pointer{
         cursor: pointer;
       }
@@ -143,21 +126,19 @@ if( isset($_GET['storeID']) ){
         /* Olive */
         background-color: #3D9970;
         padding: 0.1em 0.1em;
-        /* color:white */
       }
 
       .highLightedAdj{
         /* Teal */
         padding: 0.1em 0.1em;
         background-color: #39CCCC;
-        /* color:white */
       }
-    }
+
     </style>
   </head>
 
   <body>
-  <div id="myNav" class="main-overlay">
+  <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
 
@@ -199,13 +180,13 @@ if( isset($_GET['storeID']) ){
                 title="Total Reviews" 
                 data-placement="left" 
                 data-toggle="popover" 
-                data-trigger="focus" 
+                data-trigger="hover focus" 
                 data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews.">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
               </span>    
             </a>
-            <div class="container totalReviewValue" id="totalNoOfReviewsContainer"></div>
+            <div class="container" id="totalNoOfReviewsContainer"></div>
           </div>
         </div>
         <!-- ========================= -->   
@@ -222,7 +203,7 @@ if( isset($_GET['storeID']) ){
                 title="Overall Sentiment Score" 
                 data-placement="left" 
                 data-toggle="popover" 
-                data-trigger="focus" 
+                data-trigger="hover focus" 
                 data-content="Higher the number of stars,the more positive customers feel about the store.">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
@@ -236,7 +217,7 @@ if( isset($_GET['storeID']) ){
       <!-- ROW 2 -->
       <div class="row">
         <!-- ========================= -->   
-        <!--      SENTIMENT SCORE      -->
+        <!--   SENTIMENT SCORE DONUT   -->
         <!-- ========================= -->
         <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
           <div class="lead">
@@ -249,7 +230,7 @@ if( isset($_GET['storeID']) ){
                 title="Sentiment Score" 
                 data-placement="left" 
                 data-toggle="popover" 
-                data-trigger="focus" 
+                data-trigger="hover focus" 
                 data-content="Proportion of positive, negative and neutral reviews (in terms of percent).
                 <ul>
                   <li>Hovering over the donut chart will display the number of reviews for each sentiment </li>
@@ -279,7 +260,7 @@ if( isset($_GET['storeID']) ){
                 title="Word Cloud" 
                 data-placement="left" 
                 data-toggle="popover" 
-                data-trigger="focus" 
+                data-trigger="hover focus" 
                 data-content="Displays the most frequent nouns with their most frequent adjectives(descriptors).
                   <ul>
                     <li>Nouns are the bigger words on the right</li>
@@ -365,7 +346,7 @@ if( isset($_GET['storeID']) ){
                 title="Sentiment Over Time" 
                 data-placement="left" 
                 data-toggle="popover" 
-                data-trigger="focus" 
+                data-trigger="hover focus" 
                 data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
                   <ul>
                     <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
@@ -436,12 +417,12 @@ if( isset($_GET['storeID']) ){
 
     // Popover
     $(document).ready(function(){
-        $('[data-toggle="popover"]').popover({ 
-      html : true, 
-      content: function() {
-        return $('#popover_content_wrapper').html();
-      }
-    });   
+      $('[data-toggle="popover"]').popover({ 
+        html : true, 
+        content: function() {
+          return $('#popover_content_wrapper').html();
+        }
+      });   
     });
   
     // function test(){
@@ -491,18 +472,18 @@ if( isset($_GET['storeID']) ){
     // The main call to retrieve values for all charts other than wordcloud
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
-      document.getElementById("myNav").style.display = "block";
+      document.getElementById("main-overlay").style.display = "block";
       let adjNounPairs = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
       let response     = JSON.parse(adjNounPairs).data;
 
       // console.log(response);
 
-      dataPrepForAllOtherThanWordCloud(response);
+      dataPrepOnPageLoad(response);
       sentimentOverTimePrepareData(response);
-      document.getElementById("myNav").style.display = "none";
+      document.getElementById("main-overlay").style.display = "none";
     }
 
-    function dataPrepForAllOtherThanWordCloud(response){
+    function dataPrepOnPageLoad(response){
       // Total Reviews Number
       let totalReviews = response.length;
       document.getElementById("totalNoOfReviewsContainer").textContent = totalReviews;

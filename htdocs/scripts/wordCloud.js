@@ -238,7 +238,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   });
 
   for (x in chosenReviews){
-    console.log(x)
+    // console.log(x)
       let formattedDate = new Date(chosenReviews[x].review_date);
       // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
       document.getElementById("wordCloudClickedReviews").innerHTML +=
@@ -260,7 +260,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   document.getElementById("displayLegend").style.display = "block";
 
   chosenReviews = chosenReviews.split(",");
-
+  
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
@@ -350,14 +350,14 @@ function drawWordcLOUD(w,h){
         
           function handleMouseOverAdjOne(d, i) {
             d3.select(this)
-              .classed("word-hovered", true)
+              .classed("pointer", true)
               .transition(`mouseover-${adjTextOne}`).duration(300).ease(d3.easeLinear)
                 .attr("font-size", adjOneSize + 3);
           }
           
           function handleMouseOutAdjOne(d, i) {
             d3.select(this)
-              .classed("word-hovered", false)
+              .classed("pointer", false)
               .interrupt(`mouseover-${adjTextOne}`)
                 .attr("font-size", adjOneSize);
           }
@@ -392,14 +392,14 @@ function drawWordcLOUD(w,h){
                 
           function handleMouseOverAdjTwo(d, i) {
             d3.select(this)
-              .classed("word-hovered", true)
+              .classed("pointer", true)
               .transition(`mouseover-${adjTextTwo}`).duration(300).ease(d3.easeLinear)
                 .attr("font-size", adjTwoSize + 3);
           }
           
           function handleMouseOutAdjTwo(d, i) {
             d3.select(this)
-              .classed("word-hovered", false)
+              .classed("pointer", false)
               .interrupt(`mouseover-${adjTextTwo}`)
                 .attr("font-size", adjTwoSize);
           }
@@ -435,14 +435,14 @@ function drawWordcLOUD(w,h){
                 
           function handleMouseOverAdjThree(d, i) {
             d3.select(this)
-              .classed("word-hovered", true)
+              .classed("pointer", true)
               .transition(`mouseover-${adjTextThree}`).duration(300).ease(d3.easeLinear)
                 .attr("font-size", adjThreeSize + 3);
           }
           
           function handleMouseOutAdjThree(d, i) {
             d3.select(this)
-              .classed("word-hovered", false)
+              .classed("pointer", false)
               .interrupt(`mouseover-${adjTextThree}`)
                 .attr("font-size", adjThreeSize);
           }
@@ -464,7 +464,7 @@ function drawWordcLOUD(w,h){
 // let storeIDByUser = document.getElementById('getStoreID').value;
 // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-let url = hostname + "/adj_noun_pairs/" + shopID;
+let url = hostname + "/test/adj_noun_pairs/" + shopID;
 
 $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
 // $(window).resize(resize);
