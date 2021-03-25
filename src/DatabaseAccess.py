@@ -107,7 +107,7 @@ class DataAccess:
         query = '''
         SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
             ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE rr.store_id = %s
-            '''
+        '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
         if not return_as_dataframe:
@@ -115,6 +115,19 @@ class DataAccess:
         else:
             df = pandas.DataFrame(output)
             return df
+
+    def getAdjNounPairsByIds(self, ids, return_as_dataframe=True):
+        query = '''
+            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
+            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE CONCAT(rr.review_id,'-',rr.source_id) IN ('130157825-2', '130508880-2')
+        '''
+        args = (str(tuple(ids)),)
+        output = self.__executeSelectQuery(query, args)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            return df    
 
     def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe=True):
         query = '''

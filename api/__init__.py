@@ -94,11 +94,12 @@ def adj_noun_pairs(store_id):
     return __response_ok(df)
 
 
-@app.route('/adj_noun_pairs/', methods=["POST"])
+@app.route('/test/adj_noun_pairs/', methods=["POST"])
 def get_adj_noun_pair():
     request_data = request.get_json()
-    df = pd.json_normalize(request_data, record_path=['data'])
-    df = Master(df).adj_noun_pairs()
+    ids = request_data[request_data]
+    with DataAccess() as dao:
+        df = dao.getAdjNounPairsByIds(ids)
     return __response_ok(df)
 
 # TODO: To be removed soon!
