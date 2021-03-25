@@ -79,7 +79,7 @@ function drawSentimentDonut(donutData){
         // .style('border', '1px solid #ddd')
         // .attr('width', outerWidth)
         // .attr('height', outerHeight)
-        .attr("viewBox", `0 0 400 400`)
+        .attr("viewBox", `0 0 400 410`)
       .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -202,6 +202,7 @@ function drawSentimentDonut(donutData){
         else{
           document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
 
+          // console.log(sentimentDataForWordCloud[0][self.id])
           valuesClicked = []
           valuesClicked.push(self.id)
           if(sentimentDataForWordCloud[0][self.id].length > 10){
@@ -302,7 +303,7 @@ function drawSentimentDonut(donutData){
       lg.append('rect')
         .style('fill', d => color(d.label))
         .attr('x', 0)
-        .attr('y', 0)
+        .attr('y', 5)
         .attr('width', 20)
         .attr('height', 20);
 
@@ -310,7 +311,7 @@ function drawSentimentDonut(donutData){
         .style('font-family', 'Georgia')
         .style('font-size', '15px')
         .attr('x', 23)
-        .attr('y', 15)
+        .attr('y', 20)
         .text(d => d.label);      
 
       let offset = 0;

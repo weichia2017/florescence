@@ -110,7 +110,7 @@ if( isset($_GET['storeID']) ){
 
       .wordCloudWhiteBackground{
         background-image: url("images/white-bg.png");
-        height:400px;
+        height:460px;
       }
 
       .scrollReviews{
@@ -498,25 +498,34 @@ if( isset($_GET['storeID']) ){
 
       for(x in response){
         totalCompoundScores += response[x].compound_score;
-
         if(response[x].compound_score >= 0.05){
-          pos.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text,
-                    review_date : response[x].review_date
-                  });
+          pos.push(response[x].review_id);
         }
         else if(response[x].compound_score <= -0.05){
-          neg.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text,
-                    review_date : response[x].review_date
-                  });
+          neg.push(response[x].review_id);
         }
         else{
-          neu.push({review_id   : response[x].review_id,
-                    review_text : response[x].review_text,
-                    review_date : response[x].review_date
-                  });
+          neu.push(response[x].review_id);
         }
+
+        // if(response[x].compound_score >= 0.05){
+        //   pos.push({review_id   : response[x].review_id,
+        //             review_text : response[x].review_text,
+        //             review_date : response[x].review_date
+        //           });
+        // }
+        // else if(response[x].compound_score <= -0.05){
+        //   neg.push({review_id   : response[x].review_id,
+        //             review_text : response[x].review_text,
+        //             review_date : response[x].review_date
+        //           });
+        // }
+        // else{
+        //   neu.push({review_id   : response[x].review_id,
+        //             review_text : response[x].review_text,
+        //             review_date : response[x].review_date
+        //           });
+        // }
       }
       sentimentDataForWordCloud.push({Positive :pos,
                                       Negative :neg,

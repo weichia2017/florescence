@@ -233,19 +233,26 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
   document.getElementById("displayLegend").style.display = "none";
   
-  chosenReviews.sort(function(a,b){
+  let chosenReviewsWithFullData = [];
+  for (x in chosenReviews){
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
+                                    review_text : refactoredResponse[chosenReviews[x]].review_text})
+  }
+
+  console.log(chosenReviewsWithFullData)
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
     return new Date(b.review_date) - new Date(a.review_date);
   });
 
-  for (x in chosenReviews){
-    // console.log(x)
-      let formattedDate = new Date(chosenReviews[x].review_date);
-      // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
+
+  for (x in chosenReviewsWithFullData){
       document.getElementById("wordCloudClickedReviews").innerHTML +=
           `<div class="card mr-3 ml-3 mt-2">
               <div class="card-body">
-              <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
-              <p class="card-text">${chosenReviews[x].review_text}</p>
+              <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
+              <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
               </div>
           </div>`;
   }
@@ -464,7 +471,7 @@ function drawWordcLOUD(w,h){
 // let storeIDByUser = document.getElementById('getStoreID').value;
 // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-let url = hostname + "/test/adj_noun_pairs/" + shopID;
+let url = hostname + "/adj_noun_pairs/" + shopID;
 
 $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
 // $(window).resize(resize);
