@@ -61,6 +61,20 @@ class DataAccess:
                 row.neutral, row.positive, row.compound, datetime)
         return self.__executeInsertQuery(query, args)
 
+    def getAllSentiments(self, return_as_dataframe=True):
+        query = '''
+                SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.store_id, 
+                rr.review_text, rr.review_date, ss.compound as "compound_score"
+                FROM raw_reviews rr JOIN sentiment_scores ss 
+                ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
+            '''
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            return df
+
     def getSentiments(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
@@ -119,15 +133,14 @@ class DataAccess:
     def getAdjNounPairsByIds(self, ids, return_as_dataframe=True):
         query = '''
             SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
-            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE CONCAT(rr.review_id,'-',rr.source_id) IN ('130157825-2', '130508880-2')
-        '''
-        args = (str(tuple(ids)),)
-        output = self.__executeSelectQuery(query, args)
+            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE CONCAT(rr.review_id,'-',rr.source_id) IN 
+        ''' + str(tuple(ids))
+        output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
             return output
         else:
             df = pandas.DataFrame(output)
-            return df    
+            return df   
 
     def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe=True):
         query = '''
