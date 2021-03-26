@@ -28,7 +28,26 @@ class DataAccess:
     # Store Information Functions
 
     def getStores(self, return_as_dataframe=True):
-        query = 'SELECT * FROM `stores`'
+        query = '''
+            SELECT
+                s.store_id,
+                s.store_name,
+                s.googlereviews_url,
+                s.tripadvisors_url,
+                AVG(ss.compound) as "average_compound",
+                COUNT(ss.compound) as "num_of_reviews",
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+            FROM
+                stores s
+            JOIN raw_reviews rr ON
+                s.store_id = rr.store_id
+            JOIN sentiment_scores ss ON
+                ss.review_id = rr.review_id AND ss.source_id = rr.source_id
+            GROUP BY
+                s.store_id
+            ORDER BY
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
+        '''
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
             return output
@@ -40,7 +59,26 @@ class DataAccess:
     def getStore(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
-        query = 'SELECT * FROM `stores` WHERE store_id = %s'
+        query = '''
+            SELECT
+                s.store_id,
+                s.store_name,
+                s.googlereviews_url,
+                s.tripadvisors_url,
+                AVG(ss.compound) as "average_compound",
+                COUNT(ss.compound) as "num_of_reviews",
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+            FROM
+                stores s
+            JOIN raw_reviews rr ON
+                s.store_id = rr.store_id
+            JOIN sentiment_scores ss ON
+                ss.review_id = rr.review_id AND ss.source_id = rr.source_id
+            WHERE
+            	s.store_id = %s
+            GROUP BY
+                s.store_id
+        '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
         if not return_as_dataframe:
