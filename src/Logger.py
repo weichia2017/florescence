@@ -18,6 +18,7 @@ def get_file_handler():
     file_handler.setFormatter(FORMATTER)
     return file_handler
 
+
 def get_logger(name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
