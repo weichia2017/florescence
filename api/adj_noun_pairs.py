@@ -9,7 +9,7 @@ def adj_noun_pairs(store_id):
     df = None
     with DataAccess() as dao:
         if store_id not in dao.getStores().index.to_list():
-            return __response_invalid("The store identifier was not found")
+            return jsonify(error="The store identifier was not found"), 400
         try:
             all_pairs = dao.getAdjNounPairs(store_id)
             df = __getRanking(all_pairs)
@@ -20,6 +20,19 @@ def adj_noun_pairs(store_id):
         datetime=datetime.now(timezone.utc)
     ), 200
 
+@bp.route('/all/')
+def all_adj_noun_pairs():
+    df = None
+    with DataAccess() as dao:
+        try:
+            all_pairs = dao.getAllAdjNounPairs()
+            df = __getRanking(all_pairs)
+        except Exception as e:
+            return jsonify(error=msg), 400
+    return jsonify(
+        data=df.to_dict('records'),
+        datetime=datetime.now(timezone.utc)
+    ), 200
 
 @bp.route('/', methods=["POST"])
 def get_adj_noun_pair():
@@ -36,7 +49,6 @@ def get_adj_noun_pair():
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
     ), 200
-
 
 def __getRanking(all_pairs):
     num_of_noun = 10

@@ -8,9 +8,10 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    from . import stores, reviews, adj_noun_pairs
+    from . import stores, reviews, adj_noun_pairs, roads
     app.register_blueprint(stores.bp)
     app.register_blueprint(reviews.bp)
     app.register_blueprint(adj_noun_pairs.bp)
+    app.register_blueprint(roads.bp)
     
     return app

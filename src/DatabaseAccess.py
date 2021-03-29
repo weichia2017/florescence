@@ -88,6 +88,17 @@ class DataAccess:
             df.set_index('store_id', inplace=True)
             return df
 
+    def getRoads(self, return_as_dataframe=True):
+        query = '''
+            SELECT * FROM roads
+            '''
+        output = self.__executeSelectQuery(query)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            return df
+
     # Sentiment Functions
 
     def writeSentiments(self, row, datetime):
@@ -162,6 +173,18 @@ class DataAccess:
         '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            return df
+
+    def getAllAdjNounPairs(self, return_as_dataframe=True):
+        query = '''
+        SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
+            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id
+        '''
+        output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
             return output
         else:
