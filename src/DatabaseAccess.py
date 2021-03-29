@@ -32,6 +32,7 @@ class DataAccess:
             SELECT
                 s.store_id,
                 s.store_name,
+                s.road_id,
                 s.googlereviews_url,
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
@@ -63,6 +64,7 @@ class DataAccess:
             SELECT
                 s.store_id,
                 s.store_name,
+                s.road_id,
                 s.googlereviews_url,
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
