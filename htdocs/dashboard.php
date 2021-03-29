@@ -17,7 +17,8 @@ if( isset($_GET['storeID']) ){
     <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/> -->
 
     <!-- Material Design (External) -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
 
     <!-- Bootstrap CSS (External) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -38,17 +39,17 @@ if( isset($_GET['storeID']) ){
     <!-- Load d3-cloud from scripts folder -->
     <script src="scripts/d3.layout.cloud.js"></script>
 
-    <!-- Load wordcloud from scripts folder -->
+    <!-- Load overallSentimentScore from scripts folder -->
     <script src="scripts/overallSentimentScore.js" defer></script>
 
     <!-- Load wordcloud from scripts folder -->
-    <script src="scripts/wordCloud.js" defer></script>
+    <script src="scripts/businesses/wordCloud.js" defer></script>
 
-    <!-- Load sentimentScore from scripts folder -->
-    <script src="scripts/sentimentScoreDonut.js" defer></script>
+    <!-- Load sentimentScoreDonut from scripts folder -->
+    <script src="scripts/businesses/sentimentScoreDonut.js" defer></script>
 
     <!-- Load sentimentScoreOverTime from scripts folder -->
-    <script src="scripts/sentimentOverTime.js" defer></script>
+    <script src="scripts/businesses/sentimentOverTime.js" defer></script>
 
     <style>
       .white-bg{
@@ -143,7 +144,7 @@ if( isset($_GET['storeID']) ){
   </div>
 
   <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></a>
+    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></div>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -194,8 +195,8 @@ if( isset($_GET['storeID']) ){
         <!-- ========================= -->
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
           <div class="lead">
-            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-              auto_graph
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons-outlined float-left">
+              auto_awesome
             </span>
             <div class="float-left ml-1" >Overall Sentiment Score:</div> 
             <!-- Info PopOver -->
@@ -473,8 +474,8 @@ if( isset($_GET['storeID']) ){
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       document.getElementById("main-overlay").style.display = "block";
-      let adjNounPairs = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
-      let response     = JSON.parse(adjNounPairs).data;
+      let storeBased_Reviews = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
+      let response     = JSON.parse(storeBased_Reviews).data;
 
       // console.log(response);
 
