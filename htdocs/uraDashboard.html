@@ -128,6 +128,11 @@ if( isset($_GET['storeID']) ){
         overflow-y: scroll;
       }
 
+      .scrollStoreRanks{
+        height:400px;
+        overflow-y: scroll;
+      }
+
       .pointer{
         cursor: pointer;
       }
@@ -196,7 +201,6 @@ if( isset($_GET['storeID']) ){
                   info_outline
                 </span>    
               </a>
-              <!-- <div class="container" id="streetNameContainer">Duxton Hill</div> -->
             </div>
         </div>
       </div>
@@ -217,16 +221,19 @@ if( isset($_GET['storeID']) ){
               <div class="float-left ml-1" >Sub Zones: </div> 
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex" 
-                  title="Total Reviews" 
+                  title="Sub zones" 
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Reviews from the selected subzone">
+                  data-content="Deatailed information from the selected subzone">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                   info_outline
                 </span>    
               </a>
-              <div class="container" id="streetNameContainer">Duxton Hill</div>
+              <div class="container" id="streetNameContainer">
+                Duxton Hill 
+              </div>
+              
             </div>
         </div>
         <!-- ====================== -->
@@ -282,24 +289,24 @@ if( isset($_GET['storeID']) ){
       <!-- ROW 3 -->
       <div class="row">
         <!-- ========================= -->   
-        <!--        TOP 10 RANKS       -->
+        <!--        STORES RANKED      -->
         <!-- ========================= -->
         <div class="col-lg-5 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
           <div class="lead">
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
             align_horizontal_left
             </span>
-            <div class="float-left ml-1" >Top 10 Stores:</div> 
+            <div class="float-left ml-1" >Stores Ranked:</div> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex"  
-                title="Sentiment Score" 
+                title="Stores Ranked" 
                 data-placement="left" 
                 data-toggle="popover" 
                 data-trigger="hover focus" 
-                data-content="Proportion of positive, negative and neutral reviews (in terms of percent).
+                data-content="Stores are ranked based on ....
                 <ul>
-                  <li>Hovering over the donut chart will display the number of reviews for each sentiment </li>
-                  <li>Clicking on the donut(E.g. Positive), brings up the most frequent noun-adjectives pairs for those reviews (E.g.positive reviews).</li>
+                  <li>...</li>
+                  <li>...</li>
                 </ul>">
               <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
@@ -310,18 +317,9 @@ if( isset($_GET['storeID']) ){
           </div>
           <br>
           <br>
-          <div class="list-group">
-            <a class="list-group-item list-group-item-action pointer">1. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">2. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">3. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">4. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">5. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">6. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">7. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">8. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">9. Shop name..</a>
-            <a class="list-group-item list-group-item-action pointer">10. Shop name..</a>
-            </div>
+          <div id="storesRanked" class="list-group scrollStoreRanks">
+           <!-- The sorted stores poulate here -->
+          </div>
           
         </div>
 
@@ -549,12 +547,31 @@ if( isset($_GET['storeID']) ){
       });
     }
 
+    async function getRanking(){
+      let response   = await makeRequest(hostname + "/stores/", "GET", "");
+      let storeData = JSON.parse(response).data;
+
+      // storeData is already returned sorted but just to be sure, we sort the beta_score again.
+      storeData.sort(function(a,b){
+        return b.beta_score - a.beta_score;
+      });
+
+      storesRanked = document.getElementById("storesRanked");
+      rank = 0
+      for (x in storeData){
+        rank ++
+        // console.log(store)
+        storesRanked.innerHTML += 
+        `<a id="${storeData[x].store_id}" onclick="console.log(${storeData[x].store_id})" class="list-group-item list-group-item-action pointer">${rank+'. '}${storeData[x].store_name}</a>`
+      }
+    }
+
     // The main call to retrieve values for all charts other than wordcloud
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       document.getElementById("main-overlay").style.display = "block";
-      let reviews = await makeRequest(hostname + "/reviews/", "GET", "");
-      let response     = JSON.parse(reviews).data;
+      let reviews  = await makeRequest(hostname + "/reviews/", "GET", "");
+      let response = JSON.parse(reviews).data;
 
       // console.log(response);
 
@@ -599,8 +616,8 @@ if( isset($_GET['storeID']) ){
       //Sentiment Score
     //   prepareSentimentDonut(totalReviews);
 
-      //Preparing data for adj clicks to see review
-    //   refactorResponseForReviewsViaWordCloudAdjs(response);
+      // Preparing data for adj clicks to see review
+      refactorResponseForReviewsViaWordCloudAdjs(response);
     }  
 
     /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
@@ -628,7 +645,7 @@ if( isset($_GET['storeID']) ){
                           }
                               
       }
-      // console.log(refactoredResponse)
+      console.log(refactoredResponse)
     }
 
     // //Temporary till we have user Login Feature
@@ -639,6 +656,7 @@ if( isset($_GET['storeID']) ){
 
     // getStoreName();
     getSentimentScore();
+    getRanking();
   </script>
 
   
