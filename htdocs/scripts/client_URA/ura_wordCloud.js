@@ -251,12 +251,21 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
 
   for (x in chosenReviewsWithFullData){
       document.getElementById("wordCloudClickedReviews").innerHTML +=
-          `<div class="card mr-3 ml-3 mt-2">
+              `<div class="card mr-3 ml-3 mt-2">
               <div class="card-body">
-              <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
-              <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
+              <h6 class="reviewBodyFont" style="font-size:20px">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                  store
+                </span>
+                <div class="float-left ml-1">
+                  ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
+                </div> 
+              </h6>
+              <br>
+              <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+              <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
               </div>
-          </div>`;
+          </div>`;      
   }
 
 }
@@ -274,7 +283,8 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   for (x in chosenReviews){
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
                                     review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun)})
+                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun),
+                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
   }
 
   // Sort By Reviews By Date
@@ -287,8 +297,17 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
     document.getElementById("wordCloudClickedReviews").innerHTML +=
             `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
-                <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
-                <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
+                <h6 class="reviewBodyFont" style="font-size:20px">
+                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                    store
+                  </span>
+                  <div class="float-left ml-1">
+                    ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
+                  </div> 
+                </h6>
+                <br>
+                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                 </div>
             </div>`;      
   }

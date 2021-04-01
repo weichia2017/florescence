@@ -48,21 +48,24 @@ function sentimentOverTimePrepareData(response){
                     setimentOverTimePrepared[y].PosR.push({review_id      : response[x].review_id,
                                                            review_text    : response[x].review_text,
                                                            review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score});
+                                                           compound_score : response[x].compound_score,
+                                                           store_id       : response[x].store_id});
                 } 
                 else if(response[x].compound_score <= -0.05){
                     setimentOverTimePrepared[y].Neg += 1;
                     setimentOverTimePrepared[y].NegR.push({review_id      : response[x].review_id,
                                                            review_text    : response[x].review_text,
                                                            review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score});
+                                                           compound_score : response[x].compound_score,
+                                                           store_id       : response[x].store_id});
                 }
                 else{
                     setimentOverTimePrepared[y].Neu += 1;
                     setimentOverTimePrepared[y].NeuR.push({review_id      : response[x].review_id,
                                                            review_text    : response[x].review_text,
                                                            review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score});
+                                                           compound_score : response[x].compound_score,
+                                                           store_id       : response[x].store_id});
                 }
             }
         }
@@ -120,14 +123,24 @@ function displayReviewsBelowSentimentOverTime(chosenReviews){
         return new Date(b.review_date) - new Date(a.review_date);
     });
 
+    
     for (x in chosenReviews){
         let formattedDate = new Date(chosenReviews[x].review_date);
         // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
         document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
             `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
-                <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
-                <p class="card-text">${chosenReviews[x].review_text}</p>
+                <h6 class="reviewBodyFont" style="font-size:20px">
+                    <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                    store
+                    </span>
+                    <div class="float-left ml-1" >
+                    ${storeIDandNameDict[chosenReviews[x].store_id]}
+                    </div> 
+                </h6>
+                <br>
+                <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
+                <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
                 </div>
             </div>`;
     }
@@ -269,7 +282,7 @@ function chart(csv,w,h) {
     //   console.log(d[1]-d[0])
       let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
     //   console.log(selected)
-      console.log(d.data[selected])
+    //   console.log(d.data[selected])
       displayReviewsBelowSentimentOverTime(d.data[selected])
     }
 
