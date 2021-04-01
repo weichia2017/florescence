@@ -232,6 +232,10 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
   document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
   document.getElementById("displayLegend").style.display = "none";
+
+  // Hide the reviews being shown under sentimentovertime as well 
+  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+  document.getElementById("sentimentReviewsContainer").style.display = "none";
   
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
@@ -251,8 +255,8 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
       document.getElementById("wordCloudClickedReviews").innerHTML +=
           `<div class="card mr-3 ml-3 mt-2">
               <div class="card-body">
-              <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
-              <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
+              <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+              <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
               </div>
           </div>`;
   }
@@ -265,6 +269,10 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
   document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
   document.getElementById("displayLegend").style.display = "block";
+
+  // Hide the reviews being shown under sentimentovertime as well 
+  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+  document.getElementById("sentimentReviewsContainer").style.display = "none";
 
   chosenReviews = chosenReviews.split(",");
   
@@ -285,8 +293,8 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
     document.getElementById("wordCloudClickedReviews").innerHTML +=
             `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
-                <h5 class="card-title">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h5>
-                <p class="card-text">${chosenReviewsWithFullData[x]['review_text']}</p>
+                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                 </div>
             </div>`;      
   }

@@ -112,6 +112,11 @@ function removeSentimentOverTimeChart(){
 function displayReviewsBelowSentimentOverTime(chosenReviews){
     document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
     document.getElementById("sentimentReviewsContainer").style.display = "block";
+
+    // Hide the reviews being shown under the wordcloud as well 
+    document.getElementById("wordCloudClickedReviews").innerHTML = '';
+    document.getElementById("wordCloudReviewsContainer").style.display = "none";
+
     // window.scrollBy(0, 500);
     document.getElementById('sentimentReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
 
@@ -126,8 +131,8 @@ function displayReviewsBelowSentimentOverTime(chosenReviews){
         document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
             `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
-                <h5 class="card-title">Review Date: ${formattedDate.toLocaleDateString()}</h5>
-                <p class="card-text">${chosenReviews[x].review_text}</p>
+                <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
+                <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
                 </div>
             </div>`;
     }

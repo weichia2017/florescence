@@ -26,10 +26,10 @@ if( isset($_GET['storeID']) ){
     <!-- Load d3.js (External) -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
-    <!-- Load Anton font from google fonts (External) -->
+    <!-- Load fonts from google fonts (External) -->
     <!-- https://fonts.google.com/specimen/Anton?preview.text_type=custom&sidebar.open=true&selection.family=Anton -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
 
     <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
     <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
@@ -135,6 +135,40 @@ if( isset($_GET['storeID']) ){
         background-color: #39CCCC;
       }
 
+      .popover{
+        box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
+        width: 400px;
+      }
+
+      .popover-header {
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 600;
+        font-size:17px;
+      }
+
+      .popover-body{
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 300;
+        font-size:17px;
+      }
+
+      .headings{
+        font-family: 'Merienda', cursive;
+        color: rgb(100, 100, 100);
+        font-size:20px;
+      }
+
+      .reviewHeaderFont{
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 600;
+      }
+
+
+      .reviewBodyFont{
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 300;
+      }
+
     </style>
   </head>
 
@@ -151,10 +185,10 @@ if( isset($_GET['storeID']) ){
   </header>
 
   <main class="container" style="z-index: 0">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Dashboard</h1>
+    <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Dashboard</h1> -->
       <!-- <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button> -->
-    </div>
+    <!-- </div> -->
 
     <!-- <form>
       <input type="text" name=storeID>
@@ -162,34 +196,10 @@ if( isset($_GET['storeID']) ){
     </form> -->
     <input type="hidden" value=<?= $storeID?>  id="getStoreID">
 
-    <div class="container mb-5">
+    <div class="container mb-5 mt-5">
       <!-- ROW 1 -->
       <div class="row">
-        <!-- ====================== -->
-        <!--     TOTAL REVIEWS      -->
-        <!-- ====================== -->
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
-          <div class="lead">
-            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
-            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-              rate_review
-            </span>
-            <!-- Create a div where the total number of reviews will be -->
-            <div class="float-left ml-1" >Total Reviews:</div> 
-            <!-- Info PopOver -->
-            <a tabindex="0" class="float-right popoverzindex" 
-                title="Total Reviews" 
-                data-placement="left" 
-                data-toggle="popover" 
-                data-trigger="hover focus" 
-                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews.">
-              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
-                info_outline
-              </span>    
-            </a>
-            <div class="container" id="totalNoOfReviewsContainer"></div>
-          </div>
-        </div>
+        
         <!-- ========================= -->   
         <!--  OVERALL SENTIMENT SCORE  -->
         <!-- ========================= -->
@@ -198,7 +208,7 @@ if( isset($_GET['storeID']) ){
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons-outlined float-left">
               auto_awesome
             </span>
-            <div class="float-left ml-1" >Overall Sentiment Score:</div> 
+            <div class="float-left ml-1 headings" >Overall Sentiment Score:</div> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex"  
                 title="Overall Sentiment Score" 
@@ -213,6 +223,32 @@ if( isset($_GET['storeID']) ){
             <div class="container float-left ml-3" id="overallSentimentScore"></div>
           </div>
         </div>
+
+        <!-- ====================== -->
+        <!--     TOTAL REVIEWS      -->
+        <!-- ====================== -->
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              rate_review
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <div class="float-left ml-1 headings" >Total Reviews:</div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex" 
+                title="Total Reviews" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="hover focus" 
+                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews.">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
+            <div class="container" id="totalNoOfReviewsContainer"></div>
+          </div>
+        </div>
       </div>
 
       <!-- ROW 2 -->
@@ -225,7 +261,7 @@ if( isset($_GET['storeID']) ){
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
               tag_faces
             </span>
-            <div class="float-left ml-1" >Sentiment Score:</div> 
+            <div class="float-left ml-1 headings" >Sentiment Score:</div> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex"  
                 title="Sentiment Score" 
@@ -255,7 +291,7 @@ if( isset($_GET['storeID']) ){
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
               cloud 
             </span>
-            <div class="float-left ml-1">Word Cloud:</div> 
+            <div class="float-left ml-1 headings">Word Cloud:</div> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex"  
                 title="Word Cloud" 
@@ -304,7 +340,7 @@ if( isset($_GET['storeID']) ){
               <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 rate_review
               </span>
-              <span class="lead float-left">
+              <span class="float-left ml-1 headings">
                 Selected Reviews:
                </span>
               <!-- Legend for Noun Adj Highlted colors -->
@@ -321,12 +357,12 @@ if( isset($_GET['storeID']) ){
             </span>
           </div>
 
-            <hr>
-              <!-- <div class="col-12 border"></div> -->
-              <div id="wordCloudClickedReviews" class="scrollReviews">
-              <!-- Reviews gets Populated Here -->
-              </div>
-              <hr>
+          <hr>
+          <!-- <div class="col-12 border"></div> -->
+          <div id="wordCloudClickedReviews" class="scrollReviews">
+          <!-- Reviews gets Populated Here -->
+          </div>
+          <hr>
         </div>
       </div>
 
@@ -341,7 +377,7 @@ if( isset($_GET['storeID']) ){
             <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
               timeline
             </span>
-            <div class="float-left ml-1" >Sentiment Over Time:</div> 
+            <div class="float-left ml-1 headings" >Sentiment Over Time:</div> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex"  
                 title="Sentiment Over Time" 
@@ -381,17 +417,28 @@ if( isset($_GET['storeID']) ){
       <!-- ================================ -->
       <div class="row" id="sentimentReviewsContainer">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-          <div class="lead">
+          <div class="d-flex justify-content-between">
             <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
-            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-              rate_review
-            </span>
+            <div >
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                rate_review
+              </span>
+              <span class="float-left ml-1 headings">
+                Selected Reviews:
+               </span>
+              <!-- Legend for Noun Adj Highlted colors -->
+              <!-- <div id="displayLegend" class="float-left">
+                <span class="ml-3 highLightedAdj float-left">Adj</span>
+                <span class="ml-3 highLightedNoun float-left">Noun</span>
+              </div> -->
+            </div>
+
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
                   onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
-                  class="material-icons float-right mr-2 pointer">
+                  class="material-icons mr-2 pointer">
             close
             </span>
-            <div>Selected Reviews:</div> 
+          </div>
             <hr>
             <!-- <div class="col-12 border"></div> -->
             <div id="sentimentOverTimeClickedReviews" class="scrollReviews">
