@@ -5,15 +5,13 @@ import os
 import warnings
 import Logger
 import pandas
-import Logger
 import traceback
-
 
 class DataAccess:
     def __init__(self):
         load_dotenv('.env')
-        self.connector = self.__get_connector()
         self.logger = Logger.get_logger(__name__)
+        self.connector = self.__get_connector()
 
     def __enter__(self):
         return self
@@ -90,6 +88,39 @@ class DataAccess:
             df.set_index('store_id', inplace=True)
             return df
 
+    def getStoreByRoad(self, road_id, return_as_dataframe=True):
+        if road_id == None:
+            return None
+        query = '''
+            SELECT
+                s.store_id,
+                s.store_name,
+                s.road_id,
+                s.googlereviews_url,
+                s.tripadvisors_url,
+                AVG(ss.compound) as "average_compound",
+                COUNT(ss.compound) as "num_of_reviews",
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+            FROM
+                stores s
+            JOIN raw_reviews rr ON
+                s.store_id = rr.store_id
+            JOIN sentiment_scores ss ON
+                ss.review_id = rr.review_id AND ss.source_id = rr.source_id
+            WHERE
+            	s.road_id = %s
+            GROUP BY
+                s.store_id
+        '''
+        args = (road_id,)
+        output = self.__executeSelectQuery(query, args)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            df.set_index('store_id', inplace=True)
+            return df
+
     def getRoads(self, return_as_dataframe=True):
         query = '''
             SELECT * FROM roads
@@ -99,6 +130,20 @@ class DataAccess:
             return output
         else:
             df = pandas.DataFrame(output)
+            df.set_index('road_id', inplace=True)
+            return df
+
+    def getRoad(self, road_id, return_as_dataframe=True):
+        query = '''
+            SELECT * FROM roads WHERE road_id = %s
+            '''
+        args = (road_id,)
+        output = self.__executeSelectQuery(query, args)
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            df.set_index('road_id', inplace=True)
             return df
 
     # Sentiment Functions
@@ -130,10 +175,9 @@ class DataAccess:
         if store_id == None:
             return None
         query = '''
-                SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, 
-                rr.review_text, rr.review_date, ss.compound as "compound_score"
-                FROM raw_reviews rr JOIN sentiment_scores ss 
-                ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id WHERE rr.store_id = %s
+            SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
+            FROM raw_reviews rr 
+            JOIN sentiment_scores ss ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id WHERE rr.store_id = %s
             '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
@@ -143,19 +187,22 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getRawReviews_UnProcessed_Sentiments(self, return_as_dataframe=True):
+    def getSentimentsByRoad(self, road_id, return_as_dataframe=True):
+        if road_id == None:
+            return None
         query = '''
-            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
-            AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
-        '''
-        output = self.__executeSelectQuery(query)
-        if len(output) == 0:
-            return pandas.DataFrame()
+            SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
+            FROM raw_reviews rr 
+            JOIN sentiment_scores ss ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
+            JOIN stores s ON rr.store_id = s.store_id
+            WHERE s.road_id = %s
+            '''
+        args = (road_id,)
+        output = self.__executeSelectQuery(query, args)
         if not return_as_dataframe:
             return output
         else:
             df = pandas.DataFrame(output)
-            df.set_index('review_id', inplace=True)
             return df
 
     # Adjective Noun Pairs Functions
@@ -168,10 +215,12 @@ class DataAccess:
         args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
         return self.__executeInsertQuery(query, args)
 
-    def getAdjNounPairs(self, store_id, return_as_dataframe=True):
+    def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
         query = '''
-        SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
-            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE rr.store_id = %s
+            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj 
+            FROM raw_reviews rr 
+            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id 
+            WHERE rr.store_id = %s
         '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
@@ -181,12 +230,16 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getAllAdjNounPairs(self, return_as_dataframe=True):
+    def getAdjNounPairsByRoad(self, road_id, return_as_dataframe=True):
         query = '''
-        SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
-            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id
+            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj 
+            FROM raw_reviews rr 
+            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id 
+            JOIN stores s ON rr.store_id = s.store_id
+            WHERE s.road_id = %s
         '''
-        output = self.__executeSelectQuery(query)
+        args = (road_id,)
+        output = self.__executeSelectQuery(query, args)
         if not return_as_dataframe:
             return output
         else:
@@ -205,6 +258,23 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df   
 
+    ## Pre-Processing
+
+    def getRawReviews_UnProcessed_Sentiments(self, return_as_dataframe=True):
+        query = '''
+            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
+            AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
+        '''
+        output = self.__executeSelectQuery(query)
+        if len(output) == 0:
+            return pandas.DataFrame()
+        if not return_as_dataframe:
+            return output
+        else:
+            df = pandas.DataFrame(output)
+            df.set_index('review_id', inplace=True)
+            return df
+
     def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe=True):
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
@@ -220,7 +290,7 @@ class DataAccess:
             df.set_index('review_id', inplace=True)
             return df
 
-    # Review Functions
+    # Reviews
 
     def writeRawReviews(self, review, source_id):
         query = '''
@@ -236,6 +306,22 @@ class DataAccess:
                 review.review_date,
                 review.retrieval_date)
         return self.__executeInsertQuery(query, args)
+
+    ## Users
+
+    def createUsers(self, username, password):
+        query = '''
+            INSERT INTO `users`
+            (`user_id`, `username`, `password`, `admin`) 
+            VALUES 
+            (UUID_SHORT(),%s,%s,%s)
+            '''
+        args = (username,
+                password,
+                0)
+        return self.__executeInsertQuery(query, args)
+
+    ## Utility
 
     def __executeInsertQuery(self, query, args):
         cursor = self.connector.cursor()

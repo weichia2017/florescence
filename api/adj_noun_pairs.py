@@ -5,13 +5,17 @@ from datetime import datetime, timezone
 bp = Blueprint('adj_noun_pairs', __name__, url_prefix='/adj_noun_pairs')
 
 @bp.route('/<int:store_id>')
-def adj_noun_pairs(store_id):
+def redirect_to_pairsByStore(store_id):
+    return pairsByStores(store_id)
+
+@bp.route('/store/<int:store_id>')
+def pairsByStores(store_id):
     df = None
     with DataAccess() as dao:
         if store_id not in dao.getStores().index.to_list():
             return jsonify(error="The store identifier was not found"), 400
         try:
-            all_pairs = dao.getAdjNounPairs(store_id)
+            all_pairs = dao.getAdjNounPairsByStore(store_id)
             df = __getRanking(all_pairs)
         except Exception as e:
             return jsonify(error=msg), 400
@@ -20,12 +24,14 @@ def adj_noun_pairs(store_id):
         datetime=datetime.now(timezone.utc)
     ), 200
 
-@bp.route('/all/')
-def all_adj_noun_pairs():
+@bp.route('/road/<int:road_id>')
+def pairsByRoad(road_id):
     df = None
     with DataAccess() as dao:
+        if road_id not in dao.getRoads().index.to_list():
+            return jsonify(error="The road identifier was not found"), 400
         try:
-            all_pairs = dao.getAllAdjNounPairs()
+            all_pairs = dao.getAdjNounPairsByRoad(road_id)
             df = __getRanking(all_pairs)
         except Exception as e:
             return jsonify(error=msg), 400
