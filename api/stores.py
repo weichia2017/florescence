@@ -21,7 +21,7 @@ def all_Stores():
 def redirect_to_one_store(store_id):
     return storesByID(store_id);
 
-@bp.route('/store_id/<int:store_id>')
+@bp.route('/store/<int:store_id>')
 def storesByID(store_id):
     df = None
     with DataAccess() as dao:
@@ -36,7 +36,7 @@ def storesByID(store_id):
         datetime=datetime.now(timezone.utc)
     ), 200
 
-@bp.route('/road_id/<int:road_id>')
+@bp.route('/road/<int:road_id>')
 def storesByRoad(road_id):
     df = None
     with DataAccess() as dao:
