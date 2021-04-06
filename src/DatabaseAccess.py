@@ -308,17 +308,31 @@ class DataAccess:
             INSERT INTO `users` 
             (`user_id`, `email`, `name`, `password`, `active`, `admin`, `store_id`) 
             VALUES 
-            (UUID_SHORT(), %s, %s, %s, 1, 0, NULL)
+            (UUID_SHORT(), %s, %s, %s, True, False, NULL)
             '''
-        args = (email, name, hashed_password, 0)
+        args = (email, name, hashed_password)
         return self.__executeInsertQuery(query, args)
 
-    def getUser(self, email):
+    def getUserByEmail(self, email):
         query = '''
-            SELECT * FROM users u WHERE u.email = %s
+            SELECT * FROM users WHERE email = %s
         '''
         args = (email,)
         return self.__executeSelectQuery(query, args)
+    
+    def getUserByUserId(self, user_id):
+        query = '''
+            SELECT * FROM users WHERE user_id = %s
+        '''
+        args = (user_id,)
+        return self.__executeSelectQuery(query, args)
+
+    def updateUserPassword(self, user_id, password):
+        query = '''
+            UPDATE `users` SET `password` = %s WHERE `users`.`user_id` = %s;
+        '''
+        args = (password, user_id)
+        return self.__executeInsertQuery(query, args)
     
     
     ## Utility
