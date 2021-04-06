@@ -11,7 +11,7 @@ def reviews_():
         try:
             df = dao.getAllSentiments()
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -30,7 +30,7 @@ def reviewsByStore(store_id):
         try:
             df = dao.getSentimentsByStore(store_id)
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -45,7 +45,7 @@ def reviewsByRoad(road_id):
         try:
             df = dao.getSentimentsByRoad(road_id)
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)

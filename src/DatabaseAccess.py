@@ -260,7 +260,7 @@ class DataAccess:
 
     ## Pre-Processing
 
-    def getRawReviews_UnProcessed_Sentiments(self, return_as_dataframe=True):
+    def getRawReviews_UnProcessed_Sentiments(self):
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
             AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
@@ -268,14 +268,11 @@ class DataAccess:
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
             return pandas.DataFrame()
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output)
-            df.set_index('review_id', inplace=True)
-            return df
+        df = pandas.DataFrame(output)
+        df.set_index('review_id', inplace=True)
+        return df
 
-    def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe=True):
+    def getRawReviews_UnProcessed_AdjNounPairs(self):
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
             AND NOT EXISTS (SELECT 1 FROM adj_noun_pairs ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
@@ -283,12 +280,9 @@ class DataAccess:
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
             return pandas.DataFrame()
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output)
-            df.set_index('review_id', inplace=True)
-            return df
+        df = pandas.DataFrame(output)
+        df.set_index('review_id', inplace=True)
+        return df
 
     # Reviews
 
@@ -309,18 +303,24 @@ class DataAccess:
 
     ## Users
 
-    def createUsers(self, username, password):
+    def createUser(self, email, name, hashed_password):
         query = '''
-            INSERT INTO `users`
-            (`user_id`, `username`, `password`, `admin`) 
+            INSERT INTO `users` 
+            (`user_id`, `email`, `name`, `password`, `active`, `admin`, `store_id`) 
             VALUES 
-            (UUID_SHORT(),%s,%s,%s)
+            (UUID_SHORT(), %s, %s, %s, 1, 0, NULL)
             '''
-        args = (username,
-                password,
-                0)
+        args = (email, name, hashed_password, 0)
         return self.__executeInsertQuery(query, args)
 
+    def getUser(self, email):
+        query = '''
+            SELECT * FROM users u WHERE u.email = %s
+        '''
+        args = (email,)
+        return self.__executeSelectQuery(query, args)
+    
+    
     ## Utility
 
     def __executeInsertQuery(self, query, args):

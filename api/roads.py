@@ -11,7 +11,7 @@ def Roads():
         try:
             df = dao.getRoads().reset_index()
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -24,7 +24,7 @@ def Road(road_id):
         try:
             df = dao.getRoad(road_id).reset_index()
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)

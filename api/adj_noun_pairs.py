@@ -18,7 +18,7 @@ def pairsByStores(store_id):
             all_pairs = dao.getAdjNounPairsByStore(store_id)
             df = __getRanking(all_pairs)
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -34,7 +34,7 @@ def pairsByRoad(road_id):
             all_pairs = dao.getAdjNounPairsByRoad(road_id)
             df = __getRanking(all_pairs)
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -50,7 +50,7 @@ def get_adj_noun_pair():
             all_pairs = dao.getAdjNounPairsByIds(ids)
             df = __getRanking(all_pairs)
         except Exception as e:
-            return jsonify(error=msg), 400
+            return jsonify(error=msg), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
