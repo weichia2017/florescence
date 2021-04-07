@@ -163,7 +163,6 @@ if( isset($_GET['storeID']) ){
         font-weight: 600;
       }
 
-
       .reviewBodyFont{
         font-family: 'Open Sans', sans-serif;
         font-weight: 300;
@@ -344,7 +343,7 @@ if( isset($_GET['storeID']) ){
                 Selected Reviews:
                </span>
               <!-- Legend for Noun Adj Highlted colors -->
-              <div id="displayLegend" class="float-left">
+              <div id="displayLegend" class="float-left reviewBodyFont">
                 <span class="ml-3 highLightedAdj float-left">Adj</span>
                 <span class="ml-3 highLightedNoun float-left">Noun</span>
               </div>
@@ -521,7 +520,7 @@ if( isset($_GET['storeID']) ){
     let sentimentDataForWordCloud = [];
     async function getSentimentScore(){
       document.getElementById("main-overlay").style.display = "block";
-      let storeBased_Reviews = await makeRequest(hostname + "/reviews/" + shopID, "GET", "");
+      let storeBased_Reviews = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
       let response     = JSON.parse(storeBased_Reviews).data;
 
       // console.log(response);
@@ -579,7 +578,7 @@ if( isset($_GET['storeID']) ){
                                       Negative :neg,
                                       Neutral  :neu});
 
-      console.log(sentimentDataForWordCloud);
+      // console.log(sentimentDataForWordCloud);
 
 
       // dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0]['Negative'], 
@@ -602,13 +601,13 @@ if( isset($_GET['storeID']) ){
        its reviewid can be used to do a search in O(1) using key value pairs rather than O(n^2) using nested for loops
        From this: {
                     compound_score: xxx,
-                    review_data   : xxx,
+                    review_date   : xxx,
                     review_id     : xxx,
                     review_text   : xxx
                     }
        To this: review_id :{
                     compound_score: xxx,
-                    review_data   : xxx,
+                    review_date   : xxx,
                     review_text   : xxx
                     }
     */

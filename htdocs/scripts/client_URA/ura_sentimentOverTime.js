@@ -1,10 +1,41 @@
-function sentimentOverTimePrepareData(response){
+async function retrieveSOTbyStore(url,method,values){
+    document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
+    document.getElementById("overallSentimentScore").style.display                  = "none";
+    document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
+
+
     
-    // console.log(response)
-    let setimentOverTimePrepared = [];
+    document.getElementById("SOTSpinner").style.display                             = "block";
+    document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
+    document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+
+    var response = await makeRequest(url, method, values);  
+    let reviews  = JSON.parse(response).data;
+
+    dataPrepOnPageLoad(reviews);
+    prepareSentimentOverTime(reviews,false);
+}
+
+let setimentOverTimePrepared = [];
+function prepareSentimentOverTime(reviews,isShowSpinner){
+    if(!isShowSpinner){
+        document.getElementById("sentimentOverTimeContainerDiv").style.display          = "block";
+        document.getElementById("overallSentimentScore").style.display                  = "block";
+        document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
+        
+        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
+        document.getElementById("totalReviewsContainerSpinner").style.display           = "none";
+        document.getElementById("SOTSpinner").style.display                             = "none";
+    }
+    
+    document.getElementById("sentimentOverTimeContainer").innerHTML                 = "";
+    document.getElementById("year").innerHTML                                       = "";
+    setimentOverTimePrepared = [];
+    
+    // console.log(reviews)
     let years = [];
-    for (x in response){
-        year = new Date(response[x].review_date).getFullYear();
+    for (x in reviews){
+        year = new Date(reviews[x].review_date).getFullYear();
         years.push(year);
     }
 
@@ -13,7 +44,7 @@ function sentimentOverTimePrepareData(response){
     let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     
     // console.log(yearsUnique)
-    // Create All the empty Values for all the months of all the years that exist in the response
+    // Create All the empty Values for all the months of all the years that exist in the reviews
     for (x in yearsUnique){
         for (y in months){
             let posR          = [];
@@ -35,60 +66,137 @@ function sentimentOverTimePrepareData(response){
         }
     }
 
-    for (x in response){
-        year = new Date(response[x].review_date).getFullYear();
-        month = new Date(response[x].review_date).toLocaleString('default', { month: 'long' });
+    for (x in reviews){
+        year = new Date(reviews[x].review_date).getFullYear();
+        month = new Date(reviews[x].review_date).toLocaleString('default', { month: 'long' });
     
         for(y in setimentOverTimePrepared){
-
             if(setimentOverTimePrepared[y].Year == year &&
                 month.includes(setimentOverTimePrepared[y].Month)){
-                if(response[x].compound_score >= 0.05){
+                if(reviews[x].compound_score >= 0.05){
                     setimentOverTimePrepared[y].Pos += 1;
-                    setimentOverTimePrepared[y].PosR.push({review_id      : response[x].review_id,
-                                                           review_text    : response[x].review_text,
-                                                           review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score,
-                                                           store_id       : response[x].store_id});
+                    setimentOverTimePrepared[y].PosR.push(reviews[x].review_id);
                 } 
-                else if(response[x].compound_score <= -0.05){
+                else if(reviews[x].compound_score <= -0.05){
                     setimentOverTimePrepared[y].Neg += 1;
-                    setimentOverTimePrepared[y].NegR.push({review_id      : response[x].review_id,
-                                                           review_text    : response[x].review_text,
-                                                           review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score,
-                                                           store_id       : response[x].store_id});
+                    setimentOverTimePrepared[y].NegR.push(reviews[x].review_id);
                 }
                 else{
                     setimentOverTimePrepared[y].Neu += 1;
-                    setimentOverTimePrepared[y].NeuR.push({review_id      : response[x].review_id,
-                                                           review_text    : response[x].review_text,
-                                                           review_date    : response[x].review_date,
-                                                           compound_score : response[x].compound_score,
-                                                           store_id       : response[x].store_id});
+                    setimentOverTimePrepared[y].NeuR.push(reviews[x].review_id);
                 }
             }
+
+            // if(setimentOverTimePrepared[y].Year == year &&
+            //     month.includes(setimentOverTimePrepared[y].Month)){
+            //     if(reviews[x].compound_score >= 0.05){
+            //         setimentOverTimePrepared[y].Pos += 1;
+            //         setimentOverTimePrepared[y].PosR.push({review_id      : reviews[x].review_id,
+            //                                                review_text    : reviews[x].review_text,
+            //                                                review_date    : reviews[x].review_date,
+            //                                                compound_score : reviews[x].compound_score,
+            //                                                store_id       : reviews[x].store_id});
+            //     } 
+            //     else if(reviews[x].compound_score <= -0.05){
+            //         setimentOverTimePrepared[y].Neg += 1;
+            //         setimentOverTimePrepared[y].NegR.push({review_id      : reviews[x].review_id,
+            //                                                review_text    : reviews[x].review_text,
+            //                                                review_date    : reviews[x].review_date,
+            //                                                compound_score : reviews[x].compound_score,
+            //                                                store_id       : reviews[x].store_id});
+            //     }
+            //     else{
+            //         setimentOverTimePrepared[y].Neu += 1;
+            //         setimentOverTimePrepared[y].NeuR.push({review_id      : reviews[x].review_id,
+            //                                                review_text    : reviews[x].review_text,
+            //                                                review_date    : reviews[x].review_date,
+            //                                                compound_score : reviews[x].compound_score,
+            //                                                store_id       : reviews[x].store_id});
+            //     }
+            // }
         }
     
     }
     // console.log(JSON.stringify(setimentOverTimePrepared)); 
 
-    drawSentimentOverTimeStackedBarChart(setimentOverTimePrepared);
+    let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
+    let h = 400;
+    drawSentimentOverTimeStackedBarChart(w,h);
 }
 
-function drawSentimentOverTimeStackedBarChart(data){
 
-var legendClassArray = []; //store legend classes to select bars in plotSingle()
+function updateWordCloud(chosenReviews,selectedSentiment){
+    // document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+    // document.getElementById("sentimentReviewsContainer").style.display = "block";
+    // window.scrollBy(0, 500);
 
-let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
-let h = 400;
+    // console.log(chosenReviews)
 
-// console.log(document.getElementById('sentimentOverTimeContainerDiv').offsetWidth);
-// console.log(h)
+    document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
+    if(chosenReviews.length > 10){
+        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+        document.getElementById("wordCloudContainer").style.display             = "block";
+        
+        let dataToBeSentToServer = [{data:[]}];
+        dataToBeSentToServer[0].data = chosenReviews
+        let url = hostname + "/adj_noun_pairs/";
+        retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]))
+      }
+      else{
+        selectedReview = chosenReviews //the main variable is in the first few lines of dashboard.php
+        if(selectedSentiment == "NeuR"){
+            selectedSentiment = "neutral"
+        }else if(selectedSentiment == "NegR"){
+            selectedSentiment = "negative"
+        }else{
+            selectedSentiment = "positive"
+        }
 
-chart(data,w,h)
+        document.getElementById("wordCloudContainer").style.display          = "none";
+        document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
+        `<!-- Triangle with exclamation icon -->
+        <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 44%;width:100%" class="material-icons text-center">
+              warning_amber  
+        </div>
+        <!-- Warning message that goes along with the above icon -->
+        <div class='p-5 text-center' style='position: absolute;top: 48%;width:100%'>
+          Not enough reviews to display wordcloud. 
+          Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
+           to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
+        </div>`
+        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "block";
+      }
 
-$(window).resize(resizeSentimentOverTime);
+
+
+   
+
+    // chosenReviews.sort(function(a,b){
+    //     return new Date(b.review_date) - new Date(a.review_date);
+    // });
+
+    
+    // for (x in chosenReviews){
+    //     let formattedDate = new Date(chosenReviews[x].review_date);
+    //     // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
+    //     document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
+    //         `<div class="card mr-3 ml-3 mt-2">
+    //             <div class="card-body">
+    //             <h6 class="reviewBodyFont" style="font-size:20px">
+    //                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+    //                 store
+    //                 </span>
+    //                 <div class="float-left ml-1" >
+    //                 ${storeIDandNameDict[chosenReviews[x].store_id]}
+    //                 </div> 
+    //             </h6>
+    //             <br>
+    //             <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
+    //             <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
+    //             </div>
+    //         </div>`;
+    // }
+}
 
 /* 
 *   Each time the window gets resized, 
@@ -97,62 +205,23 @@ $(window).resize(resizeSentimentOverTime);
 *   3. draw a new sentiment over time chart
 */ 
 function resizeSentimentOverTime(){
-    w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
-    h = 400;
+    let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
+    let h = 400;
 
     if($(window).width() != width || $(window).height() != height){
-        removeSentimentOverTimeChart();
-        chart(data,w,h);
+        document.getElementById("sentimentOverTimeContainer").innerHTML = "";
+        drawSentimentOverTimeStackedBarChart(w,h);
     }
 }
 
-function removeSentimentOverTimeChart(){
-    document.getElementById("sentimentOverTimeContainer").innerHTML = "";
-}
+function drawSentimentOverTimeStackedBarChart(w,h) {
+    var legendClassArray = []; //store legend classes to select bars in plotSingle()
 
-
-
-function displayReviewsBelowSentimentOverTime(chosenReviews){
-    document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
-    document.getElementById("sentimentReviewsContainer").style.display = "block";
-    // window.scrollBy(0, 500);
-    document.getElementById('sentimentReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-
-
-    chosenReviews.sort(function(a,b){
-        return new Date(b.review_date) - new Date(a.review_date);
-    });
-
-    
-    for (x in chosenReviews){
-        let formattedDate = new Date(chosenReviews[x].review_date);
-        // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
-        document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
-            `<div class="card mr-3 ml-3 mt-2">
-                <div class="card-body">
-                <h6 class="reviewBodyFont" style="font-size:20px">
-                    <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                    store
-                    </span>
-                    <div class="float-left ml-1" >
-                    ${storeIDandNameDict[chosenReviews[x].store_id]}
-                    </div> 
-                </h6>
-                <br>
-                <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
-                <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
-                </div>
-            </div>`;
-    }
-}
-
-
-function chart(csv,w,h) {
 	var keys = ["Pos", "Neg", "Neu"]
     // console.log(keys)
 
-	var year   = [...new Set(csv.map(d => d.Year))]
-	var Months = [...new Set(csv.map(d => d.Month))]
+	var year   = [...new Set(setimentOverTimePrepared.map(d => d.Year))]
+	var Months = [...new Set(setimentOverTimePrepared.map(d => d.Month))]
 
 	var options = d3.select("#year").selectAll("option")
 		.data(year)
@@ -187,8 +256,7 @@ function chart(csv,w,h) {
 	update(d3.select("#year").property("value"), 0)
 
 	function update(input, speed) {
-
-		var data = csv.filter(f => f.Year == input)
+		var data = setimentOverTimePrepared.filter(f => f.Year == input)
 
 		data.forEach(function(d) {
 			d.total = d3.sum(keys, k => +d[k])
@@ -240,7 +308,7 @@ function chart(csv,w,h) {
     bars.enter().selectAll("rect")
       .on("mouseover", showToolTip)
       .on("mouseout", hideToolTip)
-      .on('click', showReviews)
+      .on('click', prepWordCloud)
 
     function showToolTip(d, i) {
       var xPos = parseFloat(d3.select(this).attr("x"));
@@ -277,13 +345,13 @@ function chart(csv,w,h) {
       d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
     }
 
-    function showReviews(d,i){
-    //   console.log(d.data)
+    function prepWordCloud(d,i){
+      
     //   console.log(d[1]-d[0])
       let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
     //   console.log(selected)
     //   console.log(d.data[selected])
-      displayReviewsBelowSentimentOverTime(d.data[selected])
+      updateWordCloud(d.data[selected],selected)
     }
 
     function getKeyByValue(object, value) {
@@ -346,5 +414,7 @@ function chart(csv,w,h) {
 		.on("click", function() {
 			update(select.property("value"), 750)
 		})
-    }
 }
+
+
+$(window).resize(resizeSentimentOverTime());

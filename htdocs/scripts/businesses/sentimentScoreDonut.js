@@ -182,9 +182,6 @@ function drawSentimentDonut(donutData){
           .attr("stroke-width",0);
         }
   
-        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
-        document.getElementById("wordCloudContainer").style.display             = "block";
-
         let dataToBeSentToServer = [{data:[]}];
         // Show all reviews wordCloud if nothing selected
         if(valuesClicked[0] == self.id){
@@ -193,7 +190,7 @@ function drawSentimentDonut(donutData){
           let storeIDByUser = document.getElementById('getStoreID').value;
           let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-          let url = hostname + "/adj_noun_pairs/" + shopID;
+          let url = hostname + "/adj_noun_pairs/store/" + shopID;
           retrieveWordCloudNounAdjPairs(url,"GET","");
           hideToolTip() 
 
@@ -206,6 +203,9 @@ function drawSentimentDonut(donutData){
           valuesClicked = []
           valuesClicked.push(self.id)
           if(sentimentDataForWordCloud[0][self.id].length > 10){
+            document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+            document.getElementById("wordCloudContainer").style.display             = "block";
+            
             dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0][self.id])
             let url = hostname + "/adj_noun_pairs/";
             console.log(dataToBeSentToServer[0])
@@ -218,11 +218,11 @@ function drawSentimentDonut(donutData){
             document.getElementById("wordCloudContainer").style.display          = "none";
             document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
             `<!-- Triangle with exclamation icon -->
-            <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 40%;left: 46%;" class="material-icons">
+            <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 40%;width:100%;" class="material-icons text-center">
                   warning_amber  
             </div>
             <!-- Warning message that goes along with the above icon -->
-            <div class='ml-5 mr-5 text-center' style='position: absolute;top: 52%'>
+            <div class='p5 text-center' style='position: absolute;top: 52%;width:100%'>
               Not enough reviews to display wordcloud. 
               Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
                to view the ${sentimentDataForWordCloud[0][self.id].length} ${(self.id).toLowerCase()} reviews instead
