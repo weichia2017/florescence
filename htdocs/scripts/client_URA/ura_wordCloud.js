@@ -529,8 +529,7 @@ function drawWordcLOUD(w,h){
 
 
 let url = hostname + "/adj_noun_pairs/road/1";
-
-$(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
+retrieveWordCloudNounAdjPairs(url,"GET","");
 
 
 // $(window).resize(resize);
