@@ -25,6 +25,7 @@ async function retrieveWordCloudNounAdjPairs(url,method,values){
 
 function prepareWordCloud(response){
     document.getElementById("wordCloudContainer").style.display = "block";
+    document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none"
     document.getElementById("wordCloudContainerSpinner").style.display = "none";
     // console.log(response)
     wordCloudData  = [];
@@ -479,7 +480,7 @@ function drawWordcLOUD(w,h){
 // let storeIDByUser = document.getElementById('getStoreID').value;
 // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
-let url = hostname + "/adj_noun_pairs/store" + shopID;
+let url = hostname + "/adj_noun_pairs/store/" + shopID;
 
 $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
 // $(window).resize(resize);
