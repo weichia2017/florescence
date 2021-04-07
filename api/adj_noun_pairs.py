@@ -4,25 +4,25 @@ from datetime import datetime, timezone
 
 bp = Blueprint('adj_noun_pairs', __name__, url_prefix='/adj_noun_pairs')
 
+
 @bp.route('/<int:store_id>')
 def redirect_to_pairsByStore(store_id):
     return pairsByStores(store_id)
 
+
 @bp.route('/store/<int:store_id>')
 def pairsByStores(store_id):
-    df = None
     with DataAccess() as dao:
         if store_id not in dao.getStores().index.to_list():
             return jsonify(error="The store identifier was not found"), 400
         try:
             all_pairs = dao.getAdjNounPairsByStore(store_id)
             df = __getRanking(all_pairs)
+            return jsonify(data=df.to_dict('records')), 200
         except Exception as e:
-            return jsonify(error=msg), 400
-    return jsonify(
-        data=df.to_dict('records'),
-        datetime=datetime.now(timezone.utc)
-    ), 200
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 @bp.route('/road/<int:road_id>')
 def pairsByRoad(road_id):
@@ -33,28 +33,28 @@ def pairsByRoad(road_id):
         try:
             all_pairs = dao.getAdjNounPairsByRoad(road_id)
             df = __getRanking(all_pairs)
+            return jsonify(data=df.to_dict('records')), 200
         except Exception as e:
-            return jsonify(error=msg), 400
-    return jsonify(
-        data=df.to_dict('records'),
-        datetime=datetime.now(timezone.utc)
-    ), 200
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 @bp.route('/', methods=["POST"])
 def get_adj_noun_pair():
     df = None
     request_data = request.get_json()
     ids = request_data["data"]
+    if ids == None:
+        return jsonify(error="Bad Request, check the syntax"), 400
     with DataAccess() as dao:
         try:
             all_pairs = dao.getAdjNounPairsByIds(ids)
             df = __getRanking(all_pairs)
+            return jsonify(data=df.to_dict('records')), 200
         except Exception as e:
-            return jsonify(error=msg), 400
-    return jsonify(
-        data=df.to_dict('records'),
-        datetime=datetime.now(timezone.utc)
-    ), 200
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 def __getRanking(all_pairs):
     num_of_noun = 10

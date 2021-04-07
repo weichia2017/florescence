@@ -155,7 +155,7 @@ class DataAccess:
             '''
         args = (row.review_id, row.source_id, row.negative,
                 row.neutral, row.positive, row.compound, datetime)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     def getAllSentiments(self, return_as_dataframe=True):
         query = '''
@@ -171,7 +171,7 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getSentiments(self, store_id, return_as_dataframe=True):
+    def getSentimentsbyStore(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
         query = '''
@@ -213,7 +213,7 @@ class DataAccess:
             VALUES (NULL, %s, %s, %s, %s, %s)
         '''
         args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
         query = '''
@@ -260,7 +260,7 @@ class DataAccess:
 
     ## Pre-Processing
 
-    def getRawReviews_UnProcessed_Sentiments(self, return_as_dataframe=True):
+    def getRawReviews_UnProcessed_Sentiments(self):
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
             AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
@@ -268,14 +268,11 @@ class DataAccess:
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
             return pandas.DataFrame()
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output)
-            df.set_index('review_id', inplace=True)
-            return df
+        df = pandas.DataFrame(output)
+        df.set_index('review_id', inplace=True)
+        return df
 
-    def getRawReviews_UnProcessed_AdjNounPairs(self, return_as_dataframe=True):
+    def getRawReviews_UnProcessed_AdjNounPairs(self):
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
             AND NOT EXISTS (SELECT 1 FROM adj_noun_pairs ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
@@ -283,12 +280,9 @@ class DataAccess:
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
             return pandas.DataFrame()
-        if not return_as_dataframe:
-            return output
-        else:
-            df = pandas.DataFrame(output)
-            df.set_index('review_id', inplace=True)
-            return df
+        df = pandas.DataFrame(output)
+        df.set_index('review_id', inplace=True)
+        return df
 
     # Reviews
 
@@ -305,25 +299,51 @@ class DataAccess:
                 review.review_text,
                 review.review_date,
                 review.retrieval_date)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     ## Users
 
-    def createUsers(self, username, password):
+    def createUser(self, email, name, hashed_password):
         query = '''
-            INSERT INTO `users`
-            (`user_id`, `username`, `password`, `admin`) 
+            INSERT INTO `users` 
+            (`user_id`, `email`, `name`, `password`, `active`, `admin`, `store_id`) 
             VALUES 
-            (UUID_SHORT(),%s,%s,%s)
+            (UUID_SHORT(), %s, %s, %s, True, False, NULL)
             '''
-        args = (username,
-                password,
-                0)
-        return self.__executeInsertQuery(query, args)
+        args = (email, name, hashed_password)
+        return self.__executeModificationQuery(query, args)
 
+    def getUserByEmail(self, email):
+        query = '''
+            SELECT * FROM users WHERE email = %s
+        '''
+        args = (email,)
+        return self.__executeSelectQuery(query, args)
+    
+    def getUserByUserId(self, user_id):
+        query = '''
+            SELECT * FROM users WHERE user_id = %s
+        '''
+        args = (user_id,)
+        return self.__executeSelectQuery(query, args)
+
+    def updateUserPassword(self, user_id, password):
+        query = '''
+            UPDATE `users` SET `password` = %s WHERE `users`.`user_id` = %s;
+        '''
+        args = (password, user_id)
+        return self.__executeModificationQuery(query, args)
+    
+    def updateStoreId(self, user_id, store_id):
+        query = '''
+            UPDATE `users` SET `store_id` = %s WHERE `users`.`user_id` = %s;
+        '''
+        args = (store_id, user_id)
+        return self.__executeModificationQuery(query, args)
+    
     ## Utility
 
-    def __executeInsertQuery(self, query, args):
+    def __executeModificationQuery(self, query, args):
         cursor = self.connector.cursor()
         status = True
         try:

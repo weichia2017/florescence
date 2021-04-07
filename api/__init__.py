@@ -4,6 +4,14 @@ from datetime import datetime, timezone
 from flask import Flask
 from flask_cors import CORS
 
+# HTTP Error Codes
+# 200 OK
+# 201 Created
+# 400 Bad Request
+# 401 Unauthorized
+# 405 Method Not Allowed
+# 500 Server Error
+
 def create_app():
     app = Flask(__name__)
     CORS(app)

@@ -17,7 +17,7 @@ INSERT INTO `roads` (`road_id`, `road_name`) VALUES (1, 'Duxton Hill');
 INSERT INTO `roads` (`road_id`, `road_name`) VALUES (2, 'Duxton Road');
 
 CREATE TABLE `florescence`.`stores` ( 
-  `id_store` INT NOT NULL AUTO_INCREMENT , 
+  `store_id` INT NOT NULL AUTO_INCREMENT , 
   `store_name` VARCHAR(255) NOT NULL , 
   `googlereviews_url` VARCHAR(255) NOT NULL , 
   `tripadvisors_url` VARCHAR(255) NOT NULL , 
@@ -94,16 +94,14 @@ INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisor
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (37,'Yellowpot','','https://www.google.com.sg/maps/place/Yellow+Pot+Tanjong+Pagar/@1.2786983,103.840996,17z/data=!3m1!4b1!4m5!3m4!1s0x31da1959f5c7fc3f:0x113344a3343f235!8m2!3d1.2786983!4d103.84319',2);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (38,'Kilo Kitchen','https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d12073254-Reviews-Kilo_Kitchen-Singapore.html','https://www.google.com.sg/maps/place/Kilo+Kitchen+(Singapore)/@1.2794847,103.8410555,17z/data=!3m1!4b1!4m5!3m4!1s0x31da19e191a06275:0x5a6ae47a29bd00c1!8m2!3d1.2794847!4d103.8432495',2);
 
-CREATE TABLE `florescence`.`users` (
+CREATE TABLE `florescence`.`users` ( 
   `user_id` VARCHAR(255) NOT NULL , 
-  `username` VARCHAR(255) NOT NULL , 
+  `email` VARCHAR(255) NOT NULL , 
+  `name` VARCHAR(255) NOT NULL , 
   `password` VARCHAR(255) NOT NULL , 
-  `admin` BOOLEAN NOT NULL , 
-  PRIMARY KEY (`user_id`)
-) ENGINE = InnoDB;
-
-CREATE TABLE `florescence`.`connected_stores` (
-  `user_id` VARCHAR(255) NOT NULL, 
-  `id_store` INT NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `active` BOOLEAN NOT NULL ,
+  `admin` BOOLEAN NOT NULL ,
+  `store_id` INT NULL ,
+  PRIMARY KEY (`user_id`), 
+  UNIQUE (`email`)
 ) ENGINE = InnoDB;
