@@ -3,6 +3,7 @@ from DatabaseAccess import DataAccess
 from werkzeug.security import check_password_hash, generate_password_hash
 bp = Blueprint('users', __name__, url_prefix='/users')
 
+
 @bp.route('/create', methods=['POST'])
 def create():
     email = request.form.get('email')
@@ -11,12 +12,14 @@ def create():
     hashed_password = generate_password_hash(password, method='sha256')
     with DataAccess() as dao:
         if len(dao.getUserByEmail(email)) > 0:
-            return jsonify(response=False, message="User Exist"), 400
+            return jsonify(response="User Exist"), 400
         try:
             results = dao.createUser(email, name, hashed_password)
+            return jsonify(response=results), 201
         except Exception as e:
-            return jsonify(error=e), 500
-    return jsonify(response=results), 200
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 @bp.route('/login', methods=['POST'])
 def login():
@@ -25,13 +28,16 @@ def login():
     with DataAccess() as dao:
         try:
             row = dao.getUserByEmail(email)[0]
+            if not row['active']:
+                return jsonify(response="Account is not active"), 400
             if check_password_hash(row['password'], password):
                 if row['admin']:
-                    return jsonify(user_id=row['user_id'], admin=row['admin']), 200
-                return jsonify(user_id=row['user_id'], store_id=row['store_id']), 200
+                    return jsonify(response=True, user_id=row['user_id'], admin=row['admin']), 200
+                return jsonify(response=True, user_id=row['user_id'], store_id=row['store_id']), 200
         except Exception as e:
-            return jsonify(error=e), 500
-    return jsonify(user_id=""), 401
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 @bp.route('/update/password', methods=['POST'])
 def changePassword():
@@ -42,14 +48,18 @@ def changePassword():
     with DataAccess() as dao:
         try:
             row = dao.getUserByUserId(user_id)[0]
+            if len(row) == 0:
+                return jsonify(response="Account not found"), 400
             if check_password_hash(row['password'], password):
-                results = dao.updateUserPassword(row['user_id'], hashed_password)  
+                results = dao.updateUserPassword(
+                    row['user_id'], hashed_password)
                 return jsonify(response=results), 200
             else:
-                return jsonify(response=False, message="Incorrect existing password"), 400
+                return jsonify(response="Incorrect existing password"), 401
         except Exception as e:
-            return jsonify(error=e), 500
-    return jsonify(response=False), 401
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 @bp.route('/update/store_id', methods=['POST'])
 def changeStoreId():
@@ -57,13 +67,15 @@ def changeStoreId():
     user_id = request.form.get('user_id')
     store_id = request.form.get('store_id')
     if not adminRights(admin_id):
-        return jsonify(error="Invalid Administrative Rights"), 401
+        return jsonify(response="Invalid Administrative Rights"), 401
     with DataAccess() as dao:
         try:
             results = dao.updateStoreId(user_id, store_id)
+            return jsonify(response=results), 200
         except Exception as e:
-            return jsonify(error=e), 500
-    return jsonify(response=results), 200
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
+
 
 def adminRights(user_id):
     with DataAccess() as dao:

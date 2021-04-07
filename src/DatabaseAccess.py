@@ -171,7 +171,7 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getSentiments(self, store_id, return_as_dataframe=True):
+    def getSentimentsbyStore(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
         query = '''
