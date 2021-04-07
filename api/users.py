@@ -5,7 +5,6 @@ bp = Blueprint('users', __name__, url_prefix='/users')
 
 @bp.route('/create', methods=['POST'])
 def create():
-    results = None
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
@@ -27,7 +26,9 @@ def login():
         try:
             row = dao.getUserByEmail(email)[0]
             if check_password_hash(row['password'], password):
-                return jsonify(user_id=row['user_id'], admin=row['admin']), 200
+                if row['admin']:
+                    return jsonify(user_id=row['user_id'], admin=row['admin']), 200
+                return jsonify(user_id=row['user_id'], store_id=row['store_id']), 200
         except Exception as e:
             return jsonify(error=e), 500
     return jsonify(user_id=""), 401
