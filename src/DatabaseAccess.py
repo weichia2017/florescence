@@ -155,7 +155,7 @@ class DataAccess:
             '''
         args = (row.review_id, row.source_id, row.negative,
                 row.neutral, row.positive, row.compound, datetime)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     def getAllSentiments(self, return_as_dataframe=True):
         query = '''
@@ -213,7 +213,7 @@ class DataAccess:
             VALUES (NULL, %s, %s, %s, %s, %s)
         '''
         args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
         query = '''
@@ -299,7 +299,7 @@ class DataAccess:
                 review.review_text,
                 review.review_date,
                 review.retrieval_date)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     ## Users
 
@@ -311,7 +311,7 @@ class DataAccess:
             (UUID_SHORT(), %s, %s, %s, True, False, NULL)
             '''
         args = (email, name, hashed_password)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
 
     def getUserByEmail(self, email):
         query = '''
@@ -332,12 +332,18 @@ class DataAccess:
             UPDATE `users` SET `password` = %s WHERE `users`.`user_id` = %s;
         '''
         args = (password, user_id)
-        return self.__executeInsertQuery(query, args)
+        return self.__executeModificationQuery(query, args)
     
+    def updateStoreId(self, user_id, store_id):
+        query = '''
+            UPDATE `users` SET `store_id` = %s WHERE `users`.`user_id` = %s;
+        '''
+        args = (store_id, user_id)
+        return self.__executeModificationQuery(query, args)
     
     ## Utility
 
-    def __executeInsertQuery(self, query, args):
+    def __executeModificationQuery(self, query, args):
         cursor = self.connector.cursor()
         status = True
         try:

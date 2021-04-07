@@ -12,7 +12,7 @@ def create():
     hashed_password = generate_password_hash(password, method='sha256')
     with DataAccess() as dao:
         if len(dao.getUserByEmail(email)) > 0:
-            return jsonify(response=False, message="User Exist")
+            return jsonify(response=False, message="User Exist"), 400
         try:
             results = dao.createUser(email, name, hashed_password)
         except Exception as e:
@@ -49,3 +49,23 @@ def changePassword():
         except Exception as e:
             return jsonify(error=e), 500
     return jsonify(response=False), 401
+
+@bp.route('/update/store_id', methods=['POST'])
+def changeStoreId():
+    admin_id = request.form.get('admin_id')
+    user_id = request.form.get('user_id')
+    store_id = request.form.get('store_id')
+    if not adminRights(admin_id):
+        return jsonify(error="Invalid Administrative Rights"), 401
+    with DataAccess() as dao:
+        try:
+            results = dao.updateStoreId(user_id, store_id)
+        except Exception as e:
+            return jsonify(error=e), 500
+    return jsonify(response=results), 200
+
+def adminRights(user_id):
+    with DataAccess() as dao:
+        row = dao.getUserByUserId(user_id)[0]
+        return row['admin']
+    return False

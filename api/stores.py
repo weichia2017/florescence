@@ -30,7 +30,7 @@ def storesByID(store_id):
         try:
             df = dao.getStore(store_id).reset_index()
         except Exception as e:
-            return jsonify(error=msg), 500
+            return jsonify(error=e), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
@@ -45,7 +45,7 @@ def storesByRoad(road_id):
         try:
             df = dao.getStoreByRoad(road_id)
         except Exception as e:
-            return jsonify(error=msg), 500
+            return jsonify(error=e), 500
     return jsonify(
         data=df.to_dict('records'),
         datetime=datetime.now(timezone.utc)
