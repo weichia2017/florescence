@@ -299,15 +299,17 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
 
   chosenReviews = chosenReviews.split(",");
   
+  // console.log(refactoredResponse);
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
+    // console.log(chosenReviews[x]);
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
                                     review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
                                     review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun),
                                     store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
   }
 
-  console.log(chosenReviewsWithFullData);
+  // console.log(chosenReviewsWithFullData);
 
   // Sort By Reviews By Date
   chosenReviewsWithFullData.sort(function(a,b){
@@ -528,8 +530,7 @@ function drawWordcLOUD(w,h){
 // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
 
-let url = hostname + "/adj_noun_pairs/road/1";
-retrieveWordCloudNounAdjPairs(url,"GET","");
+
 
 
 // $(window).resize(resize);

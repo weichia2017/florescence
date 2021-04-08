@@ -270,12 +270,17 @@ function chart(csv,w,h) {
     }
 
     function showReviews(d,i){
+
+        // d3.select(this)
+        // .attr("stroke","black")
+        // .attr("stroke-width",1)
+        // .style("cursor", "pointer");
     //   console.log(d.data)
     //   console.log(d[1]-d[0])
-      let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
+        let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
     //   console.log(selected)
-      console.log(d.data[selected])
-      displayReviewsBelowSentimentOverTime(d.data[selected])
+        console.log(d.data[selected])
+        displayReviewsBelowSentimentOverTime(d.data[selected])
     }
 
     function getKeyByValue(object, value) {

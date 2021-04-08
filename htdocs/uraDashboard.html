@@ -109,7 +109,7 @@ if( isset($_GET['storeID']) ){
         margin-left:25px;
       }
 
-      #streetNameContainer {
+      #subzoneNameContainer {
         font-family:'Anton', sans-serif;
         color: rgb(92, 92, 92);
         font-size: 1.8em;
@@ -150,6 +150,11 @@ if( isset($_GET['storeID']) ){
 
       .scrollStoreRanks{
         height:400px;
+        overflow-y: scroll;
+      }
+
+      .scrollSubzones{
+        height:550px;
         overflow-y: scroll;
       }
 
@@ -210,14 +215,14 @@ if( isset($_GET['storeID']) ){
 
       .list-group .list-group-item.active {
         background-color: #0275d8;
-     
+        z-index:0;
       }
 
 
       /* TanjongPagarMap */
       #tanjongPagarMap { 
         height:600px;
-        width:100%;
+        /* width:70%; */
         z-index:0;
       }
 
@@ -265,7 +270,7 @@ if( isset($_GET['storeID']) ){
         <!-- ====================== -->
         <!--    FILTER LOCATION     -->
         <!-- ====================== -->
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
               <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -285,11 +290,36 @@ if( isset($_GET['storeID']) ){
                 </span>    
               </a>
             </div>
-            <div class="mt-5" style="width:100%;">
-              <div id="tanjongPagarMap" class="float-right"></div>
+            <div class="mt-5">
+              <div id="subzonesList" class="list-group scrollSubzones list-group-hover "></div>
+              <button id="subZoneSearch" onclick="subZonesSelected()" class="btn btn-primary " type="submit">Search</button>
             </div>
-            
         </div>
+
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              filter_alt
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <div class="float-left ml-1 headings" >Tanjong Pagar BID: </div> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex" 
+                title="Total Reviews" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="hover focus" 
+                data-content="Select sub zone(s) of interest in Tanjong Pagar">
+              <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+              </span>    
+            </a>
+          </div>
+          <div class="mt-5" style="width:100%">
+            <div id="tanjongPagarMap" class=""></div>
+          </div>
+      </div>
       </div>
 
 
@@ -319,8 +349,8 @@ if( isset($_GET['storeID']) ){
                     info_outline
                   </span>    
                 </a>
-                <div class="container" id="streetNameContainer">
-                  Duxton Hill 
+                <div class="container" id="subzoneNameContainer">
+                  <!-- Subzone name get filled here -->
                   <!-- <span style="font-size: 0.3em;">Alba 1836 Wine Bar & Restaurant</span> -->
                 </div>
               </div>
@@ -627,10 +657,12 @@ if( isset($_GET['storeID']) ){
     // }
 
     document.getElementById("wordCloudReviewsContainer").style.display              = "none";
-    // document.getElementById("SubzoneInformationContainer").style.display            = "none";
+    document.getElementById("SubzoneInformationContainer").style.display            = "none";
     document.getElementById("wordCloudContainer").style.display                     = "block";
+    document.getElementById("subZoneSearch").style.display                          = "none";
+
   
-    totalReviewsContainerSpinner
+    // totalReviewsContainerSpinner
     document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
     document.getElementById("totalReviewsContainerSpinner").style.display           = "none";
     document.getElementById("wordCloudContainerSpinner").style.display              = "none";
@@ -676,9 +708,9 @@ if( isset($_GET['storeID']) ){
     let subZoneNounAdjPairs;
     let isCallForSubZone = true;
     // The main call to retrieve values for all charts other than wordcloud
-    async function getSentimentScore(){
+    async function getSentimentScore(subzone_ID){
       document.getElementById("main-overlay").style.display = "block";
-      let reviewsResponse  = await makeRequest(hostname + "/reviews/", "GET", "");
+      let reviewsResponse  = await makeRequest(hostname + "/reviews/road/"+subzone_ID, "GET", "");
       subzoneReviews = JSON.parse(reviewsResponse).data;
 
 
@@ -792,6 +824,103 @@ if( isset($_GET['storeID']) ){
       console.log(refactoredResponse)
     }
 
+
+    function enlargePolygon(e){
+      // console.log(e.id)
+      // Remove all whitespaces
+      let subzone = e.id.replace(/\s/g, "")
+      // Make first character lowercase
+      subzone = subzone.charAt(0).toLowerCase() + subzone.slice(1);
+
+      if(!selectedSubZones.includes(e.id)){
+        window[subzone].setStyle({weight: 3,color: 'red'})
+        //Unselect from list here
+      }
+    }
+
+    function shrinkPolygon(e){
+      console.log(e.id)
+      // Remove all whitespaces
+      let subzone = e.id.replace(/\s/g, "")
+      // Make first character lowercase
+      subzone = subzone.charAt(0).toLowerCase() + subzone.slice(1);
+
+      if(!selectedSubZones.includes(e.id)){
+        window[subzone].setStyle({weight: 1.5,color: '#3388ff'})
+        //Unselect from list here
+      }
+    }
+
+    function selectSubzone(e){
+
+      // Remove all whitespaces
+      let subzone = e.id.replace(/\s/g, "")
+      // Make first character lowercase
+      subzone = subzone.charAt(0).toLowerCase() + subzone.slice(1);
+
+      if(selectedSubZones.includes(e.id)){
+        window[subzone].setStyle({weight: 1.5,color: '#3388ff'})
+
+        const index = selectedSubZones.indexOf(e.id)
+        if (index > -1) {
+            selectedSubZones.splice(index, 1);
+            e.classList.remove("active");
+        }
+      }
+      else{
+        if(selectedSubZones.length < 2){
+          window[subzone].setStyle({weight: 3,color: 'red'})
+          selectedSubZones.unshift(e.id)
+          e.classList.add("active");
+        }        
+      }
+      // console.log(selectedSubZones)
+      if(selectedSubZones.length == 0){
+        document.getElementById("subZoneSearch").style.display  = "none";
+      }else{
+        document.getElementById("subZoneSearch").style.display  = "block";
+      }
+    }
+
+    var selectedSubZones = [];
+    var subZoneIdNameDic = {};
+    async function getSubzone(){
+      let subzoneResponse  = await makeRequest(hostname + "/roads/", "GET", "");
+      subzones = JSON.parse(subzoneResponse).data;
+
+      // console.log(subzones)
+      subzoneList = document.getElementById("subzonesList");
+
+      for (x in subzones){
+        subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
+        subzoneList.innerHTML += 
+        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer storesList reviewBodyFont mr-2">${subzones[x].road_name}</a>`;
+      }
+      // console.log(subZoneIdNameDic)
+    }
+
+    // ===============
+    //  Search Button
+    // ===============
+    function subZonesSelected(){
+      console.log(selectedSubZones);
+    
+      function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+      }
+      subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
+
+      document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
+      getSentimentScore(subzone1);
+
+      let url = hostname + "/adj_noun_pairs/road/"+subzone1;
+      retrieveWordCloudNounAdjPairs(url,"GET","");
+
+      getRanking(subzone1);
+      document.getElementById("SubzoneInformationContainer").style.display = "block";
+      document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
+    }
+
     // //Temporary till we have user Login Feature
     // async function getStoreName(){
     //   let storeInfo = await makeRequest(hostname + "/stores/" + shopID, "GET", "");
@@ -799,13 +928,14 @@ if( isset($_GET['storeID']) ){
     // }
 
     // getStoreName();
-    getSentimentScore();
 
-  
-
- 
-  </script>
+    // $("#btnsubmit").prop("disabled", ids.length === 0);
+    getSubzone();
+    
+    </script>
 
   
   </body>
 </html>
+
+

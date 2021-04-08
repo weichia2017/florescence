@@ -6,17 +6,54 @@ zoomHome.addTo(map);
 L.esri.basemapLayer('Topographic').addTo(map);
 
 
+
 // OVERALL
 function onClick(e) {
-  if(e.target._tooltip._source.options.weight == 3){
-    e.target.setStyle({weight: 1.5})
-  }else{
-    e.target.setStyle({weight: 3})
-  }
  
-//   e.sourceTarget._tooltip._source.options.weight = 3
-  console.log(e.target._tooltip._source.options.weight);
-  console.log(e.target._tooltip._content);
+  let subzone = e.target._tooltip._content;
+  if(selectedSubZones.includes(subzone)){
+    e.target.setStyle({weight: 1.5,color: '#3388ff'})
+
+    const index = selectedSubZones.indexOf(subzone)
+    if (index > -1) {
+        selectedSubZones.splice(index, 1);
+        document.getElementById(subzone).classList.remove("active");
+    }
+  }
+  else{
+    if(selectedSubZones.length < 2){
+        e.target.setStyle({weight: 3,color: 'red'})
+        selectedSubZones.unshift(subzone)
+        document.getElementById(subzone).classList.add("active");
+    }
+    
+  }
+//   console.log(selectedSubZones)
+
+  if(selectedSubZones.length == 0){
+    document.getElementById("subZoneSearch").style.display  = "none";
+  }else{
+      console.log("hi")
+    document.getElementById("subZoneSearch").style.display  = "block";
+  }
+
+}
+
+function onMouseOver(e) {
+    let subzone = e.target._tooltip._content;
+    if(!selectedSubZones.includes(subzone)){
+        e.target.setStyle({weight: 3,color: 'red'})
+        document.getElementById(subzone).classList.add("active");
+    }
+}
+
+function onMouseOut(e) {
+    let subzone = e.target._tooltip._content;
+    if(!selectedSubZones.includes(subzone)){
+      e.target.setStyle({weight: 1.5,color: '#3388ff'})
+      document.getElementById(subzone).classList.remove("active");
+      //Unselect from list here
+    }
 }
 
 var roadStyle =
@@ -46,17 +83,33 @@ tanjongPagarBoundry.setStyle(tanjongPagarStyle).addTo(map);
 // ==========================
 //        DUXTON HILL 
 // ==========================
-var duxtonHill = L.polygon([[1.2797342, 103.8432534], [1.2793427, 103.842607],[1.2792623, 103.8425239], [1.2791845, 103.8425293], [1.2790934, 103.8426017], [1.278844, 103.84232], [1.2786697, 103.8425239], [1.2784431, 103.8423462], [1.2780301, 103.8426198], [1.2779711, 103.8427942], [1.2786308, 103.8430892], [1.2789436, 103.8430569], [1.2789463, 103.8432071], [1.2792895, 103.8431802], [1.2793807, 103.8432822], [1.2794102, 103.8432982], [1.2797347, 103.8432553], [1.2797342, 103.8432534]]).addTo(map).on('click', onClick);
+var duxtonHill = L.polygon([[1.2797342, 103.8432534], [1.2793427, 103.842607],[1.2792623, 103.8425239], [1.2791845, 103.8425293], [1.2790934, 103.8426017], [1.278844, 103.84232], [1.2786697, 103.8425239], [1.2784431, 103.8423462], [1.2780301, 103.8426198], [1.2779711, 103.8427942], [1.2786308, 103.8430892], [1.2789436, 103.8430569], [1.2789463, 103.8432071], [1.2792895, 103.8431802], [1.2793807, 103.8432822], [1.2794102, 103.8432982], [1.2797347, 103.8432553], [1.2797342, 103.8432534]]).addTo(map);
+duxtonHill.on('click', onClick);
+duxtonHill.on('mouseover', onMouseOver);
+duxtonHill.on('mouseout', onMouseOut);
 duxtonHill.setStyle(roadStyle).addTo(map);
 duxtonHill.bindTooltip("Duxton Hill");
 
 // ==========================
 //        DUXTON ROAD 
 // ==========================
-var duxtonRoad = L.polygon([[1.2797399, 103.8432756], [1.279882, 103.843525], [1.279705, 103.8435921], [1.2794556, 103.8435867], [1.2794047, 103.8435465], [1.2791955, 103.8435572], [1.2787262, 103.8436618], [1.2777938, 103.8433153], [1.2778287, 103.8430149], [1.2779198, 103.8427762], [1.2786385, 103.8430927], [1.2789469, 103.8430605], [1.2789469, 103.8432134], [1.2792931, 103.8431822], [1.2793763, 103.8432841], [1.2793977, 103.8432921], [1.2794178, 103.8433015], [1.2797367, 103.8432655]]).addTo(map).on('click', onClick);
+var duxtonRoad = L.polygon([[1.2797399, 103.8432756], [1.279882, 103.843525], [1.279705, 103.8435921], [1.2794556, 103.8435867], [1.2794047, 103.8435465], [1.2791955, 103.8435572], [1.2787262, 103.8436618], [1.2777938, 103.8433153], [1.2778287, 103.8430149], [1.2779198, 103.8427762], [1.2786385, 103.8430927], [1.2789469, 103.8430605], [1.2789469, 103.8432134], [1.2792931, 103.8431822], [1.2793763, 103.8432841], [1.2793977, 103.8432921], [1.2794178, 103.8433015], [1.2797367, 103.8432655]]).addTo(map);
+duxtonRoad.on('click', onClick);
+duxtonRoad.on('mouseover', onMouseOver);
+duxtonRoad.on('mouseout', onMouseOut);
 duxtonRoad.setStyle(roadStyle).addTo(map);
 duxtonRoad.bindTooltip("Duxton Road");  
 
+// ==========================
+//     TANJONG PAGAR ROAD 
+// ==========================
+// INSERT into roads (road_id,road_name) VALUES (3,"Tanjong Pagar Road");
+var tanjongPagarRoad = L.polygon([[1.2798982, 103.8435422], [1.2801583, 103.8439445], [1.2802077, 103.8441613], [1.2798269, 103.8444885], [1.2796231, 103.8443276], [1.279253, 103.8442632], [1.2788133, 103.8442257], [1.2787895, 103.844146], [1.2785991, 103.8441084], [1.278575, 103.8441567], [1.2782934, 103.8441004], [1.2779797, 103.8439689], [1.2777164, 103.8439106], [1.2774858, 103.8438677], [1.2772498, 103.8439348], [1.2772521, 103.8436365], [1.2774838, 103.8436541], [1.2775034, 103.8432965], [1.2777828, 103.8433401], [1.2782494, 103.8435171], [1.2787226, 103.843688], [1.2791948, 103.8435801], [1.2793906, 103.843572], [1.2794496, 103.8436176], [1.2796989, 103.8436149], [1.2798935, 103.8435492]])
+tanjongPagarRoad.on('click', onClick);
+tanjongPagarRoad.on('mouseover', onMouseOver);
+tanjongPagarRoad.on('mouseout', onMouseOut);
+tanjongPagarRoad.setStyle(roadStyle).addTo(map);
+tanjongPagarRoad.bindTooltip("Tanjong Pagar Road");  
 
 
 
@@ -66,3 +119,4 @@ duxtonRoad.bindTooltip("Duxton Road");
 // duxtonRoad.bindPopup("Duxton Road");
 // duxtonRoad.setStyle(duxtonRoadStyle).addTo(map);
  
+
