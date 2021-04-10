@@ -38,9 +38,9 @@ class DataAccess:
                 (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             GROUP BY
                 s.store_id
@@ -70,12 +70,12 @@ class DataAccess:
                 (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             WHERE
-            	s.store_id = %s
+                s.store_id = %s
             GROUP BY
                 s.store_id
         '''
@@ -103,9 +103,9 @@ class DataAccess:
                 (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             WHERE
             	s.road_id = %s
@@ -171,7 +171,7 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getSentimentsbyStore(self, store_id, return_as_dataframe=True):
+    def getSentimentsByStore(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
         query = '''
@@ -191,7 +191,7 @@ class DataAccess:
         if road_id == None:
             return None
         query = '''
-            SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
+            SELECT s.store_id, CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
             FROM raw_reviews rr 
             JOIN sentiment_scores ss ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
             JOIN stores s ON rr.store_id = s.store_id

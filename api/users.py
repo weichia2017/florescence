@@ -28,7 +28,7 @@ def login():
     with DataAccess() as dao:
         try:
             row = dao.getUserByEmail(email)[0]
-            if len(dao.getUserByEmail(email)) == 0:
+            if len(row) == 0:
                 return jsonify(response="User not found"), 400
             if not row['active']:
                 return jsonify(response="Account is not active"), 400
