@@ -551,7 +551,7 @@ if( isset($_GET['storeID']) ){
         </div>
 
         <!-- ================================ -->   
-        <!--   WORD CLOUD REVIEWS CONTAINER   -->
+        <!--        REVIEWS CONTAINER         -->
         <!-- ================================ -->
         <div class="row" id="wordCloudReviewsContainer">
           <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
@@ -656,19 +656,24 @@ if( isset($_GET['storeID']) ){
     //  console.log("hi")
     // }
 
-    document.getElementById("wordCloudReviewsContainer").style.display              = "none";
+    // document.getElementById("wordCloudReviewsContainer").style.display              = "none";
     document.getElementById("SubzoneInformationContainer").style.display            = "none";
-    document.getElementById("wordCloudContainer").style.display                     = "block";
+    // document.getElementById("wordCloudContainer").style.display                     = "block";
     document.getElementById("subZoneSearch").style.display                          = "none";
 
   
     // totalReviewsContainerSpinner
-    document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
-    document.getElementById("totalReviewsContainerSpinner").style.display           = "none";
-    document.getElementById("wordCloudContainerSpinner").style.display              = "none";
+    // document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
+    // document.getElementById("totalReviewsContainerSpinner").style.display           = "none";
+    // document.getElementById("wordCloudContainerSpinner").style.display              = "none";
     document.getElementById("SOTSpinner").style.display                             = "none";
 
-    document.getElementById("wordCloudNotEnoughWordsWarning").style.display         = "none";
+    // Colors for sentiment Over Time In
+    let neuColor = "#AAAAAA"
+    let posColor = "#79a925"
+    let negColor = "#FF4136"
+
+    // document.getElementById("wordCloudNotEnoughWordsWarning").style.display         = "none";
     
     // let storeIDByUser = document.getElementById('getStoreID').value;
     // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
@@ -918,7 +923,7 @@ if( isset($_GET['storeID']) ){
       // Wordcloud
       let url = hostname + "/adj_noun_pairs/road/"+subzone1;
       retrieveWordCloudNounAdjPairs(url,"GET","");
-      
+
       getRanking(subzone1);
       document.getElementById("SubzoneInformationContainer").style.display = "block";
       document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});

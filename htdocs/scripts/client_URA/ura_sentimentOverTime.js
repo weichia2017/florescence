@@ -126,6 +126,8 @@ function prepareSentimentOverTime(reviews,isShowSpinner){
 
 
 function updateWordCloud(chosenReviews,selectedSentiment){
+    document.getElementById("wordCloudClickedReviews").innerHTML = '';
+    document.getElementById("wordCloudReviewsContainer").style.display = "none";
     
     if(chosenReviews.length > 10){
         document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
@@ -246,8 +248,8 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
 		.attr("class", "y-axis")
 
 	var z = d3.scaleOrdinal()
-		.range(["#79a925", "#FF4136", "#AAAAAA"])
-		.domain(keys);
+        .range([posColor, negColor, neuColor])
+        .domain(keys);
 
 	update(d3.select("#year").property("value"), 0)
 
@@ -343,16 +345,22 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
 
     function prepWordCloud(d,i){
       
-    //   console.log(d[1]-d[0])
-      let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
-    //   console.log(selected)
-    //   console.log(d.data[selected])
-      updateWordCloud(d.data[selected],selected)
+        let selectedSentiment = ''
+        sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
+        if(sentimentSelected == posColor){
+            selectedSentiment = "PosR"
+        }else if(sentimentSelected == neuColor){
+            selectedSentiment = "NeuR"
+        }else{
+            selectedSentiment = "NegR"
+        }
+ 
+        updateWordCloud(d.data[selectedSentiment],selectedSentiment)
     }
 
-    function getKeyByValue(object, value) {
-      return Object.keys(object).find(key => object[key] === value);
-    }
+    // function getKeyByValue(object, value) {
+    //   return Object.keys(object).find(key => object[key] === value);
+    // }
 
     // Total Reviews on top of the bar text
 	var text = svg.selectAll(".text")

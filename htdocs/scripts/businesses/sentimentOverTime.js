@@ -69,6 +69,7 @@ function sentimentOverTimePrepareData(response){
     
     }
     // console.log(JSON.stringify(setimentOverTimePrepared)); 
+    console.log(setimentOverTimePrepared)
 
     drawSentimentOverTimeStackedBarChart(setimentOverTimePrepared);
 }
@@ -173,7 +174,7 @@ function chart(csv,w,h) {
 		.attr("class", "y-axis")
 
 	var z = d3.scaleOrdinal()
-		.range(["#79a925", "#FF4136", "#AAAAAA"])
+		.range([posColor, negColor, neuColor])
 		.domain(keys);
 
 	update(d3.select("#year").property("value"), 0)
@@ -271,21 +272,22 @@ function chart(csv,w,h) {
 
     function showReviews(d,i){
 
-        // d3.select(this)
-        // .attr("stroke","black")
-        // .attr("stroke-width",1)
-        // .style("cursor", "pointer");
-    //   console.log(d.data)
-    //   console.log(d[1]-d[0])
-        let selected = getKeyByValue(d.data, (d[1]-d[0])) + "R"
-    //   console.log(selected)
-        console.log(d.data[selected])
-        displayReviewsBelowSentimentOverTime(d.data[selected])
+        let selectedSentiment = ''
+        sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
+        if(sentimentSelected == posColor){
+            selectedSentiment = "PosR"
+        }else if(sentimentSelected == neuColor){
+            selectedSentiment = "NeuR"
+        }else{
+            selectedSentiment = "NegR"
+        }
+ 
+        displayReviewsBelowSentimentOverTime(d.data[selectedSentiment])
     }
 
-    function getKeyByValue(object, value) {
-      return Object.keys(object).find(key => object[key] === value);
-    }
+    // function getKeyByValue(object, value) {
+    //   return Object.keys(object).find(key => object[key] === value);
+    // }
 
     // Total Reviews on top of the bar text
 	var text = svg.selectAll(".text")

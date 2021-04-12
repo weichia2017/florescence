@@ -478,9 +478,14 @@ if( isset($_GET['storeID']) ){
 
     document.getElementById("wordCloudReviewsContainer").style.display      = "none";
     document.getElementById("sentimentReviewsContainer").style.display      = "none";
-    document.getElementById("wordCloudContainer").style.display             = "block";
+    // document.getElementById("wordCloudContainer").style.display             = "block";
     document.getElementById("wordCloudContainerSpinner").style.display      = "none";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+    
+    // Colors for sentiment Over Time In
+    let neuColor = "#AAAAAA"
+    let posColor = "#79a925"
+    let negColor = "#FF4136"
     
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
