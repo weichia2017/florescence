@@ -7,20 +7,20 @@ CREATE TABLE `florescence`.`sources` (
 INSERT INTO `sources` (`source_id`, `source_name`) VALUES (1, 'Google Reviews');
 INSERT INTO `sources` (`source_id`, `source_name`) VALUES (2, 'TripAdvisor');
 
-CREATE TABLE `florescence`.`roads` ( 
-  `road_id` INT NOT NULL, 
-  `road_name` VARCHAR(255) NOT NULL , 
+CREATE TABLE `florescence`.`roads` (
+  `road_id` INT NOT NULL,
+  `road_name` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`road_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `roads` (`road_id`, `road_name`) VALUES (1, 'Duxton Hill');
 INSERT INTO `roads` (`road_id`, `road_name`) VALUES (2, 'Duxton Road');
 
-CREATE TABLE `florescence`.`stores` ( 
-  `store_id` INT NOT NULL AUTO_INCREMENT , 
-  `store_name` VARCHAR(255) NOT NULL , 
-  `googlereviews_url` VARCHAR(255) NOT NULL , 
-  `tripadvisors_url` VARCHAR(255) NOT NULL , 
+CREATE TABLE `florescence`.`stores` (
+  `store_id` INT NOT NULL AUTO_INCREMENT ,
+  `store_name` VARCHAR(255) NOT NULL ,
+  `googlereviews_url` VARCHAR(255) NOT NULL ,
+  `tripadvisors_url` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id_store`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -34,18 +34,18 @@ CREATE TABLE `florescence`.`raw_reviews` (
   PRIMARY KEY (review_id, source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `florescence`.`sentiment_scores` ( 
+CREATE TABLE `florescence`.`sentiment_scores` (
   `review_id` varchar(255) NOT NULL,
   `source_id` int(11) NOT NULL,
   `negative` float(6,4) DEFAULT NULL,
-  `neutral` float(6,4) DEFAULT NULL, 
-  `positive` float(6,4) DEFAULT NULL, 
+  `neutral` float(6,4) DEFAULT NULL,
+  `positive` float(6,4) DEFAULT NULL,
   `compound` float(6,4) DEFAULT NULL,
   `processed_date` date DEFAULT NULL,
   PRIMARY KEY (review_id, source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `florescence`.`adj_noun_pairs` ( 
+CREATE TABLE `florescence`.`adj_noun_pairs` (
   `pair_id` int(11) NOT NULL AUTO_INCREMENT,
   `review_id` varchar(255) NOT NULL,
   `source_id` int(11) NOT NULL,
@@ -70,7 +70,6 @@ INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisor
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (13,'Kitchen Kumars', 'https://www.google.com/maps/place/Kitchen+Kumars/@1.2785261,103.8423165,19z/data=!3m1!4b1!4m5!3m4!1s0x31da1932922e76ed:0xcd9ffad00ac6783a!8m2!3d1.2785248!4d103.8428637', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d17676105-Reviews-Kitchen_Kumars-Singapore.html', 1);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (14,'Parallel coffee roasters', 'https://www.google.com/maps/place/Parallel+Coffee+Roasters+(Duxton+Hill)/@1.278592,103.842847,15z/data=!4m2!3m1!1s0x0:0x92b985bf24286375?sa=X&ved=2ahUKEwjbstfk9urtAhUJcCsKHRydCsEQ_BIwCnoECBsQBQ', '', 1);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (15,'Latteria mozzarella bar', 'https://www.google.com/maps/place/Latteria+Mozzarella+Bar/@1.2786122,103.8407543,17z/data=!3m1!4b1!4m5!3m4!1s0x31da196d6cb6855f:0xf193e727fc263c6d!8m2!3d1.2786068!4d103.842943', 'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d3136129-Reviews-Latteria_Mozzarella_Bar-Singapore.html', 1);
-
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (16,"Lombardo\'s","https://www.google.com.sg/maps/place/Lombardo's+Burgers+Singapore/@1.2797794,103.8412183,17z/data=!3m1!4b1!4m5!3m4!1s0x31da19d6bfa27e17:0x6ab2ce2590b63600!8m2!3d1.2797794!4d103.8434123",'https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d18917196-Reviews-Lombardo_s_Burger_Singapore-Singapore.html',2);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (17,"Sharky\'s","https://www.google.com.sg/maps/place/Sharky's+@+Duxton/@1.2958732,103.8594123,14z/data=!4m8!1m2!2m1!1sSharky's!3m4!1s0x31da194a1c41f363:0xbf90d813f70c8f2c!8m2!3d1.279666!4d103.8433822",'',2);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (18,"JEFFO\'S","https://www.google.com.sg/maps/place/JEFFO'S/@1.2796655,103.8412607,17z/data=!4m5!3m4!1s0x31da196d5e4ccc09:0xdc03767d978e0766!8m2!3d1.2796601!4d103.8434547","https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d21676687-Reviews-Jeffo_s-Singapore.html",2);
@@ -95,14 +94,14 @@ INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisor
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (37,'Yellowpot','https://www.google.com.sg/maps/place/Yellow+Pot+Tanjong+Pagar/@1.2786983,103.840996,17z/data=!3m1!4b1!4m5!3m4!1s0x31da1959f5c7fc3f:0x113344a3343f235!8m2!3d1.2786983!4d103.84319','',2);
 INSERT INTO `stores` (`store_id`,`store_name`, `googlereviews_url`, `tripadvisors_url`, `road_id`) VALUES (38,'Kilo Kitchen','https://www.google.com.sg/maps/place/Kilo+Kitchen+(Singapore)/@1.2794847,103.8410555,17z/data=!3m1!4b1!4m5!3m4!1s0x31da19e191a06275:0x5a6ae47a29bd00c1!8m2!3d1.2794847!4d103.8432495','https://www.tripadvisor.com.sg/Restaurant_Review-g294265-d12073254-Reviews-Kilo_Kitchen-Singapore.html',2);
 
-CREATE TABLE `florescence`.`users` ( 
-  `user_id` VARCHAR(255) NOT NULL , 
-  `email` VARCHAR(255) NOT NULL , 
-  `name` VARCHAR(255) NOT NULL , 
-  `password` VARCHAR(255) NOT NULL , 
+CREATE TABLE `florescence`.`users` (
+  `user_id` VARCHAR(255) NOT NULL ,
+  `email` VARCHAR(255) NOT NULL ,
+  `name` VARCHAR(255) NOT NULL ,
+  `password` VARCHAR(255) NOT NULL ,
   `active` BOOLEAN NOT NULL ,
   `admin` BOOLEAN NOT NULL ,
   `store_id` INT NULL ,
-  PRIMARY KEY (`user_id`), 
+  PRIMARY KEY (`user_id`),
   UNIQUE (`email`)
 ) ENGINE = InnoDB;
