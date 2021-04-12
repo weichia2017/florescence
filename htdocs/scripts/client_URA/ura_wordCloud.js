@@ -37,6 +37,10 @@ function prepareWordCloud(response,isShowSpinner){
     console.log(response)
     wordCloudData  = [];
     document.getElementById("wordCloudContainer").innerHTML = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+    document.getElementById("wordCloudClickedReviews").innerHTML = '';
+    document.getElementById("wordCloudReviewsContainer").style.display = "none";
     let fontsizeIdentifierCount = 0;
     for(x in response){
       fontsizeIdentifierCount += response[x].review_id.length
