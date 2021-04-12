@@ -885,18 +885,20 @@ if( isset($_GET['storeID']) ){
     var selectedSubZones = [];
     var subZoneIdNameDic = {};
     async function getSubzone(){
+      document.getElementById("main-overlay").style.display = "block";
+
       let subzoneResponse  = await makeRequest(hostname + "/roads/", "GET", "");
       subzones = JSON.parse(subzoneResponse).data;
 
       // console.log(subzones)
-      subzoneList = document.getElementById("subzonesList");
 
       for (x in subzones){
         subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
-        subzoneList.innerHTML += 
+        document.getElementById("subzonesList").innerHTML += 
         `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer storesList reviewBodyFont mr-2">${subzones[x].road_name}</a>`;
       }
       // console.log(subZoneIdNameDic)
+      document.getElementById("main-overlay").style.display = "none";
     }
 
     // ===============
@@ -913,9 +915,10 @@ if( isset($_GET['storeID']) ){
       document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
       getSentimentScore(subzone1);
 
+      // Wordcloud
       let url = hostname + "/adj_noun_pairs/road/"+subzone1;
       retrieveWordCloudNounAdjPairs(url,"GET","");
-
+      
       getRanking(subzone1);
       document.getElementById("SubzoneInformationContainer").style.display = "block";
       document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
