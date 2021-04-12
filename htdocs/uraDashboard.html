@@ -291,7 +291,9 @@ if( isset($_GET['storeID']) ){
               </a>
             </div>
             <div class="mt-5">
-              <div id="subzonesList" class="list-group scrollSubzones list-group-hover "></div>
+              <div id="subzonesList" class="list-group scrollSubzones list-group-hover reviewBodyFont">
+                <!-- Subzones get populated here -->
+              </div>
               <button id="subZoneSearch" onclick="subZonesSelected()" class="btn btn-primary " type="submit">Search</button>
             </div>
         </div>
@@ -900,7 +902,7 @@ if( isset($_GET['storeID']) ){
       for (x in subzones){
         subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
         document.getElementById("subzonesList").innerHTML += 
-        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer storesList reviewBodyFont mr-2">${subzones[x].road_name}</a>`;
+        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer reviewBodyFont mr-2">${subzones[x].road_name}</a>`;
       }
       // console.log(subZoneIdNameDic)
       document.getElementById("main-overlay").style.display = "none";
@@ -924,7 +926,10 @@ if( isset($_GET['storeID']) ){
       let url = hostname + "/adj_noun_pairs/road/"+subzone1;
       retrieveWordCloudNounAdjPairs(url,"GET","");
 
+      // Ranking list
       getRanking(subzone1);
+
+      // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
       document.getElementById("SubzoneInformationContainer").style.display = "block";
       document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
     }
