@@ -126,16 +126,11 @@ function prepareSentimentOverTime(reviews,isShowSpinner){
 
 
 function updateWordCloud(chosenReviews,selectedSentiment){
-    // document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
-    // document.getElementById("sentimentReviewsContainer").style.display = "block";
-    // window.scrollBy(0, 500);
-
-    // console.log(chosenReviews)
-
-    document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
+    
     if(chosenReviews.length > 10){
         document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
         document.getElementById("wordCloudContainer").style.display             = "block";
+        document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
         
         let dataToBeSentToServer = [{data:[]}];
         dataToBeSentToServer[0].data = chosenReviews
@@ -165,6 +160,7 @@ function updateWordCloud(chosenReviews,selectedSentiment){
            to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
         </div>`
         document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "block";
+        document.getElementById('wordCloudNotEnoughWordsWarning').scrollIntoView({block: "end",behavior:'smooth'});
       }
 
 
