@@ -80,6 +80,18 @@ def changeStoreId():
             return jsonify(response="Server Error", error=e), 500
     return jsonify(response="Server Error"), 500
 
+@bp.route('/users', methods=['POST'])
+def getAllUsers():
+    admin_id = request.form.get('admin_id')
+    if not adminRights(admin_id):
+        return jsonify(response="Invalid Administrative Rights"), 401
+    with DataAccess() as dao:
+        try:
+            results = dao.getAllUsers()
+            return jsonify(response=results), 200
+        except Exception as e:
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
 
 def adminRights(user_id):
     with DataAccess() as dao:
