@@ -292,8 +292,8 @@ function drawWordcLOUD(){
 
   // append the svg object to the body of the page
   var svg = d3.select("#wordCloudContainer").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      // .attr("width", width + margin.left + margin.right)
+      // .attr("height", height + margin.top + margin.bottom)
       .attr("viewBox", `0 0 ${w} ${h}`)
       .append("g")
       .attr("transform",
