@@ -22,11 +22,11 @@ function prepareSentimentDonut(total){
 function color(key){
   // console.log(key)
   if(key.includes("Positive"))
-    return "#79a925";
+    return posColor;
   else if(key.includes("Negative")){
-    return "#FF4136";
+    return negColor;
   }else{
-    return "#AAAAAA";
+    return neuColor;
   }
 }
 
@@ -216,13 +216,14 @@ function drawSentimentDonut(donutData){
             selectedReview = sentimentDataForWordCloud[0][self.id] //the main variable is in the first few lines of dashboard.php
             console.log("throw warning")
             document.getElementById("wordCloudContainer").style.display          = "none";
+            document.getElementById("wordCloudWhiteBackground").style.display    = "block"; 
             document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
-            `<!-- Triangle with exclamation icon -->
-            <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 40%;width:100%;" class="material-icons text-center">
-                  warning_amber  
-            </div>
-            <!-- Warning message that goes along with the above icon -->
-            <div class='p5 text-center' style='position: absolute;top: 52%;width:100%'>
+            `
+            <div class='p-2 text-center' style='position: absolute;top: 35%;width:100%'>
+              <div style="font-size:50px; color: #fdcc0d;" class="material-icons text-center">
+                    warning_amber  
+              </div>
+              <br>
               Not enough reviews to display wordcloud. 
               Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
                to view the ${sentimentDataForWordCloud[0][self.id].length} ${(self.id).toLowerCase()} reviews instead

@@ -109,7 +109,7 @@ if( isset($_GET['storeID']) ){
         left: 47%;
       }
 
-      .wordCloudWhiteBackground{
+      #wordCloudWhiteBackground{
         background-image: url("images/white-bg.png");
         height:460px;
       }
@@ -177,25 +177,55 @@ if( isset($_GET['storeID']) ){
   </div>
 
   <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
-    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span id="shopNameNavBar"></span></div>
+    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span class="shopName"></span></div>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </header>
 
   <main class="container" style="z-index: 0">
-    <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Dashboard</h1> -->
-      <!-- <button class="btn btn-primary" id="UpdateButton" onclick=test()>Update</button> -->
-    <!-- </div> -->
-
-    <!-- <form>
-      <input type="text" name=storeID>
-      <input type="submit">
-    </form> -->
     <input type="hidden" value=<?= $storeID?>  id="getStoreID">
 
-    <div class="container mb-5 mt-5">
+    <div id="unableToDisplayMode" class="container mb-5 mt-5">
+
+      <!-- ======================================== -->   
+      <!--   UNABLE TO DISPLAY INSIGHTS CONTAINER   -->
+      <!-- ======================================== -->
+      <div class="row">
+        <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <hr>
+          <div class='p-2 text-center mt-5'>
+            <div style="font-size:50px; color:#fa4646" class="material-icons text-center">
+              running_with_errors  
+            </div>
+            <br>
+            <span id="unableToDisplayMessage">
+              Sorry we were not able to obtain much insights.. <br>
+              <span class="shopName"></span> has 
+              <u><span class="noOfReviews"><!-- Number Populates here --></span> reviews</u> 
+              from both our available sources, TripAdvisor and GoogleReviews.<br><br>
+              However you can still view the <span class="noOfReviews"><!-- Number Populates here --></span> 
+              reviews below.
+            </span>
+          </div>
+          <br>
+          <hr>
+          <div style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons ml-3 float-left">
+                rate_review
+          </div>
+          <span class="ml-1 headings float-left" >
+            Reviews:
+          </span>
+          <br><br>
+          <div id="showReviewsContainer" class="scrollReviews">
+          <!-- Reviews gets Populated Here -->
+          </div>
+          <hr>
+        </div>
+      </div>
+    </div>
+  
+    <div id="normalMode" class="container mb-5 mt-5">
       <!-- ROW 1 -->
       <div class="row">
         
@@ -315,7 +345,7 @@ if( isset($_GET['storeID']) ){
           </div>
 
           <!-- White background to the empty space of div when spinner is loading -->
-          <div class="wordCloudWhiteBackground"></div>
+          <div id="wordCloudWhiteBackground"></div>
          
           <!-- The yellow exclamaintion mark triangle along with the text  -->
           <div id="wordCloudNotEnoughWordsWarning">
@@ -327,9 +357,9 @@ if( isset($_GET['storeID']) ){
         </div>
       </div>
 
-      <!-- ================================ -->   
-      <!--   WORD CLOUD REVIEWS CONTAINER   -->
-      <!-- ================================ -->
+      <!-- ======================================== -->   
+      <!--   WORD CLOUD DISPLAY REVIEWS CONTAINER   -->
+      <!-- ======================================== -->
       <div class="row" id="wordCloudReviewsContainer">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
           
@@ -341,7 +371,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <span class="float-left ml-1 headings">
                 Selected Reviews:
-               </span>
+              </span>
               <!-- Legend for Noun Adj Highlted colors -->
               <div id="displayLegend" class="float-left reviewBodyFont">
                 <span class="ml-3 highLightedAdj float-left">Adj</span>
@@ -459,9 +489,6 @@ if( isset($_GET['storeID']) ){
 
   <script>
 
-    var hostname = "http://35.175.55.18:5000";
-    selectedReview='';
-
     // Popover
     $(document).ready(function(){
       $('[data-toggle="popover"]').popover({ 
@@ -471,22 +498,27 @@ if( isset($_GET['storeID']) ){
         }
       });   
     });
-  
-    // function test(){
-    //  console.log("hi")
-    // }
+
+    var hostname = "http://35.175.55.18:5000";
+    selectedReview='';
+    limitNormalMode = 10;
+    let width  = $(window).width();
+    let height = $(window).height();
+
+    // Colors for Donut and Stacked Bar Charts
+    let neuColor = "#AAAAAA"
+    let posColor = "#79a925"
+    let negColor = "#FF4136"
+
+    document.getElementById("unableToDisplayMode").style.display            = "none";
+    document.getElementById("normalMode").style.display                     = "none";
 
     document.getElementById("wordCloudReviewsContainer").style.display      = "none";
     document.getElementById("sentimentReviewsContainer").style.display      = "none";
     // document.getElementById("wordCloudContainer").style.display             = "block";
     document.getElementById("wordCloudContainerSpinner").style.display      = "none";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
-    
-    // Colors for sentiment Over Time In
-    let neuColor = "#AAAAAA"
-    let posColor = "#79a925"
-    let negColor = "#FF4136"
-    
+      
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
     
@@ -521,17 +553,76 @@ if( isset($_GET['storeID']) ){
       });
     }
 
+    function populateReviews(storeBased_Reviews){
+      // console.log(storeBased_Reviews)
+
+      let chosenReviewsWithFullData = [];
+      //Convert String Date to Normal Date for the sorting
+      for (x in storeBased_Reviews){
+        chosenReviewsWithFullData.push({review_id   : storeBased_Reviews[x]['review_id'],
+                                        review_date : new Date(storeBased_Reviews[x]['review_date']),
+                                        review_text : storeBased_Reviews[x]['review_text']
+                                      })
+      }
+      // Sort By Reviews By Date
+      storeBased_Reviews.sort(function(a,b){
+        return new Date(b.review_date) - new Date(a.review_date);
+      });
+
+      //Display the values
+      for (x in chosenReviewsWithFullData){
+        document.getElementById("showReviewsContainer").innerHTML +=
+                `<div class="card mr-3 ml-3 mt-2">
+                    <div class="card-body">
+                    <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                    <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                    </div>
+                </div>`;      
+      }
+    }
+
+    function showUnableToDisplay(storeBased_Reviews){
+      document.getElementById("unableToDisplayMode").style.display = "block";
+      document.getElementById("normalMode").style.display          = "none";
+      
+      let totalReviews = storeBased_Reviews.length;
+      let elements = document.getElementsByClassName('noOfReviews');
+      for (index in elements){
+          elements[index].innerText = totalReviews;
+      }      
+      populateReviews(storeBased_Reviews)
+    }
+
+    function showNormalMode(storeBased_Reviews){
+      document.getElementById("unableToDisplayMode").style.display = "none";
+      document.getElementById("normalMode").style.display          = "block";
+
+      // Wordcloud
+      let wordCloudData  = [];
+      let url = hostname + "/adj_noun_pairs/store/" + shopID;
+      $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
+
+      // Donut, Total Reviews, Overall Sentiment Score(Stars)
+      dataPrepOnPageLoad(storeBased_Reviews);
+
+      // Sentiments Over Time
+      sentimentOverTimePrepareData(storeBased_Reviews); 
+    }
+
     // The main call to retrieve values for all charts other than wordcloud
     let sentimentDataForWordCloud = [];
-    async function getSentimentScore(){
+    async function mainCall(){
       document.getElementById("main-overlay").style.display = "block";
-      let storeBased_Reviews = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
-      let response     = JSON.parse(storeBased_Reviews).data;
+      getStoreName();
 
-      // console.log(response);
+      let response = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
+      let storeBased_Reviews = JSON.parse(response).data;
 
-      dataPrepOnPageLoad(response);
-      sentimentOverTimePrepareData(response);
+      if(storeBased_Reviews.length > limitNormalMode){
+        showNormalMode(storeBased_Reviews);
+      }else{
+        showUnableToDisplay(storeBased_Reviews);
+      }
       document.getElementById("main-overlay").style.display = "none";
     }
 
@@ -559,37 +650,10 @@ if( isset($_GET['storeID']) ){
         else{
           neu.push(response[x].review_id);
         }
-
-        // if(response[x].compound_score >= 0.05){
-        //   pos.push({review_id   : response[x].review_id,
-        //             review_text : response[x].review_text,
-        //             review_date : response[x].review_date
-        //           });
-        // }
-        // else if(response[x].compound_score <= -0.05){
-        //   neg.push({review_id   : response[x].review_id,
-        //             review_text : response[x].review_text,
-        //             review_date : response[x].review_date
-        //           });
-        // }
-        // else{
-        //   neu.push({review_id   : response[x].review_id,
-        //             review_text : response[x].review_text,
-        //             review_date : response[x].review_date
-        //           });
-        // }
       }
       sentimentDataForWordCloud.push({Positive :pos,
                                       Negative :neg,
                                       Neutral  :neu});
-
-      // console.log(sentimentDataForWordCloud);
-
-
-      // dataToBeSentToServer[0].data.push(...sentimentDataForWordCloud[0]['Negative'], 
-      //                                   ...sentimentDataForWordCloud[0]['Neutral'],
-      //                                   ...sentimentDataForWordCloud[0]['Positive'])
-
 
       //Overall Sentiment Score 
       let overallSentimentScore = totalCompoundScores/totalReviews;
@@ -633,11 +697,14 @@ if( isset($_GET['storeID']) ){
     //Temporary till we have user Login Feature
     async function getStoreName(){
       let storeInfo = await makeRequest(hostname + "/stores/" + shopID, "GET", "");
-      document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
+      // document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
+      let elements = document.getElementsByClassName('shopName');
+      for (index in elements){
+          elements[index].innerText = JSON.parse(storeInfo).data[0].store_name;
+      }
     }
 
-    getStoreName();
-    getSentimentScore();
+    mainCall();
   </script>
 
   

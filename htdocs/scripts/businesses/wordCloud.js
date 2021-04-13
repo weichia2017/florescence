@@ -1,38 +1,38 @@
-let wordCloudData  = [];
-var width          = $(window).width(), height = $(window).height();
-
 async function retrieveWordCloudNounAdjPairs(url,method,values){
     document.getElementById("wordCloudContainer").style.display = "none";
+    document.getElementById("wordCloudWhiteBackground").style.display = "block";    
     document.getElementById("wordCloudContainerSpinner").style.display = "block";
 
-    var adjNounPairs = await makeRequest(url, method, values);  
-    let response     = JSON.parse(adjNounPairs).data;
+    var response     = await makeRequest(url, method, values);  
+    let adjNounPairs = JSON.parse(response).data;
 
   
     if(method == "POST"){
       if( document.getElementById("wordCloudNotEnoughWordsWarning").style.display != "block"){
-        prepareWordCloud(response) 
+        prepareWordCloud(adjNounPairs) 
       }else{
         // console.log("oops blocked")
         document.getElementById("wordCloudContainerSpinner").style.display = "none";
+        document.getElementById("wordCloudWhiteBackground").style.display = "none"; 
       }
         
     }else{
-      prepareWordCloud(response)
+      prepareWordCloud(adjNounPairs)
     }
     
 }
 
-function prepareWordCloud(response){
+function prepareWordCloud(adjNounPairs){
     document.getElementById("wordCloudContainer").style.display = "block";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none"
     document.getElementById("wordCloudContainerSpinner").style.display = "none";
-    // console.log(response)
+    document.getElementById("wordCloudWhiteBackground").style.display = "none"; 
+    // console.log(adjNounPairs)
     wordCloudData  = [];
     document.getElementById("wordCloudContainer").innerHTML = "";
     let fontsizeIdentifierCount = 0;
-    for(x in response){
-      fontsizeIdentifierCount += response[x].review_id.length
+    for(x in adjNounPairs){
+      fontsizeIdentifierCount += adjNounPairs[x].review_id.length
     }
     fontsizeIdentifierCount /=10;
     // console.log(fontsizeIdentifierCount)
@@ -40,18 +40,18 @@ function prepareWordCloud(response){
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
 
-    for(x in response){
-        let currentNoun   = response[x].noun;
-        let count         = response[x].review_id.length;
-        let adj           = response[x].adj;
-        let reviewid      = response[x].review_id;
+    for(x in adjNounPairs){
+        let currentNoun   = adjNounPairs[x].noun;
+        let count         = adjNounPairs[x].review_id.length;
+        let adj           = adjNounPairs[x].adj;
+        let reviewid      = adjNounPairs[x].review_id;
        
         totalCountForNoun += count;
         //adj parameter 0,1,2: the adj, the count of adj, the reviewID of adj
         accumulatedAdj.push([adj,count,reviewid]);
 
-        if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].noun) || 
-            response[parseInt(x)+1] === undefined){
+        if( (adjNounPairs[parseInt(x)+1] !== undefined && currentNoun != adjNounPairs[parseInt(x)+1].noun) || 
+            adjNounPairs[parseInt(x)+1] === undefined){
             
             // console.log(fontsizeIdentifierCount);
             let multiplier = 0
@@ -130,11 +130,9 @@ function prepareWordCloud(response){
         }
     }
     // console.log(wordCloudData)
+ 
 
-    let w = document.getElementById('wordCloudContainer').offsetWidth;
-    let h = 450;
-
-    drawWordcLOUD(w,h);
+    drawWordcLOUD();
 }
 
 function getTextLength(text,size,fontFamily){
@@ -188,27 +186,6 @@ function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounS
 
     return "ll" + newNounText;
 }
-
-/* Each time the window gets resized, 
-*   1. get the new width and height of the container
-*   2. remove inner HTML of word cloud
-*   3. draw a new wordcloud
-/=*/ 
-// function resize(){
-//     // console.log(document.getElementById('wordCloudContainer').offsetWidth)
-//     // console.log(document.getElementById('wordCloudContainer').offsetHeight)
-//     w = document.getElementById('wordCloudContainer').offsetWidth;
-//     h = document.getElementById('wordCloudContainer').offsetHeight;
-
-//     if($(window).width() != width || $(window).height() != height){
-//         removeWordCloud();
-//         drawWordcLOUD(w,h);
-//     }
-// }
-
-// function removeWordCloud(){
-//     document.getElementById("wordCloudContainer").innerHTML = "";
-// }
 
 function randomColor () {
     var chars = '0123456789ABCDEF'.split('');
@@ -264,7 +241,6 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
 
 }
 
-
 function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   document.getElementById("wordCloudClickedReviews").innerHTML = '';
   document.getElementById("wordCloudReviewsContainer").style.display = "block";
@@ -301,186 +277,203 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   }
 }
 
-function drawWordcLOUD(w,h){     
-    // set the dimensions and margins of the graph
-    var margin = {top: 5, right: 5, bottom: 5, left: 5},
-    width = w - margin.left - margin.right,
-    height = h - margin.top - margin.bottom;
+function drawWordcLOUD(){     
 
-    // append the svg object to the body of the page
-    var svg = d3.select("#wordCloudContainer").append("svg")
-        // .attr("width", width + margin.left + margin.right)
-        // .attr("height", height + margin.top + margin.bottom)
-        .attr("viewBox", `0 0 ${w} ${h}`)
-    .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+  console.log(document.getElementById('wordCloudContainer').offsetHeight);
 
-    // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
-    // Wordcloud features that are different from one word to the other must be here
-    var wordCloudSVG = d3.layout.cloud() 
-    .size([width, height])
-    .words(wordCloudData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
-    // .spiral("rectangular")
-    .padding(11)       //space between words
-    .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
-    .fontSize(function(d) { return d.size})  // Originial is just d.size ...; Log Math.log10(d.size)*60; Initiall used Math.abs(d.size - average)/average * 60
-    .on("word", ({size, x, y, rotate, text, adjArray,fontFam}) => {
-        // console.log(x)
-        let nounSize = size;
-        let nounX    = x;
-        let nounY    = y;
+  let w = document.getElementById('wordCloudContainer').offsetWidth;
+  // let h = document.getElementById('wordCloudWhiteBackground').offsetHeight;
+  let h = 450
+  
+  // set the dimensions and margins of the graph
+  var margin = {top: 5, right: 5, bottom: 5, left: 5},
+  width = w - margin.left - margin.right,
+  height = h - margin.top - margin.bottom;
 
-        // console.log(text)
-        // console.log(adjArray)
-        // console.log(size)
+  // append the svg object to the body of the page
+  var svg = d3.select("#wordCloudContainer").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("viewBox", `0 0 ${w} ${h}`)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
-        //NOUN
-        svg.append("text")
-          .attr("font-size", nounSize)
-          .attr("text-anchor", "middle")
-          .style("font-family", fontFam)
-          .attr("transform", `translate(${nounX},${nounY}) rotate(${rotate})`)
-          .text(text.split(".")[1])
-          .classed("click-only-text", true)
-          .style("fill", color => randomColor());
+    /* Each time the window gets resized, 
+    *   1. get the new width and height of the container
+    *   2. remove inner HTML of word cloud
+    *   3. draw a new wordcloud
+    /=*/ 
+    // function resize(){
+    //   // console.log(document.getElementById('wordCloudContainer').offsetWidth)
+    //   // console.log(document.getElementById('wordCloudContainer').offsetHeight)
+    //   // w = document.getElementById('wordCloudContainer').offsetWidth;
+    //   // h = document.getElementById('wordCloudContainer').offsetHeight;
 
-        //ADJ1
-        let adjTextOne   = adjArray[0][0];
-        let adjOneSize   = adjArray[0][3];
-        let adjOneX   = x - adjArray[0][4];
-        let adjOneY   = y - adjArray[0][5];
+    //   if($(window).width() != width || $(window).height() != height){
+    //     document.getElementById("wordCloudContainer").innerHTML = "";
+    //     drawWordcLOUD();
+    //   }
+    // }
 
-        svg.append("text")
-          .attr("font-size", adjOneSize)
-          .attr("text-anchor", "end")
-          .attr("id",  adjArray[0][2])
-          .style("font-family", fontFam)
-          .attr("transform", `translate(${adjOneX},${adjOneY}) rotate(${rotate})`)
-          .text(adjTextOne)
-          .classed("click-only-text", true)
-          .style("fill", color => randomColor())
-          .on("mouseover", handleMouseOverAdjOne)
-          .on("mouseout", handleMouseOutAdjOne)
-          .on("click", handleClick);
+    // $(window).resize(resize);
+
+  // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+  // Wordcloud features that are different from one word to the other must be here
+  var wordCloudSVG = d3.layout.cloud() 
+  .size([width, height])
+  .words(wordCloudData.map(function(d) { return {text: d.noun, size:d.size, adjArray: d.adj, fontFam:d.font}; }))
+  // .spiral("rectangular")
+  .padding(11)       //space between words
+  .rotate(0)         // To rotate -> function() { return ~~(Math.random() * 2) * 90; }
+  .fontSize(function(d) { return d.size})  // Originial is just d.size ...; Log Math.log10(d.size)*60; Initiall used Math.abs(d.size - average)/average * 60
+  .on("word", ({size, x, y, rotate, text, adjArray,fontFam}) => {
+      // console.log(x)
+      let nounSize = size;
+      let nounX    = x;
+      let nounY    = y;
+
+      // console.log(text)
+      // console.log(adjArray)
+      // console.log(size)
+
+      //NOUN
+      svg.append("text")
+        .attr("font-size", nounSize)
+        .attr("text-anchor", "middle")
+        .style("font-family", fontFam)
+        .attr("transform", `translate(${nounX},${nounY}) rotate(${rotate})`)
+        .text(text.split(".")[1])
+        .classed("click-only-text", true)
+        .style("fill", color => randomColor());
+
+      //ADJ1
+      let adjTextOne   = adjArray[0][0];
+      let adjOneSize   = adjArray[0][3];
+      let adjOneX   = x - adjArray[0][4];
+      let adjOneY   = y - adjArray[0][5];
+
+      svg.append("text")
+        .attr("font-size", adjOneSize)
+        .attr("text-anchor", "end")
+        .attr("id",  adjArray[0][2])
+        .style("font-family", fontFam)
+        .attr("transform", `translate(${adjOneX},${adjOneY}) rotate(${rotate})`)
+        .text(adjTextOne)
+        .classed("click-only-text", true)
+        .style("fill", color => randomColor())
+        .on("mouseover", handleMouseOverAdjOne)
+        .on("mouseout", handleMouseOutAdjOne)
+        .on("click", handleClick);
+      
+        function handleMouseOverAdjOne(d, i) {
+          d3.select(this)
+            .classed("pointer", true)
+            .transition(`mouseover-${adjTextOne}`).duration(300).ease(d3.easeLinear)
+              .attr("font-size", adjOneSize + 3);
+        }
         
-          function handleMouseOverAdjOne(d, i) {
-            d3.select(this)
-              .classed("pointer", true)
-              .transition(`mouseover-${adjTextOne}`).duration(300).ease(d3.easeLinear)
-                .attr("font-size", adjOneSize + 3);
-          }
-          
-          function handleMouseOutAdjOne(d, i) {
-            d3.select(this)
-              .classed("pointer", false)
-              .interrupt(`mouseover-${adjTextOne}`)
-                .attr("font-size", adjOneSize);
-          }
-          
-          function handleClick(d, i) {
-            var e = d3.select(this);
-            // console.log(e.text())
-            // window.scrollBy(0, 300);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
-            e.classed("word-selected", !e.classed("word-selected"));
-          }
-
-        //ADJ2
-        if (adjArray[1] != undefined){
-          let adjTextTwo   = adjArray[1][0];
-          let adjTwoSize   = adjArray[1][3];
-          let adjTwoX   = x - adjArray[1][4];
-          let adjTwoY   = y - adjArray[1][5];
-
-          svg.append("text")
-          .attr("font-size", adjTwoSize)
-          .attr("text-anchor", "end")
-          .attr("id",  adjArray[1][2])
-          .style("font-family", fontFam)
-          .attr("transform", `translate(${adjTwoX},${adjTwoY}) rotate(${rotate})`)
-          .text(adjTextTwo)
-          .classed("click-only-text", true)
-          .style("fill", color => randomColor())
-          .on("mouseover", handleMouseOverAdjTwo)
-          .on("mouseout", handleMouseOutAdjTwo)
-          .on("click", handleClick);
-                
-          function handleMouseOverAdjTwo(d, i) {
-            d3.select(this)
-              .classed("pointer", true)
-              .transition(`mouseover-${adjTextTwo}`).duration(300).ease(d3.easeLinear)
-                .attr("font-size", adjTwoSize + 3);
-          }
-          
-          function handleMouseOutAdjTwo(d, i) {
-            d3.select(this)
-              .classed("pointer", false)
-              .interrupt(`mouseover-${adjTextTwo}`)
-                .attr("font-size", adjTwoSize);
-          }
-          
-          function handleClick(d, i) {
-            var e = d3.select(this);
-            // console.log(e._groups[0][0].id)
-            // window.scrollBy(0, 200);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
-            e.classed("word-selected", !e.classed("word-selected"));
-          }
+        function handleMouseOutAdjOne(d, i) {
+          d3.select(this)
+            .classed("pointer", false)
+            .interrupt(`mouseover-${adjTextOne}`)
+              .attr("font-size", adjOneSize);
+        }
+        
+        function handleClick(d, i) {
+          var e = d3.select(this);
+          // console.log(e.text())
+          // window.scrollBy(0, 300);
+          displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+          e.classed("word-selected", !e.classed("word-selected"));
         }
 
-        //ADJ3
-        if (adjArray[2] != undefined){
-          let adjTextThree = adjArray[2][0];
-          let adjThreeSize = adjArray[2][3];
-          let adjThreeX = x - adjArray[2][4];
-          let adjThreeY = y + adjArray[2][5];
+      //ADJ2
+      if (adjArray[1] != undefined){
+        let adjTextTwo   = adjArray[1][0];
+        let adjTwoSize   = adjArray[1][3];
+        let adjTwoX   = x - adjArray[1][4];
+        let adjTwoY   = y - adjArray[1][5];
 
-          svg.append("text")
-          .attr("font-size", adjThreeSize)
-          .attr("text-anchor", "end")
-          .attr("id",  adjArray[2][2])
-          .style("font-family", fontFam)
-          .attr("transform", `translate(${adjThreeX},${adjThreeY}) rotate(${rotate})`)
-          .text(adjTextThree)
-          .classed("click-only-text", true)
-          .style("fill", color => randomColor())
-          .on("mouseover", handleMouseOverAdjThree)
-          .on("mouseout", handleMouseOutAdjThree)
-          .on("click", handleClick);
-                
-          function handleMouseOverAdjThree(d, i) {
-            d3.select(this)
-              .classed("pointer", true)
-              .transition(`mouseover-${adjTextThree}`).duration(300).ease(d3.easeLinear)
-                .attr("font-size", adjThreeSize + 3);
-          }
-          
-          function handleMouseOutAdjThree(d, i) {
-            d3.select(this)
-              .classed("pointer", false)
-              .interrupt(`mouseover-${adjTextThree}`)
-                .attr("font-size", adjThreeSize);
-          }
-          
-          function handleClick(d, i) {
-            var e = d3.select(this);
-            // console.log(e._groups[0][0].id)
-            // window.scrollBy(0, 150);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
-            e.classed("word-selected", !e.classed("word-selected"));
-          }
+        svg.append("text")
+        .attr("font-size", adjTwoSize)
+        .attr("text-anchor", "end")
+        .attr("id",  adjArray[1][2])
+        .style("font-family", fontFam)
+        .attr("transform", `translate(${adjTwoX},${adjTwoY}) rotate(${rotate})`)
+        .text(adjTextTwo)
+        .classed("click-only-text", true)
+        .style("fill", color => randomColor())
+        .on("mouseover", handleMouseOverAdjTwo)
+        .on("mouseout", handleMouseOutAdjTwo)
+        .on("click", handleClick);
+              
+        function handleMouseOverAdjTwo(d, i) {
+          d3.select(this)
+            .classed("pointer", true)
+            .transition(`mouseover-${adjTextTwo}`).duration(300).ease(d3.easeLinear)
+              .attr("font-size", adjTwoSize + 3);
         }
-      });
+        
+        function handleMouseOutAdjTwo(d, i) {
+          d3.select(this)
+            .classed("pointer", false)
+            .interrupt(`mouseover-${adjTextTwo}`)
+              .attr("font-size", adjTwoSize);
+        }
+        
+        function handleClick(d, i) {
+          var e = d3.select(this);
+          // console.log(e._groups[0][0].id)
+          // window.scrollBy(0, 200);
+          displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+          e.classed("word-selected", !e.classed("word-selected"));
+        }
+      }
 
-    wordCloudSVG.start();
+      //ADJ3
+      if (adjArray[2] != undefined){
+        let adjTextThree = adjArray[2][0];
+        let adjThreeSize = adjArray[2][3];
+        let adjThreeX = x - adjArray[2][4];
+        let adjThreeY = y + adjArray[2][5];
+
+        svg.append("text")
+        .attr("font-size", adjThreeSize)
+        .attr("text-anchor", "end")
+        .attr("id",  adjArray[2][2])
+        .style("font-family", fontFam)
+        .attr("transform", `translate(${adjThreeX},${adjThreeY}) rotate(${rotate})`)
+        .text(adjTextThree)
+        .classed("click-only-text", true)
+        .style("fill", color => randomColor())
+        .on("mouseover", handleMouseOverAdjThree)
+        .on("mouseout", handleMouseOutAdjThree)
+        .on("click", handleClick);
+              
+        function handleMouseOverAdjThree(d, i) {
+          d3.select(this)
+            .classed("pointer", true)
+            .transition(`mouseover-${adjTextThree}`).duration(300).ease(d3.easeLinear)
+              .attr("font-size", adjThreeSize + 3);
+        }
+        
+        function handleMouseOutAdjThree(d, i) {
+          d3.select(this)
+            .classed("pointer", false)
+            .interrupt(`mouseover-${adjTextThree}`)
+              .attr("font-size", adjThreeSize);
+        }
+        
+        function handleClick(d, i) {
+          var e = d3.select(this);
+          // console.log(e._groups[0][0].id)
+          // window.scrollBy(0, 150);
+          displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+          e.classed("word-selected", !e.classed("word-selected"));
+        }
+      }
+    });
+
+  wordCloudSVG.start();
 }
-
-
-// let storeIDByUser = document.getElementById('getStoreID').value;
-// let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
-
-let url = hostname + "/adj_noun_pairs/store/" + shopID;
-
-$(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
-// $(window).resize(resize);
