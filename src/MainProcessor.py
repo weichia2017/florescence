@@ -54,7 +54,7 @@ class Processor:
     def processAdjNounPairs(self):
         self.logger.info("running Adjective-Noun Processing")
         with DataAccess() as dao:
-            raw_df = dao.getRawReviews_UnProcessed_AdjNounPairs()
+            raw_df = dao.getRawReviews_UnProcessed_AdjNounPairs().reset_index()
             if raw_df.empty:
                 self.logger.info("No new review(s) to generate Adjective-Noun Pairs, halting processing")
                 return None
@@ -67,11 +67,7 @@ class Processor:
             all_pairs = pd.DataFrame(columns=['review_id','source_id','noun', 'adj'])
             doc = nlp(row.review_text)
             for token in doc:
-                if (token.pos_ == 'ADJ' and 
-                    token.dep_ == "amod" and 
-                    token.head != None and 
-                    token.head.pos_ in ['PROPN', 'NOUN'] and 
-                    token.text != "-"):
+                if (token.pos_ == 'ADJ' and token.dep_ == "amod" and token.head != None and token.head.pos_ in ['PROPN', 'NOUN'] and token.text != "-"):
                         new_row = {'review_id': row.review_id, 
                                    'source_id': row.source_id, 
                                    'noun': token.head.lemma_.lower(), 
@@ -84,8 +80,8 @@ class Processor:
         all_pairs['source_id'] = all_pairs['source_id'].astype('int')
         self.logger.info("Adjective-Noun Pairs Analysis Completed")
         self.logger.info("Inserting to Database")
-        for row in all_pairs.itertuples():
-            with DataAccess() as dao:
+        with DataAccess() as dao:
+            for row in all_pairs.itertuples():
                 try:
                     dao.writeAdjNounPairs(row, datetime.now())
                 except:

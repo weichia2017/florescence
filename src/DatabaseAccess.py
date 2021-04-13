@@ -216,7 +216,7 @@ class DataAccess:
             INSERT INTO `adj_noun_pairs` (`pair_id`, `review_id`, `source_id`, `noun`, `adj`, `processed_date`)
             VALUES (NULL, %s, %s, %s, %s, %s)
         '''
-        args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
+        args = (row['review_id'], row['source_id'], row['noun'], row['adj'], datetime)
         return self.__executeModificationQuery(query, args)
 
     def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
@@ -280,6 +280,7 @@ class DataAccess:
         query = '''
             SELECT * FROM raw_reviews rr WHERE rr.review_text != ""
             AND NOT EXISTS (SELECT 1 FROM adj_noun_pairs ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
+            AND rr.retrieval_date >= (SELECT MAX(processed_date) FROM adj_noun_pairs)
         '''
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
