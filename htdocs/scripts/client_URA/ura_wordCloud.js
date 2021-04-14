@@ -34,7 +34,7 @@ function prepareWordCloud(response,isShowSpinner){
       document.getElementById("wordCloudContainer").style.display = "block";
       document.getElementById("wordCloudContainerSpinner").style.display = "none";
     }
-    console.log(response)
+    // console.log(response)
     wordCloudData  = [];
     document.getElementById("wordCloudContainer").innerHTML = "";
     document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML = "";
@@ -49,7 +49,7 @@ function prepareWordCloud(response,isShowSpinner){
       fontsizeIdentifierCount += response[x].review_id.length
     }
     fontsizeIdentifierCount /=10;
-    console.log(fontsizeIdentifierCount)
+    // console.log(fontsizeIdentifierCount)
 
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;

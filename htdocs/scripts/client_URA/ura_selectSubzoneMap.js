@@ -115,5 +115,3 @@ tanjongPagarRoad.bindTooltip("Tanjong Pagar Road");
 // duxtonHill.bindPopup("Duxton Hill");
 // duxtonRoad.bindPopup("Duxton Road");
 // duxtonRoad.setStyle(duxtonRoadStyle).addTo(map);
- 
-

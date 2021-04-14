@@ -202,6 +202,10 @@ if( isset($_GET['storeID']) ){
         font-size:20px;
       }
 
+      .showStoreName{
+        /* font-size:15px; */
+        color: #0275d8;
+      }
 
       .reviewHeaderFont{
         font-family: 'Open Sans', sans-serif;
@@ -224,6 +228,10 @@ if( isset($_GET['storeID']) ){
         z-index:0;
       }
 
+
+
+
+      /* STORE RANK CARDS */
       .card .card-header:hover {
         background-color: #0275d8;
         color:white;
@@ -242,6 +250,7 @@ if( isset($_GET['storeID']) ){
       }
 
 
+      /* MAP RELATED CSS */
       /* TanjongPagarMap */
       #tanjongPagarMap { 
         height:600px;
@@ -445,7 +454,6 @@ if( isset($_GET['storeID']) ){
     
         <!-- ROW 4 -->
         <div class="row">
-          
           <!-- ========================= -->   
           <!--        STORES RANKED      -->
           <!-- ========================= -->
@@ -496,6 +504,8 @@ if( isset($_GET['storeID']) ){
                 timeline
               </span>
               <div class="float-left ml-1 headings" >Sentiment Over Time:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreName"></div>
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Sentiment Over Time" 
@@ -507,7 +517,7 @@ if( isset($_GET['storeID']) ){
                       <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
                       <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
                       <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
-                      <li>Clicking on a particular stacked bar shows the review(s) for that sentiment on that particular month.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
                     </ul>">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                   info_outline
@@ -549,6 +559,8 @@ if( isset($_GET['storeID']) ){
                 cloud 
               </span>
               <div class="float-left ml-1 headings">Word Cloud:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreName"></div>
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Word Cloud" 
@@ -585,10 +597,11 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
 
-        <!-- ================================ -->   
-        <!--        REVIEWS CONTAINER         -->
-        <!-- ================================ -->
+        <!-- ROW 6 -->
         <div class="row" id="wordCloudReviewsContainer">
+          <!-- ================================ -->   
+          <!--        REVIEWS CONTAINER         -->
+          <!-- ================================ -->
           <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
             
             <div class="d-flex justify-content-between">
@@ -599,7 +612,9 @@ if( isset($_GET['storeID']) ){
                 </span>
                 <span class="lead float-left headings">
                   Selected Reviews:
-                  </span>
+                </span>
+                <!-- Store name -->
+                <div class="float-left ml-1 headings showStoreName"></div>
                 <!-- Legend for Noun Adj Highlted colors -->
                 <div id="displayLegend" class="float-left reviewBodyFont">
                   <span class="ml-3 highLightedAdj float-left">Adj</span>
@@ -775,7 +790,7 @@ if( isset($_GET['storeID']) ){
                           }
                               
       }
-      console.log(refactoredResponse)
+      // console.log(refactoredResponse)
     }
 
 
@@ -793,7 +808,7 @@ if( isset($_GET['storeID']) ){
     }
 
     function shrinkPolygon(e){
-      console.log(e.id)
+      // console.log(e.id)
       // Remove all whitespaces
       let subzone = e.id.replace(/\s/g, "")
       // Make first character lowercase
@@ -875,7 +890,7 @@ if( isset($_GET['storeID']) ){
     //  Search Button
     // ===============
     function subZonesSelected(){
-      console.log(selectedSubZones);
+      // console.log(selectedSubZones);
     
       $('#collapsibleSubzoneFilter').collapse("hide");
  
@@ -899,6 +914,11 @@ if( isset($_GET['storeID']) ){
       document.getElementById("SubzoneInformationContainer").style.display = "block";
       document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
       document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
+
+      //Clear StoreNames if present beside headers
+      document.querySelectorAll('.showStoreName').forEach(function(elem){
+        elem.innerText = "";
+      });
 
       //Overall Sentiment Score (Stars)
       document.getElementById("overallSentimentScore").style.display                  = "none";
@@ -927,5 +947,3 @@ if( isset($_GET['storeID']) ){
 
   </body>
 </html>
-
-

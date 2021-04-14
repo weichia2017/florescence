@@ -17,7 +17,9 @@ async function getRanking(subzone_ID){
         storeIDandNameDict[storeData[x].store_id] = storeData[x].store_name;
         rank ++;
 
-        storeID = storeData[x].store_id
+        storeID   = storeData[x].store_id;
+        storeName = storeData[x].store_name;
+
     
         // console.log(storeData)
         storesRanked.innerHTML += 
@@ -28,7 +30,7 @@ async function getRanking(subzone_ID){
                 data-target="#Store${storeID}" 
                 class="card-header pointer reviewBodyFont storesList" 
                 aria-expanded="false">
-                ${rank+'. '}${storeData[x].store_name}
+                ${rank+'. '}${storeName}
             </div>
         </div>
     
@@ -58,6 +60,10 @@ function showStoreSpecificDetails(e,storeId){
     if(e.classList.contains("card-active")){
         e.classList.remove("card-active");
         isCallForSubZone = true;
+
+        document.querySelectorAll('.showStoreName').forEach(function(elem){
+            elem.innerText = "";
+        });
     
         dataPrepOnPageLoad(subzoneReviews, false);
         prepareSentimentOverTime(subzoneReviews,true)
@@ -68,6 +74,11 @@ function showStoreSpecificDetails(e,storeId){
         storesList.forEach(function(elem) {
             elem.classList.remove("card-active");
         });
+
+        document.querySelectorAll('.showStoreName').forEach(function(elem){
+            elem.innerText = e.textContent.trim().substring(3);
+        });
+
 
         let sotURL = hostname + "/reviews/store/" + storeId;
         retrieveSOTbyStore(sotURL, "GET", "")
