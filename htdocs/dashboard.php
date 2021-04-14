@@ -93,8 +93,13 @@ if( isset($_GET['storeID']) ){
         margin-left:25px;
       }
 
-      .stars{
+      .normalStars{
         font-size:40px; 
+        color: #fdcc0d;
+      }
+
+      .rankedStars{
+        font-size:22px; 
         color: #fdcc0d;
       }
 
@@ -200,7 +205,7 @@ if( isset($_GET['storeID']) ){
             </div>
             <br>
             <span id="unableToDisplayMessage">
-              Sorry we were not able to obtain much insights.. <br>
+              Sorry we are not able to obtain much insights.. <br>
               <span class="shopName"></span> has 
               <u><span class="noOfReviews"><!-- Number Populates here --></span> reviews</u> 
               from both our available sources, TripAdvisor and GoogleReviews.<br><br>

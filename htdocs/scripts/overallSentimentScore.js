@@ -1,4 +1,12 @@
-function displayStars(overallSentimentScore){
+function displayStars(overallSentimentScore, isForURARankedContainingStoreID){
+
+    if(isForURARankedContainingStoreID){
+      starsType    = "rankedStars"
+      placeStarsAt = "rankOverallSentimentOverTime"+isForURARankedContainingStoreID
+    }else{
+      starsType = "normalStars"
+      placeStarsAt = "overallSentimentScore"
+    }
     
     //CompountScore  Stars
       //-1             0
@@ -14,213 +22,213 @@ function displayStars(overallSentimentScore){
       //1              5 
       // let overallSentimentScore = -1
     //   console.log(overallSentimentScore);
-      if(overallSentimentScore == 1){
-        // console.log("5 Stars");
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>`;
-      }
-      else if(overallSentimentScore >= 0.8){
-        // console.log("4.5 Stars");
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_half
-        </span>`;
-      }
-      else if(overallSentimentScore >= 0.6){
-        // console.log("4 Stars");  
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= 0.4){
-        // console.log("3.5 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_half
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= 0.2){
-        // console.log("3 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= -0.199999){
-        // console.log("2.5 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_half
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= -0.399999){
-        // console.log("2 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= -0.59999){
-        // console.log("1.5 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_half
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= -0.79999 ){
-        // console.log("1 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore >= -0.99999 ){
-        // console.log("0.5 Stars"); 
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star_half
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
-      else if(overallSentimentScore == -1){
-        // console.log("0 Stars");
-        document.getElementById("overallSentimentScore").innerHTML =
-        `<span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>
-        <span class="material-icons stars">
-        star_border
-        </span>`;
-      }
+    if(overallSentimentScore == 1){
+      // console.log("5 Stars");
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>`;
+    }
+    else if(overallSentimentScore >= 0.8){
+      // console.log("4.5 Stars");
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_half
+      </span>`;
+    }
+    else if(overallSentimentScore >= 0.6){
+      // console.log("4 Stars");  
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= 0.4){
+      // console.log("3.5 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_half
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= 0.2){
+      // console.log("3 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= -0.199999){
+      // console.log("2.5 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_half
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= -0.399999){
+      // console.log("2 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= -0.59999){
+      // console.log("1.5 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_half
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= -0.79999 ){
+      // console.log("1 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore >= -0.99999 ){
+      // console.log("0.5 Stars"); 
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star_half
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
+    else if(overallSentimentScore == -1){
+      // console.log("0 Stars");
+      document.getElementById(placeStarsAt).innerHTML =
+      `<span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>
+      <span class="material-icons ${starsType}">
+      star_border
+      </span>`;
+    }
 }

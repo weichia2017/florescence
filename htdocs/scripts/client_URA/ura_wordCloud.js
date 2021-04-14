@@ -41,12 +41,15 @@ function prepareWordCloud(response,isShowSpinner){
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
     document.getElementById("wordCloudClickedReviews").innerHTML = '';
     document.getElementById("wordCloudReviewsContainer").style.display = "none";
+
+
+
     let fontsizeIdentifierCount = 0;
     for(x in response){
       fontsizeIdentifierCount += response[x].review_id.length
     }
     fontsizeIdentifierCount /=10;
-    // console.log(fontsizeIdentifierCount)
+    console.log(fontsizeIdentifierCount)
 
     let accumulatedAdj    = [];
     let totalCountForNoun = 0;
@@ -82,16 +85,44 @@ function prepareWordCloud(response,isShowSpinner){
               multiplier = 95;
             }
 
+            // console.log(fontsizeIdentifierCount);
+            // let multiplier = 1
+            // if(fontsizeIdentifierCount > 50){
+            //   multiplier= 10;
+            // }else if(fontsizeIdentifierCount > 45){
+            //   multiplier= 15;
+            // }else if(fontsizeIdentifierCount > 40){
+            //   multiplier= 20;
+            // }else if(fontsizeIdentifierCount > 35){
+            //   multiplier= 25;
+            // }else if(fontsizeIdentifierCount > 30){
+            //   multiplier = 30;
+            // }else if(fontsizeIdentifierCount > 25){
+            //   multiplier = 35;
+            // }else if(fontsizeIdentifierCount > 20){
+            //   multiplier = 40;
+            // }else if(fontsizeIdentifierCount > 15){
+            //   multiplier = 45;
+            // }else if(fontsizeIdentifierCount > 10){
+            //   multiplier = 50;
+            // }else if(fontsizeIdentifierCount > 5){
+            //   multiplier = 65;
+            // }else if(fontsizeIdentifierCount > 1){
+            //   multiplier = 95;
+            // }
+
+
             if(totalCountForNoun==1){
               totalCountForNoun = 2;
             }
      
-
+            // console.log(totalCountForNoun)
             // adj parameter 3: adj sizes
             let wordCloudSize = Math.log10(totalCountForNoun)*multiplier;
-            let adjOneSize   = wordCloudSize/6 *2.5;
-            let adjTwoSize   = wordCloudSize/6 *2;
-            let adjThreeSize = wordCloudSize/6 *1.5;
+            let adjOneSize    = wordCloudSize/6 *2.5;
+            let adjTwoSize    = wordCloudSize/6 *2;
+            let adjThreeSize  = wordCloudSize/6 *1.5;
+            // console.log(wordCloudSize)
 
             if(wordCloudSize<1){
               wordCloudSize = 1
@@ -227,131 +258,6 @@ function randomColor () {
     for (var i = 0; i < 6; i++)
         color += chars[Math.floor(Math.random() * 16)];
     return color;
-}
-
-function highlight_word(searchpara,adj,noun)
-{
-  var pattern=new RegExp("\\b"+adj+"\\b", "gi");
-  var new_text=searchpara.replace(pattern, "<mark class='highLightedAdj'>"+adj+"</mark>");   // Teal
-
-  var pattern=new RegExp(noun, "gi");
-  new_text=new_text.replace(pattern, "<mark class='highLightedNoun'>"+noun+"</mark>"); // Olive
-  return new_text
-}
-
-function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "none";
-  
-  let chosenReviewsWithFullData = [];
-  for (x in chosenReviews){
-    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
-                                    review_text : refactoredResponse[chosenReviews[x]].review_text,
-                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
-  }
-
-  console.log(chosenReviewsWithFullData)
-  // Sort By Reviews By Date
-  chosenReviewsWithFullData.sort(function(a,b){
-    return new Date(b.review_date) - new Date(a.review_date);
-  });
-
-  if(isCallForSubZone){
-    for (x in chosenReviewsWithFullData){
-        document.getElementById("wordCloudClickedReviews").innerHTML +=
-                `<div class="card mr-3 ml-3 mt-2">
-                <div class="card-body">
-                <h6 class="reviewBodyFont" style="font-size:20px">
-                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                    store
-                  </span>
-                  <div class="float-left ml-1">
-                    ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
-                  </div> 
-                </h6>
-                <br>
-                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                </div>
-            </div>`;      
-    }
-  }
-  else{
-    //Display the values
-    for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
-              `<div class="card mr-3 ml-3 mt-2">
-                  <div class="card-body">
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                  </div>
-              </div>`;      
-    }
-  }
-
-}
-
-
-function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "block";
-
-  chosenReviews = chosenReviews.split(",");
-  
-  // console.log(refactoredResponse);
-  let chosenReviewsWithFullData = [];
-  for (x in chosenReviews){
-    // console.log(chosenReviews[x]);
-    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun),
-                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
-  }
-
-  // console.log(chosenReviewsWithFullData);
-
-  // Sort By Reviews By Date
-  chosenReviewsWithFullData.sort(function(a,b){
-    return new Date(b.review_date) - new Date(a.review_date);
-  });
-
-  if (isCallForSubZone){
-    //Display the values
-    for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
-              `<div class="card mr-3 ml-3 mt-2">
-                  <div class="card-body">
-                  <h6 class="reviewBodyFont" style="font-size:20px">
-                    <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                      store
-                    </span>
-                    <div class="float-left ml-1">
-                      ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
-                    </div> 
-                  </h6>
-                  <br>
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                  </div>
-              </div>`;      
-    }
-  }else{
-    //Display the values
-    for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
-              `<div class="card mr-3 ml-3 mt-2">
-                  <div class="card-body">
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                  </div>
-              </div>`;      
-    }
-  }
 }
 
 function drawWordcLOUD(w,h){     
@@ -530,11 +436,127 @@ function drawWordcLOUD(w,h){
 }
 
 
-// let storeIDByUser = document.getElementById('getStoreID').value;
-// let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
 
+function highlight_word(searchpara,adj,noun)
+{
+  var pattern=new RegExp("\\b"+adj+"\\b", "gi");
+  var new_text=searchpara.replace(pattern, "<mark class='highLightedAdj'>"+adj+"</mark>");   // Teal
 
+  var pattern=new RegExp(noun, "gi");
+  new_text=new_text.replace(pattern, "<mark class='highLightedNoun'>"+noun+"</mark>"); // Olive
+  return new_text
+}
 
+function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "none";
+  
+  let chosenReviewsWithFullData = [];
+  for (x in chosenReviews){
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
+                                    review_text : refactoredResponse[chosenReviews[x]].review_text,
+                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
+  }
 
+  console.log(chosenReviewsWithFullData)
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
 
-// $(window).resize(resize);
+  if(isCallForSubZone){
+    for (x in chosenReviewsWithFullData){
+        document.getElementById("wordCloudClickedReviews").innerHTML +=
+                `<div class="card mr-3 ml-3 mt-2">
+                <div class="card-body">
+                <h6 class="reviewBodyFont" style="font-size:20px">
+                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                    store
+                  </span>
+                  <div class="float-left ml-1">
+                    ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
+                  </div> 
+                </h6>
+                <br>
+                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                </div>
+            </div>`;      
+    }
+  }
+  else{
+    //Display the values
+    for (x in chosenReviewsWithFullData){
+      document.getElementById("wordCloudClickedReviews").innerHTML +=
+              `<div class="card mr-3 ml-3 mt-2">
+                  <div class="card-body">
+                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                  </div>
+              </div>`;      
+    }
+  }
+
+}
+
+function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "block";
+
+  chosenReviews = chosenReviews.split(",");
+  
+  // console.log(refactoredResponse);
+  let chosenReviewsWithFullData = [];
+  for (x in chosenReviews){
+    // console.log(chosenReviews[x]);
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
+                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun),
+                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
+  }
+
+  // console.log(chosenReviewsWithFullData);
+
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
+
+  if (isCallForSubZone){
+    //Display the values
+    for (x in chosenReviewsWithFullData){
+      document.getElementById("wordCloudClickedReviews").innerHTML +=
+              `<div class="card mr-3 ml-3 mt-2">
+                  <div class="card-body">
+                  <h6 class="reviewBodyFont" style="font-size:20px">
+                    <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                      store
+                    </span>
+                    <div class="float-left ml-1">
+                      ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
+                    </div> 
+                  </h6>
+                  <br>
+                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                  </div>
+              </div>`;      
+    }
+  }else{
+    //Display the values
+    for (x in chosenReviewsWithFullData){
+      document.getElementById("wordCloudClickedReviews").innerHTML +=
+              `<div class="card mr-3 ml-3 mt-2">
+                  <div class="card-body">
+                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                  </div>
+              </div>`;      
+    }
+  }
+}

@@ -80,8 +80,8 @@ if( isset($_GET['storeID']) ){
         z-index: 2;
         top: 0;
         left: 0;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0, 0.9);
+        /* background-color: rgb(0,0,0); */
+        background-color: rgba(0, 0, 0, 0.651);
       }
 
       .navbar-brand {
@@ -117,8 +117,13 @@ if( isset($_GET['storeID']) ){
         margin-left:25px;
       }
 
-      .stars{
+      .normalStars{
         font-size:40px; 
+        color: #fdcc0d;
+      }
+
+      .rankedStars{
+        font-size:22px; 
         color: #fdcc0d;
       }
 
@@ -138,9 +143,9 @@ if( isset($_GET['storeID']) ){
         padding: 7px 10px
       }
 
-      .wordCloudWhiteBackground{
+      .whiteBackground{
         background-image: url("images/white-bg.png");
-        height:460px;
+        height:430px;
       }
 
       .scrollReviews{
@@ -210,12 +215,30 @@ if( isset($_GET['storeID']) ){
 
       .list-group .list-group-item:hover {
         background-color: #a7a7a7;
-        /* color:white; */
+        color:white;
       }
 
       .list-group .list-group-item.active {
         background-color: #0275d8;
+        color:white;
         z-index:0;
+      }
+
+      .card .card-header:hover {
+        background-color: #0275d8;
+        color:white;
+        border: 1px solid black;
+      }
+
+      .card-active {
+        border: 1.5px solid black;
+        background-color: #0275d8;
+        color:white;
+        z-index:0;
+      }
+
+      .card-body{
+        padding:0.7rem;
       }
 
 
@@ -337,18 +360,11 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
         <!-- ROW 3 -->
-        <div class="row mb-4">
+        <div class="row">
           <!-- ====================== -->
           <!--        SUB-ZONES       -->
           <!-- ====================== -->
-          <!-- ========================= -->   
-          <!--  OVERALL SENTIMENT SCORE  -->
-          <!-- ========================= -->
-          <!-- ====================== -->
-          <!--     TOTAL REVIEWS      -->
-          <!-- ====================== -->
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
-            <div class="d-flex justify-content-between">
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
               <div class="lead">
                 <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
                 <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -372,56 +388,61 @@ if( isset($_GET['storeID']) ){
                   <!-- <span style="font-size: 0.3em;">Alba 1836 Wine Bar & Restaurant</span> -->
                 </div>
               </div>
-
-
-              <div class="lead">
-                <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                    auto_awesome
-                </span>
-                <div class="float-left ml-1 headings" >Overall Sentiment Score:</div> 
-                <!-- Info PopOver -->
-                <a tabindex="0" class="float-right popoverzindex"  
-                    title="Overall Sentiment Score" 
-                    data-placement="left" 
-                    data-toggle="popover" 
-                    data-trigger="hover focus" 
-                    data-content="Higher the number of stars,the more positive customers feel about the stores in this subzone">
-                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
-                    info_outline
-                  </span>    
-                </a>
-                <div class="container float-left ml-3" id="overallSentimentScore"></div>
-                <!-- Spinner that only shows when loading -->
-                <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinner" role="status" ></div>
-              </div>
-
-
-              <div class="lead">
-                <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
-                <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                  rate_review
-                </span>
-                <!-- Create a div where the total number of reviews will be -->
-                <div class="float-left ml-1 headings" >Total Reviews:</div> 
-                <!-- Info PopOver -->
-                <a tabindex="0" class="float-right popoverzindex" 
-                    title="Total Reviews" 
-                    data-placement="left" 
-                    data-toggle="popover" 
-                    data-trigger="hover focus" 
-                    data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
-                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
-                    info_outline
-                  </span>    
-                </a>
-                <div class="container" id="totalNoOfReviewsContainer"></div>
-                <!-- Spinner that only shows when loading -->
-                <div class="spinner-border text-secondary float-left spinner" id="totalReviewsContainerSpinner" role="status" ></div>
-              </div>
+          </div>
+          <!-- ========================= -->   
+          <!--  OVERALL SENTIMENT SCORE  -->
+          <!-- ========================= -->
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                  auto_awesome
+              </span>
+              <div class="float-left ml-1 headings" >Overall Sentiment Score:</div> 
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Overall Sentiment Score" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Higher the number of stars,the more positive customers feel about the stores in this subzone">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+              <div class="container float-left ml-3" id="overallSentimentScore"></div>
             </div>
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinner" role="status" ></div>
+          </div>
+          <!-- ====================== -->
+          <!--     TOTAL REVIEWS      -->
+          <!-- ====================== -->
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                rate_review
+              </span>
+              <!-- Create a div where the total number of reviews will be -->
+              <div class="float-left ml-1 headings" >Total Reviews:</div> 
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex" 
+                  title="Total Reviews" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+              <div class="container" id="totalNoOfReviewsContainer"></div>
+            </div>
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="totalReviewsContainerSpinner" role="status" ></div>
           </div>
         </div>
-
+    
         <!-- ROW 4 -->
         <div class="row">
           
@@ -454,11 +475,16 @@ if( isset($_GET['storeID']) ){
             </div>
             <br>
             <hr>
-            <div id="storesRanked" class="list-group scrollStoreRanks list-group-hover">
+            <div id="accordion" class="scrollStoreRanks float-left w-100">
               <!-- The sorted stores poulate here -->
             </div>
-          </div>
 
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="whiteBackground"></div>
+
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="StorerRankedSpinner" role="status" ></div>
+          </div>
 
           <!-- ================================ -->   
           <!--    SENTIMENT OVER TIME CHART     -->
@@ -492,7 +518,7 @@ if( isset($_GET['storeID']) ){
               <hr>
               <!-- <hr> -->
               <!-- <div class="col-12 border"></div> -->
-              <div id="sentimentOverTimeContainerDiv">
+              <div id="sentimentOverTimeContainerDiv" class="float-left">
                 <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
                   Select year: <select id="year"></select>
     
@@ -503,6 +529,8 @@ if( isset($_GET['storeID']) ){
                   <!-- SOT chart populates here -->
                 </svg>
               </div>
+              <!-- White background to the empty space of div when spinner is loading -->
+              <div class="whiteBackground"></div>
 
               <!-- Spinner that only shows when loading -->
               <div class="spinner-border text-secondary float-left spinner" id="SOTSpinner" role="status" ></div>
@@ -545,7 +573,7 @@ if( isset($_GET['storeID']) ){
             </div>
 
             <!-- White background to the empty space of div when spinner is loading -->
-            <div class="wordCloudWhiteBackground"></div>
+            <div class="whiteBackground"></div>
             
             <!-- The yellow exclamaintion mark triangle along with the text  -->
             <div id="wordCloudNotEnoughWordsWarning">
@@ -619,10 +647,11 @@ if( isset($_GET['storeID']) ){
     var hostname = "http://35.175.55.18:5000";
     selectedReview='';
 
-    document.getElementById("subzoneExpandDownArrowRow").style.display    = "none";
-    document.getElementById("SubzoneInformationContainer").style.display  = "none";
-    document.getElementById("subZoneSearch").style.display                = "none";
-    document.getElementById("SOTSpinner").style.display                   = "none";
+    document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
+    document.getElementById("SubzoneInformationContainer").style.display            = "none";
+    document.getElementById("subZoneSearch").style.display                          = "none";
+    document.getElementById("wordCloudReviewsContainer").style.display              = "none";
+    
 
     // Colors for sentiment Over Time In
     let neuColor = "#AAAAAA"
@@ -669,17 +698,13 @@ if( isset($_GET['storeID']) ){
       let reviewsResponse  = await makeRequest(hostname + "/reviews/road/"+subzone_ID, "GET", "");
       subzoneReviews = JSON.parse(reviewsResponse).data;
 
-      dataPrepOnPageLoad(subzoneReviews);
-      prepareSentimentOverTime(subzoneReviews);
+      dataPrepOnPageLoad(subzoneReviews,true);
+      prepareSentimentOverTime(subzoneReviews,false);
       document.getElementById("main-overlay").style.display = "none";
     }
 
     let sentimentDataForWordCloud = [];
-    function dataPrepOnPageLoad(reviews){
-
-      // Total Reviews Number
-      let subZoneTotalReviews = reviews.length;
-      document.getElementById("totalNoOfReviewsContainer").textContent = subZoneTotalReviews;
+    function dataPrepOnPageLoad(reviews, processOSTAndTotalReviews){
 
       // Sentiments pos,neg,neu
       let pos          = [];
@@ -706,11 +731,18 @@ if( isset($_GET['storeID']) ){
                                       Negative :neg,
                                       Neutral  :neu});
 
-      //Overall Sentiment Score 
-      let subZoneOverallSentimentScore = totalCompoundScores/subZoneTotalReviews;
-      // console.log(subZoneOverallSentimentScore)
-      displayStars(subZoneOverallSentimentScore)
-            
+ 
+      // Only process if for subzoneLevel
+      if(processOSTAndTotalReviews){
+        // Total Reviews Number
+        let subZoneTotalReviews = reviews.length;
+        document.getElementById("totalNoOfReviewsContainer").textContent = subZoneTotalReviews;
+
+        //Overall Sentiment Score 
+        let subZoneOverallSentimentScore = totalCompoundScores/subZoneTotalReviews;
+        displayStars(subZoneOverallSentimentScore, false)
+      }
+
       // Preparing data for adj clicks to see review
       refactorResponseForReviewsViaWordCloudAdjs(reviews);
     }  
@@ -824,6 +856,21 @@ if( isset($_GET['storeID']) ){
       document.getElementById("main-overlay").style.display = "none";
     }
 
+    function closeUpRow(){
+      //collapsibleSubzoneFilter
+      // $("#collapsibleSubzoneFilter").removeClass("show");
+      // $('#collapsibleSubzoneFilter').collapse("hide");
+      document.getElementById("subzoneExpandUpArrowRow").style.display   = "none";
+      document.getElementById("subzoneExpandDownArrowRow").style.display = "block";
+      // console.log($('#subzoneExpandArrowRow').attr("aria-expanded"))
+    }
+
+    function closeDownRow(){
+      document.getElementById("subzoneExpandDownArrowRow").style.display = "none";
+      document.getElementById("subzoneExpandUpArrowRow").style.display   = "block";
+    }
+    
+
     // ===============
     //  Search Button
     // ===============
@@ -836,8 +883,9 @@ if( isset($_GET['storeID']) ){
         return Object.keys(object).find(key => object[key] === value);
       }
       subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
-
       document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
+
+      // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
       getSentimentScore(subzone1);
 
       // Wordcloud
@@ -847,32 +895,36 @@ if( isset($_GET['storeID']) ){
       // Ranking list
       getRanking(subzone1);
 
-      // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
+   
       document.getElementById("SubzoneInformationContainer").style.display = "block";
       document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
       document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
+
+      //Overall Sentiment Score (Stars)
+      document.getElementById("overallSentimentScore").style.display                  = "none";
+      document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
+      
+      //Total Number of Reviews 
+      document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
+      document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+
+      //Ranked Stores
+      document.getElementById("accordion").style.display                              = "none";
+      document.getElementById("StorerRankedSpinner").style.display                    = "block";
+
+      //Sentiment Over Time Stacked Bar Chart
+      document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
+      document.getElementById("SOTSpinner").style.display                             = "block";
+
+      //WordCloud
+      document.getElementById("wordCloudContainer").style.display                     = "none"; 
+      document.getElementById("wordCloudContainerSpinner").style.display              = "block";
       // document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
     }
-
-    function closeUpRow(){
-      //collapsibleSubzoneFilter
-      // $("#collapsibleSubzoneFilter").removeClass("show");
-      // $('#collapsibleSubzoneFilter').collapse("hide");
-      document.getElementById("subzoneExpandUpArrowRow").style.display   = "none";
-      document.getElementById("subzoneExpandDownArrowRow").style.display = "block";
-      // console.log($('#subzoneExpandArrowRow').attr("aria-expanded"))
-    }
-
-    function closeDownRow(){
-      document.getElementById("subzoneExpandUpArrowRow").style.display   = "block";
-      document.getElementById("subzoneExpandDownArrowRow").style.display = "none";
-    }
-    
 
     mainCall();
     </script>
 
-  
   </body>
 </html>
 

@@ -1,18 +1,16 @@
 async function retrieveSOTbyStore(url,method,values){
     document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-    document.getElementById("overallSentimentScore").style.display                  = "none";
-    document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
-
-
+    // document.getElementById("overallSentimentScore").style.display                  = "none";
+    // document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
     
     document.getElementById("SOTSpinner").style.display                             = "block";
-    document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
-    document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+    // document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
+    // document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
 
     var response = await makeRequest(url, method, values);  
     let reviews  = JSON.parse(response).data;
 
-    dataPrepOnPageLoad(reviews);
+    dataPrepOnPageLoad(reviews,false);
     prepareSentimentOverTime(reviews,false);
 }
 
@@ -23,13 +21,15 @@ function prepareSentimentOverTime(reviews,isShowSpinner){
         document.getElementById("overallSentimentScore").style.display                  = "block";
         document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
         
-        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
-        document.getElementById("totalReviewsContainerSpinner").style.display           = "none";
         document.getElementById("SOTSpinner").style.display                             = "none";
+        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
+        document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
     }
-    
-    document.getElementById("sentimentOverTimeContainer").innerHTML                 = "";
-    document.getElementById("year").innerHTML                                       = "";
+
+    // document.getElementById("overallSentimentScore").style.display      = "block";
+    // document.getElementById("totalNoOfReviewsContainer").style.display  = "block";
+    document.getElementById("sentimentOverTimeContainer").innerHTML     = "";
+    document.getElementById("year").innerHTML                           = "";
     setimentOverTimePrepared = [];
     
     // console.log(reviews)
@@ -151,14 +151,13 @@ function updateWordCloud(chosenReviews,selectedSentiment){
 
         document.getElementById("wordCloudContainer").style.display          = "none";
         document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
-        `<!-- Triangle with exclamation icon -->
-        <div style="font-size:50px; color: #fdcc0d; position: absolute; top: 44%;width:100%" class="material-icons text-center">
-              warning_amber  
-        </div>
-        <!-- Warning message that goes along with the above icon -->
-        <div class='p-5 text-center' style='position: absolute;top: 48%;width:100%'>
-          Not enough reviews to display wordcloud. 
-          Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
+        `<div class='p-5 text-center' style='position: absolute;top: 30%;width:100%'>
+         <div style="font-size:50px; color: #fdcc0d;" class="material-icons text-center">
+                warning_amber  
+            </div>
+         <br>
+         Not enough reviews to display wordcloud. 
+         Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
            to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
         </div>`
         document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "block";
@@ -419,6 +418,5 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
 			update(select.property("value"), 750)
 		})
 }
-
 
 $(window).resize(resizeSentimentOverTime());
