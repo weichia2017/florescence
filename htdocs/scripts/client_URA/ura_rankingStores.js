@@ -31,7 +31,9 @@ async function getRanking(subzone_ID){
                 class="card-header pointer reviewBodyFont storesList" 
                 aria-expanded="false">
                 ${rank+'. '}${storeName}
+                <input type="hidden" value="${storeData[x].num_of_reviews}">
             </div>
+            
         </div>
     
         <div id="Store${storeID}" class="collapse" data-parent="#accordion">
@@ -61,30 +63,65 @@ function showStoreSpecificDetails(e,storeId){
         e.classList.remove("card-active");
         isCallForSubZone = true;
 
+        //Remove store names besides the headers of SOT,WordCloud and Reviews Container
         document.querySelectorAll('.showStoreName').forEach(function(elem){
             elem.innerText = "";
         });
-    
+
+        if(e.childNodes[1].value <= limitToShowIndividualStoreInsights){
+            document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
+            document.getElementById("entireWordCloudContainer").style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer").style.display     = "none";
+        }
         dataPrepOnPageLoad(subzoneReviews, false);
-        prepareSentimentOverTime(subzoneReviews,true)
-        prepareWordCloud(subZoneNounAdjPairs)
+        prepareSentimentOverTime(subzoneReviews);
+        prepareWordCloud(subZoneNounAdjPairs);
       
     }else{
         isCallForSubZone = false;
+        let noOfReviews = e.childNodes[1].value;
+        let storeName   = e.textContent.trim().substring(3);
+
         storesList.forEach(function(elem) {
             elem.classList.remove("card-active");
         });
 
+        //Update store names besides the headers of SOT,WordCloud and Reviews Container
         document.querySelectorAll('.showStoreName').forEach(function(elem){
-            elem.innerText = e.textContent.trim().substring(3);
+            elem.innerText = storeName;
         });
+        
+        // Only of more than limitNo of reviews
+        if(noOfReviews> limitToShowIndividualStoreInsights){
+            // WordCloud
+            let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
+            retrieveWordCloudNounAdjPairs(wcURL, "GET", "")
+            document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
+            document.getElementById("entireWordCloudContainer").style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer").style.display     = "none";
+        }else{
+
+            //Update store names besides the headers of SOT,WordCloud and Reviews Container
+            document.querySelectorAll('.noOfReviewsForErrorInsights').forEach(function(elem){
+                elem.innerText = noOfReviews;
+            });
 
 
+            document.getElementById("errorInsightsSpinner").style.display              = "block";
+            document.getElementById("showReviewsContainerForErrorInsights").innerHTML  = "";
+            document.getElementById("shopNameForErrorInsights").textContent            = storeName;
+            document.getElementById("limitForErrorInsights").textContent               = limitToShowIndividualStoreInsights;
+            
+            document.getElementById("entireSentimentOverTimeContainer").style.display  = "none";
+            document.getElementById("entireWordCloudContainer").style.display          = "none";
+            document.getElementById("wordCloudReviewsContainer").style.display         = "none";
+            document.getElementById("unableToShowInsightsContainer").style.display     = "block";
+        }
+
+        
         let sotURL = hostname + "/reviews/store/" + storeId;
         retrieveSOTbyStore(sotURL, "GET", "")
-        
-        let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
-        retrieveWordCloudNounAdjPairs(wcURL, "GET", "")
         e.classList.add("card-active");
+     
     }    
 }

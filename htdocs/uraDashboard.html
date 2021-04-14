@@ -153,8 +153,13 @@ if( isset($_GET['storeID']) ){
         overflow-y: scroll;
       }
 
+      .miniScrollReview{
+        height:300px;
+        overflow-y: scroll
+      }
+
       .scrollStoreRanks{
-        height:400px;
+        height:420px;
         overflow-y: scroll;
       }
 
@@ -497,7 +502,7 @@ if( isset($_GET['storeID']) ){
           <!-- ================================ -->   
           <!--    SENTIMENT OVER TIME CHART     -->
           <!-- ================================ -->
-          <div class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div id="entireSentimentOverTimeContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -545,6 +550,62 @@ if( isset($_GET['storeID']) ){
               <!-- Spinner that only shows when loading -->
               <div class="spinner-border text-secondary float-left spinner" id="SOTSpinner" role="status" ></div>
           </div>
+
+          <!-- ===================================-->   
+          <!--   STORES WITH LESS THAN # REVIEWS   -->
+          <!-- =================================== -->
+          <div id="unableToShowInsightsContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                running_with_errors
+              </span>
+              <div class="float-left ml-1 headings">Error Obtaining Insights: </div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreName"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Sentiment Over Time" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                    <ul>
+                      <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                      <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                      <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
+                    </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+            <br>
+            <hr>
+            <div class='p-2 text-center mt-1'>
+              <div style="font-size:50px; color:#fa4646" class="material-icons text-center">
+                running_with_errors  
+              </div>
+              <br>
+              <span id="unableToDisplayMessage">
+                Ooops
+                <span id="shopNameForErrorInsights"></span> 
+                has less than 
+                <u><span id="limitForErrorInsights"></span> reviews.</u> 
+                <br>
+                Let's just view the 
+                <span class="noOfReviewsForErrorInsights"></span> 
+                reviews below.
+              </span>
+            </div>
+     
+            <div id="showReviewsContainerForErrorInsights" class="miniScrollReview"></div>
+             <!-- Spinner that only shows when loading -->
+             <div class="spinner-border text-secondary float-left spinner" id="errorInsightsSpinner" role="status" ></div>
+           
+          </div>
+
         </div>
 
         <!-- ROW 5 -->
@@ -552,7 +613,7 @@ if( isset($_GET['storeID']) ){
           <!-- ========================= -->   
           <!--        WORD CLOUD         -->
           <!-- ========================= -->
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
+          <div id="entireWordCloudContainer" class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
             <div class="lead">
               <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -660,13 +721,14 @@ if( isset($_GET['storeID']) ){
     });
 
     var hostname = "http://35.175.55.18:5000";
+    limitToShowIndividualStoreInsights = 10;
     selectedReview='';
 
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
     document.getElementById("SubzoneInformationContainer").style.display            = "none";
     document.getElementById("subZoneSearch").style.display                          = "none";
     document.getElementById("wordCloudReviewsContainer").style.display              = "none";
-    
+
 
     // Colors for sentiment Over Time In
     let neuColor = "#AAAAAA"
@@ -714,7 +776,7 @@ if( isset($_GET['storeID']) ){
       subzoneReviews = JSON.parse(reviewsResponse).data;
 
       dataPrepOnPageLoad(subzoneReviews,true);
-      prepareSentimentOverTime(subzoneReviews,false);
+      prepareSentimentOverTime(subzoneReviews);
       document.getElementById("main-overlay").style.display = "none";
     }
 
@@ -919,6 +981,12 @@ if( isset($_GET['storeID']) ){
       document.querySelectorAll('.showStoreName').forEach(function(elem){
         elem.innerText = "";
       });
+
+      //ErrorInsights
+      document.getElementById("errorInsightsSpinner").style.display                   = "none";
+      document.getElementById("unableToShowInsightsContainer").style.display          = "none";
+      document.getElementById("entireSentimentOverTimeContainer").style.display       = "block";
+      document.getElementById("entireWordCloudContainer").style.display               = "block";
 
       //Overall Sentiment Score (Stars)
       document.getElementById("overallSentimentScore").style.display                  = "none";

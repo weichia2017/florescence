@@ -124,6 +124,11 @@ if( isset($_GET['storeID']) ){
         overflow-y: scroll;
       }
 
+      .miniScrollReview{
+        height:300px;
+        overflow-y: scroll;
+      }
+
       .pointer{
         cursor: pointer;
       }
@@ -198,6 +203,13 @@ if( isset($_GET['storeID']) ){
       <!-- ======================================== -->
       <div class="row">
         <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              running_with_errors
+            </span>
+            <div class="float-left ml-1 headings">Error Obtaining Insights: </div> 
+          </div>
+          <br>
           <hr>
           <div class='p-2 text-center mt-5'>
             <div style="font-size:50px; color:#fa4646" class="material-icons text-center">
@@ -209,19 +221,13 @@ if( isset($_GET['storeID']) ){
               <span class="shopName"></span> has 
               <u><span class="noOfReviews"><!-- Number Populates here --></span> reviews</u> 
               from both our available sources, TripAdvisor and GoogleReviews.<br><br>
-              However you can still view the <span class="noOfReviews"><!-- Number Populates here --></span> 
+              Please try to get your customers to leave more reviews :><br>
+              However, you can still view the <span class="noOfReviews"><!-- Number Populates here --></span> 
               reviews below.
             </span>
           </div>
           <br>
-          <hr>
-          <div style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons ml-3 float-left">
-                rate_review
-          </div>
-          <span class="ml-1 headings float-left" >
-            Reviews:
-          </span>
-          <br><br>
+          <br>
           <div id="showReviewsContainer" class="scrollReviews">
           <!-- Reviews gets Populated Here -->
           </div>

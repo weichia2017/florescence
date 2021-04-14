@@ -10,24 +10,50 @@ async function retrieveSOTbyStore(url,method,values){
     var response = await makeRequest(url, method, values);  
     let reviews  = JSON.parse(response).data;
 
-    dataPrepOnPageLoad(reviews,false);
-    prepareSentimentOverTime(reviews,false);
+    // Only of more than limitNo of reviews
+    if(reviews.length > limitToShowIndividualStoreInsights){
+        dataPrepOnPageLoad(reviews,false);
+        prepareSentimentOverTime(reviews);
+    }else{
+        
+      let chosenReviewsWithFullData = [];
+      //Convert String Date to Normal Date for the sorting
+      for (x in reviews){
+        chosenReviewsWithFullData.push({review_id   : reviews[x]['review_id'],
+                                        review_date : new Date(reviews[x]['review_date']),
+                                        review_text : reviews[x]['review_text']
+                                      })
+      }
+      // Sort By Reviews By Date
+      reviews.sort(function(a,b){
+        return new Date(b.review_date) - new Date(a.review_date);
+      });
+
+      //Display the values
+      for (x in chosenReviewsWithFullData){
+        document.getElementById("showReviewsContainerForErrorInsights").innerHTML +=
+                `<div class="card mr-3 ml-3 mt-2">
+                    <div class="card-body">
+                    <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                    <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                    </div>
+                </div>`;      
+      }
+      document.getElementById("errorInsightsSpinner").style.display  = "none";
+    }
 }
 
 let setimentOverTimePrepared = [];
-function prepareSentimentOverTime(reviews,isShowSpinner){
-    if(!isShowSpinner){
-        document.getElementById("sentimentOverTimeContainerDiv").style.display          = "block";
-        document.getElementById("overallSentimentScore").style.display                  = "block";
-        document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
-        
-        document.getElementById("SOTSpinner").style.display                             = "none";
-        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
-        document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
-    }
+function prepareSentimentOverTime(reviews){
 
-    // document.getElementById("overallSentimentScore").style.display      = "block";
-    // document.getElementById("totalNoOfReviewsContainer").style.display  = "block";
+    document.getElementById("sentimentOverTimeContainerDiv").style.display          = "block";
+    document.getElementById("overallSentimentScore").style.display                  = "block";
+    document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
+    
+    document.getElementById("SOTSpinner").style.display                             = "none";
+    document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
+    document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
+
     document.getElementById("sentimentOverTimeContainer").innerHTML     = "";
     document.getElementById("year").innerHTML                           = "";
     setimentOverTimePrepared = [];

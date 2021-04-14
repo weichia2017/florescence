@@ -469,6 +469,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
 
   if(isCallForSubZone){
     for (x in chosenReviewsWithFullData){
+        console.log(storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]);
         document.getElementById("wordCloudClickedReviews").innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
