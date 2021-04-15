@@ -8,7 +8,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         return b.beta_score - a.beta_score;
     });
 
-    let subzone      = IDtoPlaceRank.substring(IDtoPlaceRank.length - 8);
+    let subzoneChoice      = IDtoPlaceRank.substring(IDtoPlaceRank.length - 8);
     let storesRanked = document.getElementById(IDtoPlaceRank);
     //Clear all the ranks each time this function is called
     storesRanked.innerHTML = "";
@@ -26,7 +26,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         storesRanked.innerHTML += 
         `<div class="card">
             <div 
-                onclick="showStoreSpecificDetails(this,${storeID},'${subzone}')" 
+                onclick="showStoreSpecificDetails(this,${storeID},'${subzoneChoice}')" 
                 data-toggle="collapse" 
                 data-target="#Store${storeID}" 
                 class="card-header pointer reviewBodyFont storesList" 
@@ -40,13 +40,13 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         <div id="Store${storeID}" class="collapse" data-parent="#${IDtoPlaceRank}">
             <div class="card-body border d-flex justify-content-between ">
                 <span id="rankOverallSentimentOverTime${storeID}"></span> 
-                <span id="${subzone}RankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
+                <span id="${subzoneChoice}RankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
             </div>
         </div>
         `;
 
         displayStars(storeData[x].average_compound,storeID)
-        document.getElementById(subzone+"RankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
+        document.getElementById(subzoneChoice+"RankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
     }
     document.getElementById(IDtoPlaceRank).style.display     = "block";
     document.getElementById(IDforRankSpinner).style.display  = "none";
@@ -54,11 +54,11 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
 // `<a id="${storeData[x].store_id}" onclick="showStoreSpecificDetails(this,${storeData[x].store_id})" class="list-group-item pointer storesList reviewBodyFont">${rank+'. '}${storeData[x].store_name}</a>
 // `
 
-function showStoreSpecificDetails(e,storeId,subZone){
+function showStoreSpecificDetails(e,storeId,subZoneChoice){
     let storesList = document.querySelectorAll('.storesList');
 
-    document.getElementById("wordCloudNotEnoughWordsWarning"+subZone).innerHTML     = "";
-    document.getElementById("wordCloudNotEnoughWordsWarning"+subZone).style.display = "none";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subZoneChoice).innerHTML     = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subZoneChoice).style.display = "none";
 
     //IF SELECTED UNSELECT
     if(e.classList.contains("card-active")){
@@ -66,7 +66,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
         isCallForSubZone = true;
 
         //Remove store names besides the headers of SOT,WordCloud and Reviews Container
-        document.querySelectorAll('.showStoreName').forEach(function(elem){
+        document.querySelectorAll('.showStoreName'+subZoneChoice).forEach(function(elem){
             elem.innerText = "";
         });
 
@@ -76,8 +76,8 @@ function showStoreSpecificDetails(e,storeId,subZone){
             document.getElementById("unableToShowInsightsContainer").style.display     = "none";
         }
         dataPrepOnPageLoad(subzoneReviews, false);
-        prepareSentimentOverTime(subzoneReviews,subZone);
-        prepareWordCloud(subZoneNounAdjPairs,false,subZone);
+        prepareSentimentOverTime(subzoneReviews,subZoneChoice);
+        prepareWordCloud(subZoneNounAdjPairs,false,subZoneChoice);
       
     }
     //IF UNSELECTED SELECT
@@ -91,7 +91,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
         });
 
         //Update store names besides the headers of SOT,WordCloud and Reviews Container
-        document.querySelectorAll('.showStoreName').forEach(function(elem){
+        document.querySelectorAll('.showStoreName'+subZoneChoice).forEach(function(elem){
             elem.innerText = storeName;
         });
         
@@ -99,7 +99,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
         if(noOfReviews> limitToShowIndividualStoreInsights){
             // WordCloud
             let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
-            retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subZone)
+            retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subZoneChoice)
             document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
             document.getElementById("entireWordCloudContainer").style.display          = "block";
             document.getElementById("unableToShowInsightsContainer").style.display     = "none";
@@ -123,7 +123,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
 
         
         let sotURL = hostname + "/reviews/store/" + storeId;
-        retrieveSOTbyStore(sotURL, "GET", "",subZone)
+        retrieveSOTbyStore(sotURL, "GET", "",subZoneChoice)
         e.classList.add("card-active");
      
     }    

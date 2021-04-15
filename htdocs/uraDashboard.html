@@ -202,7 +202,7 @@ if( isset($_GET['storeID']) ){
         font-size:20px;
       }
 
-      .showStoreName{
+      .showStoreNameSubzone1{
         /* font-size:15px; */
         color: #0275d8;
       }
@@ -511,7 +511,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <div class="float-left ml-1 headings" >Sentiment Over Time:</div> 
               <!-- Store name -->
-              <div class="float-left ml-1 headings showStoreName"></div>
+              <div class="float-left ml-1 headings showStoreNameSubzone1"></div>
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Sentiment Over Time" 
@@ -563,7 +563,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <div class="float-left ml-1 headings">Error Obtaining Insights: </div> 
               <!-- Store name -->
-              <div class="float-left ml-1 headings showStoreName"></div>
+              <div class="float-left ml-1 headings showStoreNameSubzone1"></div>
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Sentiment Over Time" 
@@ -622,7 +622,7 @@ if( isset($_GET['storeID']) ){
               </span>
               <div class="float-left ml-1 headings">Word Cloud:</div> 
               <!-- Store name -->
-              <div class="float-left ml-1 headings showStoreName"></div>
+              <div class="float-left ml-1 headings showStoreNameSubzone1"></div>
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Word Cloud" 
@@ -675,7 +675,7 @@ if( isset($_GET['storeID']) ){
                   Selected Reviews:
                 </span>
                 <!-- Store name -->
-                <div class="float-left ml-1 headings showStoreName"></div>
+                <div class="float-left ml-1 headings showStoreNameSubzone1"></div>
                 <!-- Legend for Noun Adj Highlted colors -->
                 <div id="displayLegendSubzone1" class="float-left reviewBodyFont">
                   <span class="ml-3 highLightedAdj float-left">Adj</span>
@@ -992,7 +992,7 @@ if( isset($_GET['storeID']) ){
         document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
 
         //Clear StoreNames if present beside headers
-        document.querySelectorAll('.showStoreName').forEach(function(elem){
+        document.querySelectorAll('.showStoreNameSubzone1').forEach(function(elem){
           elem.innerText = "";
         });
 
