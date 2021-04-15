@@ -504,7 +504,7 @@ if( isset($_GET['storeID']) ){
           <!-- ================================ -->   
           <!--    SENTIMENT OVER TIME CHART     -->
           <!-- ================================ -->
-          <div id="entireSentimentOverTimeContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div id="entireSentimentOverTimeContainerSubzone1" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 timeline
@@ -534,7 +534,7 @@ if( isset($_GET['storeID']) ){
               <hr>
               <!-- <hr> -->
               <!-- <div class="col-12 border"></div> -->
-              <div id="sentimentOverTimeContainerDiv" class="float-left">
+              <div id="sentimentOverTimeContainerDivSubzone1" class="float-left">
                 <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
                   Select year: <select id="yearSubzone1"></select>
     
@@ -555,7 +555,7 @@ if( isset($_GET['storeID']) ){
           <!-- =================================== -->   
           <!--   STORES WITH LESS THAN # REVIEWS   -->
           <!-- =================================== -->
-          <div id="unableToShowInsightsContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div id="unableToShowInsightsContainerSubzone1" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -591,19 +591,19 @@ if( isset($_GET['storeID']) ){
               <br>
               <span id="unableToDisplayMessage">
                 Ooops
-                <span id="shopNameForErrorInsights"></span> 
+                <span id="shopNameForErrorInsightsSubzone1"></span> 
                 has less than 
                 <u><span id="limitForErrorInsights"></span> reviews.</u> 
                 <br>
                 Let's just view the 
-                <span class="noOfReviewsForErrorInsights"></span> 
+                <span class="noOfReviewsForErrorInsightsSubzone1"></span> 
                 reviews below.
               </span>
             </div>
      
-            <div id="showReviewsContainerForErrorInsights" class="miniScrollReview"></div>
+            <div id="showReviewsContainerForErrorInsightsSubzone1" class="miniScrollReview"></div>
              <!-- Spinner that only shows when loading -->
-             <div class="spinner-border text-secondary float-left spinner" id="errorInsightsSpinner" role="status" ></div>
+             <div class="spinner-border text-secondary float-left spinner" id="errorInsightsSpinnerSubzone1" role="status" ></div>
            
           </div>
 
@@ -614,7 +614,7 @@ if( isset($_GET['storeID']) ){
           <!-- ========================= -->   
           <!--        WORD CLOUD         -->
           <!-- ========================= -->
-          <div id="entireWordCloudContainer" class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
+          <div id="entireWordCloudContainerSubzone1" class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
             <div class="lead">
               <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -723,7 +723,7 @@ if( isset($_GET['storeID']) ){
     });
 
     var hostname = "http://35.175.55.18:5000";
-    limitToShowIndividualStoreInsights = 10;
+    limitToShowIndividualStoreInsights = 24;
     selectedReview='';
 
     
@@ -731,7 +731,7 @@ if( isset($_GET['storeID']) ){
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
     document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
     document.getElementById("subZoneSearch").style.display                          = "none";
-    document.getElementById("wordCloudReviewsContainerSubzone1").style.display              = "none";
+    document.getElementById("wordCloudReviewsContainerSubzone1").style.display      = "none";
 
 
     // Colors for sentiment Over Time In
@@ -997,10 +997,10 @@ if( isset($_GET['storeID']) ){
         });
 
         //ErrorInsights
-        document.getElementById("errorInsightsSpinner").style.display                   = "none";
-        document.getElementById("unableToShowInsightsContainer").style.display          = "none";
-        document.getElementById("entireSentimentOverTimeContainer").style.display       = "block";
-        document.getElementById("entireWordCloudContainer").style.display               = "block";
+        document.getElementById("errorInsightsSpinnerSubzone1").style.display                   = "none";
+        document.getElementById("unableToShowInsightsContainerSubzone1").style.display          = "none";
+        document.getElementById("entireSentimentOverTimeContainerSubzone1").style.display       = "block";
+        document.getElementById("entireWordCloudContainerSubzone1").style.display               = "block";
 
         //Overall Sentiment Score (Stars)
         document.getElementById("overallSentimentScore").style.display                  = "none";
@@ -1015,7 +1015,7 @@ if( isset($_GET['storeID']) ){
         document.getElementById("StorerRankedSpinnerSubzone1").style.display                    = "block";
 
         //Sentiment Over Time Stacked Bar Chart
-        document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
+        document.getElementById("sentimentOverTimeContainerDivSubzone1").style.display          = "none";
         document.getElementById("SOTSpinnerSubzone1").style.display                             = "block";
 
         //WordCloud

@@ -71,9 +71,9 @@ function showStoreSpecificDetails(e,storeId,subZoneChoice){
         });
 
         if(e.childNodes[1].value <= limitToShowIndividualStoreInsights){
-            document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
-            document.getElementById("entireWordCloudContainer").style.display          = "block";
-            document.getElementById("unableToShowInsightsContainer").style.display     = "none";
+            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "block";
+            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "none";
         }
         dataPrepOnPageLoad(subzoneReviews, false);
         prepareSentimentOverTime(subzoneReviews,subZoneChoice);
@@ -96,29 +96,29 @@ function showStoreSpecificDetails(e,storeId,subZoneChoice){
         });
         
         // Only of more than limitNo of reviews
-        if(noOfReviews> limitToShowIndividualStoreInsights){
+        if(noOfReviews > limitToShowIndividualStoreInsights){
             // WordCloud
             let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
             retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subZoneChoice)
-            document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
-            document.getElementById("entireWordCloudContainer").style.display          = "block";
-            document.getElementById("unableToShowInsightsContainer").style.display     = "none";
+            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "block";
+            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "none";
         }else{
 
-            //Update store names besides the headers of SOT,WordCloud and Reviews Container
-            document.querySelectorAll('.noOfReviewsForErrorInsights').forEach(function(elem){
+            //
+            document.querySelectorAll('.noOfReviewsForErrorInsights'+subZoneChoice).forEach(function(elem){
                 elem.innerText = noOfReviews;
             });
 
-            document.getElementById("errorInsightsSpinner").style.display              = "block";
-            document.getElementById("showReviewsContainerForErrorInsights").innerHTML  = "";
-            document.getElementById("shopNameForErrorInsights").textContent            = storeName;
+            document.getElementById("errorInsightsSpinner"+subZoneChoice).style.display              = "block";
+            document.getElementById("showReviewsContainerForErrorInsights"+subZoneChoice).innerHTML  = "";
+            document.getElementById("shopNameForErrorInsights"+subZoneChoice).textContent            = storeName;
             document.getElementById("limitForErrorInsights").textContent               = limitToShowIndividualStoreInsights;
-            
-            document.getElementById("entireSentimentOverTimeContainer").style.display  = "none";
-            document.getElementById("entireWordCloudContainer").style.display          = "none";
-            document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display  = "none";
-            document.getElementById("unableToShowInsightsContainer").style.display     = "block";
+
+            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "none";
+            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "none";
+            document.getElementById("wordCloudReviewsContainer"+subZoneChoice).style.display  = "none";
+            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "block";
         }
 
         

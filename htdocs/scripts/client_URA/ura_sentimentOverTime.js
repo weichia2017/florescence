@@ -1,6 +1,6 @@
 async function retrieveSOTbyStore(url,method,values,subzoneChoice){
-    document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-    document.getElementById("SOTSpinnerSubzone1").style.display                     = "block";
+    document.getElementById("sentimentOverTimeContainerDiv"+subzoneChoice).style.display          = "none";
+    document.getElementById("SOTSpinner"+subzoneChoice).style.display                     = "block";
 
     var response = await makeRequest(url, method, values);  
     let reviews  = JSON.parse(response).data;
@@ -26,7 +26,7 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
 
       //Display the values
       for (x in chosenReviewsWithFullData){
-        document.getElementById("showReviewsContainerForErrorInsights").innerHTML +=
+        document.getElementById("showReviewsContainerForErrorInsights"+subzoneChoice).innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
                     <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
@@ -34,22 +34,22 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
                     </div>
                 </div>`;      
       }
-      document.getElementById("errorInsightsSpinner").style.display  = "none";
+      document.getElementById("errorInsightsSpinner"+subzoneChoice).style.display  = "none";
     }
 }
 
 let setimentOverTimePrepared = [];
 function prepareSentimentOverTime(reviews, subzoneChoice){
 
-    document.getElementById("sentimentOverTimeContainerDiv").style.display          = "block";
+    document.getElementById("sentimentOverTimeContainerDiv"+subzoneChoice).style.display          = "block";
     document.getElementById("overallSentimentScore").style.display                  = "block";
     document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
     
-    document.getElementById("SOTSpinnerSubzone1").style.display                     = "none";
+    document.getElementById("SOTSpinner"+subzoneChoice).style.display                     = "none";
     document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
     document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
 
-    document.getElementById("sentimentOverTimeStackedBarChartSubzone1").innerHTML   = "";
+    document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML   = "";
     document.getElementById("year"+subzoneChoice).innerHTML                         = "";
     setimentOverTimePrepared = [];
     
@@ -112,7 +112,7 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
     }
     // console.log(JSON.stringify(setimentOverTimePrepared)); 
 
-    let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
+    let w = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
     let h = 400;
     drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice);
 }
@@ -165,11 +165,11 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
 *   3. draw a new sentiment over time chart
 */ 
 function resizeSentimentOverTime(){
-    let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
+    let w = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
     let h = 400;
 
     if($(window).width() != width || $(window).height() != height){
-        document.getElementById("sentimentOverTimeStackedBarChartSubzone1").innerHTML = "";
+        document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML = "";
         drawSentimentOverTimeStackedBarChart(w,h);
     }
 }
@@ -188,7 +188,7 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 	.enter().append("option")
 		.text(d => d)
 
-	var svg = d3.select("#sentimentOverTimeStackedBarChartSubzone1").attr("viewBox", `0 0 ${w} ${h}`),
+	var svg = d3.select("#sentimentOverTimeStackedBarChart"+subzoneChoice).attr("viewBox", `0 0 ${w} ${h}`),
 		margin = {top: 35, left: 35, bottom: 0, right: 20},
 		width = +w - margin.left - margin.right,
 		height = +h - margin.top - margin.bottom;
