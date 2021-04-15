@@ -216,7 +216,7 @@ class DataAccess:
             INSERT INTO `adj_noun_pairs` (`pair_id`, `review_id`, `source_id`, `noun`, `adj`, `processed_date`)
             VALUES (NULL, %s, %s, %s, %s, %s)
         '''
-        args = (row['review_id'], row['source_id'], row['noun'], row['adj'], datetime)
+        args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
         return self.__executeModificationQuery(query, args)
 
     def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
@@ -332,6 +332,12 @@ class DataAccess:
         args = (user_id,)
         return self.__executeSelectQuery(query, args)
 
+    def getAllUsers(self):
+        query = '''
+            SELECT user_id, email, name, active, admin, store_id FROM users
+        '''
+        return self.__executeSelectQuery(query)
+    
     def updateUserPassword(self, user_id, password):
         query = '''
             UPDATE `users` SET `password` = %s WHERE `users`.`user_id` = %s;
