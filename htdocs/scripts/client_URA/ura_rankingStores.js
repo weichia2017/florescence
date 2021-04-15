@@ -59,6 +59,7 @@ function showStoreSpecificDetails(e,storeId){
     document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML     = "";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
 
+    //IF SELECTED UNSELECT
     if(e.classList.contains("card-active")){
         e.classList.remove("card-active");
         isCallForSubZone = true;
@@ -77,7 +78,9 @@ function showStoreSpecificDetails(e,storeId){
         prepareSentimentOverTime(subzoneReviews);
         prepareWordCloud(subZoneNounAdjPairs);
       
-    }else{
+    }
+    //IF UNSELECTED SELECT
+    else{
         isCallForSubZone = false;
         let noOfReviews = e.childNodes[1].value;
         let storeName   = e.textContent.trim().substring(3);
@@ -105,7 +108,6 @@ function showStoreSpecificDetails(e,storeId){
             document.querySelectorAll('.noOfReviewsForErrorInsights').forEach(function(elem){
                 elem.innerText = noOfReviews;
             });
-
 
             document.getElementById("errorInsightsSpinner").style.display              = "block";
             document.getElementById("showReviewsContainerForErrorInsights").innerHTML  = "";

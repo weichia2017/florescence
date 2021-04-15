@@ -659,7 +659,7 @@ if( isset($_GET['storeID']) ){
         </div>
 
         <!-- ROW 6 -->
-        <div class="row" id="wordCloudReviewsContainer">
+        <div id="wordCloudReviewsContainer" class="row">
           <!-- ================================ -->   
           <!--        REVIEWS CONTAINER         -->
           <!-- ================================ -->
@@ -953,61 +953,75 @@ if( isset($_GET['storeID']) ){
     // ===============
     function subZonesSelected(){
       // console.log(selectedSubZones);
-    
-      $('#collapsibleSubzoneFilter').collapse("hide");
- 
-      function getKeyByValue(object, value) {
-        return Object.keys(object).find(key => object[key] === value);
+
+      // Error Mode
+      if(selectedSubZones.length > 2 || selectedSubZones.length < 0){
+        // RETURN ERROR MESSAGE 
       }
-      subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
-      document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
-
-      // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
-      getSentimentScore(subzone1);
-
-      // Wordcloud
-      let url = hostname + "/adj_noun_pairs/road/"+subzone1;
-      retrieveWordCloudNounAdjPairs(url,"GET","");
-
-      // Ranking list
-      getRanking(subzone1);
-
-   
-      document.getElementById("SubzoneInformationContainer").style.display = "block";
-      document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
-      document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
-
-      //Clear StoreNames if present beside headers
-      document.querySelectorAll('.showStoreName').forEach(function(elem){
-        elem.innerText = "";
-      });
-
-      //ErrorInsights
-      document.getElementById("errorInsightsSpinner").style.display                   = "none";
-      document.getElementById("unableToShowInsightsContainer").style.display          = "none";
-      document.getElementById("entireSentimentOverTimeContainer").style.display       = "block";
-      document.getElementById("entireWordCloudContainer").style.display               = "block";
-
-      //Overall Sentiment Score (Stars)
-      document.getElementById("overallSentimentScore").style.display                  = "none";
-      document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
       
-      //Total Number of Reviews 
-      document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
-      document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+      // Single mode
+      else if(selectedSubZones.length == 1){
+        $('#collapsibleSubzoneFilter').collapse("hide");
+  
+        function getKeyByValue(object, value) {
+          return Object.keys(object).find(key => object[key] === value);
+        }
 
-      //Ranked Stores
-      document.getElementById("accordion").style.display                              = "none";
-      document.getElementById("StorerRankedSpinner").style.display                    = "block";
+        subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
+        document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
 
-      //Sentiment Over Time Stacked Bar Chart
-      document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-      document.getElementById("SOTSpinner").style.display                             = "block";
+        // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
+        getSentimentScore(subzone1);
 
-      //WordCloud
-      document.getElementById("wordCloudContainer").style.display                     = "none"; 
-      document.getElementById("wordCloudContainerSpinner").style.display              = "block";
-      // document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
+        // Wordcloud
+        let url = hostname + "/adj_noun_pairs/road/"+subzone1;
+        retrieveWordCloudNounAdjPairs(url,"GET","");
+
+        // Ranking list
+        getRanking(subzone1);
+
+    
+        document.getElementById("SubzoneInformationContainer").style.display = "block";
+        document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
+        document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
+
+        //Clear StoreNames if present beside headers
+        document.querySelectorAll('.showStoreName').forEach(function(elem){
+          elem.innerText = "";
+        });
+
+        //ErrorInsights
+        document.getElementById("errorInsightsSpinner").style.display                   = "none";
+        document.getElementById("unableToShowInsightsContainer").style.display          = "none";
+        document.getElementById("entireSentimentOverTimeContainer").style.display       = "block";
+        document.getElementById("entireWordCloudContainer").style.display               = "block";
+
+        //Overall Sentiment Score (Stars)
+        document.getElementById("overallSentimentScore").style.display                  = "none";
+        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
+        
+        //Total Number of Reviews 
+        document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
+        document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+
+        //Ranked Stores
+        document.getElementById("accordion").style.display                              = "none";
+        document.getElementById("StorerRankedSpinner").style.display                    = "block";
+
+        //Sentiment Over Time Stacked Bar Chart
+        document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
+        document.getElementById("SOTSpinner").style.display                             = "block";
+
+        //WordCloud
+        document.getElementById("wordCloudContainer").style.display                     = "none"; 
+        document.getElementById("wordCloudContainerSpinner").style.display              = "block";
+        // document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
+      }
+      
+      // Compare Mode
+      else{
+
+      }
     }
 
     mainCall();
