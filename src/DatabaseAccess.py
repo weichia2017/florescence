@@ -35,12 +35,12 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             GROUP BY
                 s.store_id
@@ -67,17 +67,19 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             WHERE
-            	s.store_id = %s
+                s.store_id = %s
             GROUP BY
                 s.store_id
+            ORDER BY
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
         '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
@@ -100,17 +102,19 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
-            JOIN raw_reviews rr ON
+            LEFT JOIN raw_reviews rr ON
                 s.store_id = rr.store_id
-            JOIN sentiment_scores ss ON
+            LEFT JOIN sentiment_scores ss ON
                 ss.review_id = rr.review_id AND ss.source_id = rr.source_id
             WHERE
             	s.road_id = %s
             GROUP BY
                 s.store_id
+            ORDER BY
+                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
         '''
         args = (road_id,)
         output = self.__executeSelectQuery(query, args)
@@ -150,7 +154,7 @@ class DataAccess:
 
     def writeSentiments(self, row, datetime):
         query = '''
-            INSERT INTO `sentiment_scores` (`review_id`, `source_id`, `negative`, `neutral`, `positive`, `compound`, processed_date) 
+            INSERT INTO `sentiment_scores` (`review_id`, `source_id`, `negative`, `neutral`, `positive`, `compound`, processed_date)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             '''
         args = (row.review_id, row.source_id, row.negative,
@@ -159,9 +163,9 @@ class DataAccess:
 
     def getAllSentiments(self, return_as_dataframe=True):
         query = '''
-                SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.store_id, 
+                SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.store_id,
                 rr.review_text, rr.review_date, ss.compound as "compound_score"
-                FROM raw_reviews rr JOIN sentiment_scores ss 
+                FROM raw_reviews rr JOIN sentiment_scores ss
                 ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
             '''
         output = self.__executeSelectQuery(query)
@@ -171,12 +175,12 @@ class DataAccess:
             df = pandas.DataFrame(output)
             return df
 
-    def getSentimentsbyStore(self, store_id, return_as_dataframe=True):
+    def getSentimentsByStore(self, store_id, return_as_dataframe=True):
         if store_id == None:
             return None
         query = '''
             SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
-            FROM raw_reviews rr 
+            FROM raw_reviews rr
             JOIN sentiment_scores ss ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id WHERE rr.store_id = %s
             '''
         args = (store_id,)
@@ -191,8 +195,8 @@ class DataAccess:
         if road_id == None:
             return None
         query = '''
-            SELECT CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
-            FROM raw_reviews rr 
+            SELECT s.store_id, CONCAT(rr.review_id, '-', rr.source_id) as review_id, rr.review_text, rr.review_date, ss.compound as "compound_score"
+            FROM raw_reviews rr
             JOIN sentiment_scores ss ON rr.review_id = ss.review_id AND rr.source_id = ss.source_id
             JOIN stores s ON rr.store_id = s.store_id
             WHERE s.road_id = %s
@@ -209,17 +213,17 @@ class DataAccess:
 
     def writeAdjNounPairs(self, row, datetime):
         query = '''
-            INSERT INTO `adj_noun_pairs` (`pair_id`, `review_id`, `source_id`, `noun`, `adj`, `processed_date`) 
+            INSERT INTO `adj_noun_pairs` (`pair_id`, `review_id`, `source_id`, `noun`, `adj`, `processed_date`)
             VALUES (NULL, %s, %s, %s, %s, %s)
         '''
-        args = (row.review_id, row.source_id, row.noun, row.adj, datetime)
+        args = (row['review_id'], row['source_id'], row['noun'], row['adj'], datetime)
         return self.__executeModificationQuery(query, args)
 
     def getAdjNounPairsByStore(self, store_id, return_as_dataframe=True):
         query = '''
-            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj 
-            FROM raw_reviews rr 
-            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id 
+            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj
+            FROM raw_reviews rr
+            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id
             WHERE rr.store_id = %s
         '''
         args = (store_id,)
@@ -232,9 +236,9 @@ class DataAccess:
 
     def getAdjNounPairsByRoad(self, road_id, return_as_dataframe=True):
         query = '''
-            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj 
-            FROM raw_reviews rr 
-            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id 
+            SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj
+            FROM raw_reviews rr
+            JOIN adj_noun_pairs anp ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id
             JOIN stores s ON rr.store_id = s.store_id
             WHERE s.road_id = %s
         '''
@@ -249,20 +253,20 @@ class DataAccess:
     def getAdjNounPairsByIds(self, ids, return_as_dataframe=True):
         query = '''
             SELECT CONCAT(anp.review_id,'-', anp.source_id) as review_id, anp.noun, anp.adj FROM raw_reviews rr JOIN adj_noun_pairs anp
-            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE CONCAT(rr.review_id,'-',rr.source_id) IN 
+            ON rr.review_id = anp.review_id AND rr.source_id = anp.source_id WHERE CONCAT(rr.review_id,'-',rr.source_id) IN
         ''' + str(tuple(ids))
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
             return output
         else:
             df = pandas.DataFrame(output)
-            return df   
+            return df
 
     ## Pre-Processing
 
     def getRawReviews_UnProcessed_Sentiments(self):
         query = '''
-            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
+            SELECT * FROM raw_reviews rr WHERE rr.review_text != ""
             AND NOT EXISTS (SELECT 1 FROM sentiment_scores ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
         '''
         output = self.__executeSelectQuery(query)
@@ -274,8 +278,9 @@ class DataAccess:
 
     def getRawReviews_UnProcessed_AdjNounPairs(self):
         query = '''
-            SELECT * FROM raw_reviews rr WHERE rr.review_text != "" 
+            SELECT * FROM raw_reviews rr WHERE rr.review_text != ""
             AND NOT EXISTS (SELECT 1 FROM adj_noun_pairs ss WHERE rr.review_id = ss.review_id AND rr.source_id = ss.source_id)
+            AND rr.retrieval_date >= (SELECT MAX(processed_date) FROM adj_noun_pairs)
         '''
         output = self.__executeSelectQuery(query)
         if len(output) == 0:
@@ -288,9 +293,9 @@ class DataAccess:
 
     def writeRawReviews(self, review, source_id):
         query = '''
-            INSERT INTO `raw_reviews` 
-            (`review_id`, `source_id`, `store_id`, `review_text`, `review_date`, `retrieval_date`) 
-            VALUES 
+            INSERT INTO `raw_reviews`
+            (`review_id`, `source_id`, `store_id`, `review_text`, `review_date`, `retrieval_date`)
+            VALUES
             (%s, %s, %s, %s, %s, %s)
             '''
         args = (review.review_id,
@@ -305,9 +310,9 @@ class DataAccess:
 
     def createUser(self, email, name, hashed_password):
         query = '''
-            INSERT INTO `users` 
-            (`user_id`, `email`, `name`, `password`, `active`, `admin`, `store_id`) 
-            VALUES 
+            INSERT INTO `users`
+            (`user_id`, `email`, `name`, `password`, `active`, `admin`, `store_id`)
+            VALUES
             (UUID_SHORT(), %s, %s, %s, True, False, NULL)
             '''
         args = (email, name, hashed_password)
@@ -319,7 +324,7 @@ class DataAccess:
         '''
         args = (email,)
         return self.__executeSelectQuery(query, args)
-    
+
     def getUserByUserId(self, user_id):
         query = '''
             SELECT * FROM users WHERE user_id = %s
@@ -333,14 +338,14 @@ class DataAccess:
         '''
         args = (password, user_id)
         return self.__executeModificationQuery(query, args)
-    
+
     def updateStoreId(self, user_id, store_id):
         query = '''
             UPDATE `users` SET `store_id` = %s WHERE `users`.`user_id` = %s;
         '''
         args = (store_id, user_id)
         return self.__executeModificationQuery(query, args)
-    
+
     ## Utility
 
     def __executeModificationQuery(self, query, args):

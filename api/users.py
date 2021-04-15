@@ -28,12 +28,16 @@ def login():
     with DataAccess() as dao:
         try:
             row = dao.getUserByEmail(email)[0]
+            if len(dao.getUserByEmail(email)) == 0:
+                return jsonify(response="User not found"), 400
             if not row['active']:
                 return jsonify(response="Account is not active"), 400
             if check_password_hash(row['password'], password):
                 if row['admin']:
                     return jsonify(response=True, user_id=row['user_id'], admin=row['admin']), 200
                 return jsonify(response=True, user_id=row['user_id'], store_id=row['store_id']), 200
+            else:
+                return jsonify(response="Incorrect Password"), 401
         except Exception as e:
             return jsonify(response="Server Error", error=e), 500
     return jsonify(response="Server Error"), 500
@@ -76,6 +80,18 @@ def changeStoreId():
             return jsonify(response="Server Error", error=e), 500
     return jsonify(response="Server Error"), 500
 
+@bp.route('/users', methods=['POST'])
+def getAllUsers():
+    admin_id = request.form.get('admin_id')
+    if not adminRights(admin_id):
+        return jsonify(response="Invalid Administrative Rights"), 401
+    with DataAccess() as dao:
+        try:
+            results = dao.getAllUsers()
+            return jsonify(response=results), 200
+        except Exception as e:
+            return jsonify(response="Server Error", error=e), 500
+    return jsonify(response="Server Error"), 500
 
 def adminRights(user_id):
     with DataAccess() as dao:
