@@ -1,9 +1,9 @@
 let wordCloudData  = [];
 var width          = $(window).width(), height = $(window).height();
 
-async function retrieveWordCloudNounAdjPairs(url,method,values){
-    document.getElementById("wordCloudContainer").style.display = "none";
-    document.getElementById("wordCloudContainerSpinner").style.display = "block";
+async function retrieveWordCloudNounAdjPairs(url,method,values,subzoneChoice){
+    document.getElementById("wordCloudContainer"+subzoneChoice).style.display = "none";
+    document.getElementById("wordCloudContainerSpinner"+subzoneChoice).style.display = "block";
 
     var response = await makeRequest(url, method, values);  
     let adjNounPairs     = JSON.parse(response).data;
@@ -12,33 +12,33 @@ async function retrieveWordCloudNounAdjPairs(url,method,values){
 
   
     if(method == "POST"){
-      if( document.getElementById("wordCloudNotEnoughWordsWarning").style.display != "block"){
-        prepareWordCloud(adjNounPairs) 
+      if( document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display != "block"){
+        prepareWordCloud(adjNounPairs,false,subzoneChoice) 
       }else{
         console.log("oops blocked");
-        document.getElementById("wordCloudContainerSpinner").style.display = "none";
+        document.getElementById("wordCloudContainerSpinner"+subzoneChoice).style.display = "none";
       }
         
     }else{
       if(url.includes("adj_noun_pairs/road")){
         subZoneNounAdjPairs = adjNounPairs;
       }
-      prepareWordCloud(adjNounPairs,false);
+      prepareWordCloud(adjNounPairs,false,subzoneChoice);
     }
     
 }
 
-function prepareWordCloud(response,isShowSpinner){
+function prepareWordCloud(response,isShowSpinner,subzoneChoice){
 
     if(!isShowSpinner){
-      document.getElementById("wordCloudContainer").style.display = "block";
-      document.getElementById("wordCloudContainerSpinner").style.display = "none";
+      document.getElementById("wordCloudContainer"+subzoneChoice).style.display = "block";
+      document.getElementById("wordCloudContainerSpinner"+subzoneChoice).style.display = "none";
     }
     // console.log(response)
     wordCloudData  = [];
-    document.getElementById("wordCloudContainer").innerHTML = "";
-    document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML = "";
-    document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+    document.getElementById("wordCloudContainer"+subzoneChoice).innerHTML = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).innerHTML = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
     document.getElementById("wordCloudClickedReviews").innerHTML = '';
     document.getElementById("wordCloudReviewsContainer").style.display = "none";
 
@@ -173,10 +173,10 @@ function prepareWordCloud(response,isShowSpinner){
     }
     // console.log(wordCloudData)
 
-    let w = document.getElementById('wordCloudContainer').offsetWidth;
+    let w = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
     let h = 450;
 
-    drawWordcLOUD(w,h);
+    drawWordcLOUD(w,h,subzoneChoice);
 }
 
 function getTextLength(text,size,fontFamily){
@@ -237,10 +237,10 @@ function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounS
 *   3. draw a new wordcloud
 /=*/ 
 // function resize(){
-//     // console.log(document.getElementById('wordCloudContainer').offsetWidth)
-//     // console.log(document.getElementById('wordCloudContainer').offsetHeight)
-//     w = document.getElementById('wordCloudContainer').offsetWidth;
-//     h = document.getElementById('wordCloudContainer').offsetHeight;
+//     // console.log(document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth)
+//     // console.log(document.getElementById('wordCloudContainer'+subzoneChoice).offsetHeight)
+//     w = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
+//     h = document.getElementById('wordCloudContainer'+subzoneChoice).offsetHeight;
 
 //     if($(window).width() != width || $(window).height() != height){
 //         removeWordCloud();
@@ -249,7 +249,7 @@ function getNewNounDupe(adjArray,fontFamily,spaceBetweenNounAdj,nounLength,nounS
 // }
 
 // function removeWordCloud(){
-//     document.getElementById("wordCloudContainer").innerHTML = "";
+//     document.getElementById("wordCloudContainer"+subzoneChoice).innerHTML = "";
 // }
 
 function randomColor () {
@@ -260,14 +260,14 @@ function randomColor () {
     return color;
 }
 
-function drawWordcLOUD(w,h){     
+function drawWordcLOUD(w,h,subzoneChoice){     
     // set the dimensions and margins of the graph
     var margin = {top: 5, right: 5, bottom: 5, left: 5},
     width = w - margin.left - margin.right,
     height = h - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    var svg = d3.select("#wordCloudContainer").append("svg")
+    var svg = d3.select("#wordCloudContainer"+subzoneChoice).append("svg")
         // .attr("width", width + margin.left + margin.right)
         // .attr("height", height + margin.top + margin.bottom)
         .attr("viewBox", `0 0 ${w} ${h}`)

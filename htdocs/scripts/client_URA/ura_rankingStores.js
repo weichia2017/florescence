@@ -57,8 +57,8 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
 function showStoreSpecificDetails(e,storeId,subZone){
     let storesList = document.querySelectorAll('.storesList');
 
-    document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML     = "";
-    document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subZone).innerHTML     = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subZone).style.display = "none";
 
     //IF SELECTED UNSELECT
     if(e.classList.contains("card-active")){
@@ -77,7 +77,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
         }
         dataPrepOnPageLoad(subzoneReviews, false);
         prepareSentimentOverTime(subzoneReviews,subZone);
-        prepareWordCloud(subZoneNounAdjPairs);
+        prepareWordCloud(subZoneNounAdjPairs,false,subZone);
       
     }
     //IF UNSELECTED SELECT
@@ -99,7 +99,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
         if(noOfReviews> limitToShowIndividualStoreInsights){
             // WordCloud
             let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
-            retrieveWordCloudNounAdjPairs(wcURL, "GET", "")
+            retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subZone)
             document.getElementById("entireSentimentOverTimeContainer").style.display  = "block";
             document.getElementById("entireWordCloudContainer").style.display          = "block";
             document.getElementById("unableToShowInsightsContainer").style.display     = "none";

@@ -1,4 +1,4 @@
-async function retrieveSOTbyStore(url,method,values,subZone){
+async function retrieveSOTbyStore(url,method,values,subzoneChoice){
     document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
     document.getElementById("SOTSpinnerSubzone1").style.display                     = "block";
 
@@ -8,7 +8,7 @@ async function retrieveSOTbyStore(url,method,values,subZone){
     // Only of more than limitNo of reviews
     if(reviews.length > limitToShowIndividualStoreInsights){
         dataPrepOnPageLoad(reviews,false);
-        prepareSentimentOverTime(reviews,subZone);
+        prepareSentimentOverTime(reviews,subzoneChoice);
     }else{
         
       let chosenReviewsWithFullData = [];
@@ -118,19 +118,19 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
 }
 
 
-function updateWordCloud(chosenReviews,selectedSentiment){
+function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
     document.getElementById("wordCloudClickedReviews").innerHTML = '';
     document.getElementById("wordCloudReviewsContainer").style.display = "none";
     
     if(chosenReviews.length > 10){
-        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
-        document.getElementById("wordCloudContainer").style.display             = "block";
-        document.getElementById('wordCloudContainer').scrollIntoView({block: "end",behavior:'smooth'});
+        document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
+        document.getElementById("wordCloudContainer"+subzoneChoice).style.display             = "block";
+        document.getElementById('wordCloudContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
         
         let dataToBeSentToServer = [{data:[]}];
         dataToBeSentToServer[0].data = chosenReviews
         let url = hostname + "/adj_noun_pairs/";
-        retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]))
+        retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]),subzoneChoice)
       }
       else{
         selectedReview = chosenReviews //the main variable is in the first few lines of dashboard.php
@@ -142,8 +142,8 @@ function updateWordCloud(chosenReviews,selectedSentiment){
             selectedSentiment = "positive"
         }
 
-        document.getElementById("wordCloudContainer").style.display          = "none";
-        document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML  = 
+        document.getElementById("wordCloudContainer"+subzoneChoice).style.display          = "none";
+        document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).innerHTML  = 
         `<div class='p-5 text-center' style='position: absolute;top: 30%;width:100%'>
          <div style="font-size:50px; color: #fdcc0d;" class="material-icons text-center">
                 warning_amber  
@@ -153,39 +153,9 @@ function updateWordCloud(chosenReviews,selectedSentiment){
          Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
            to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
         </div>`
-        document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "block";
-        document.getElementById('wordCloudNotEnoughWordsWarning').scrollIntoView({block: "end",behavior:'smooth'});
+        document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "block";
+        document.getElementById('wordCloudNotEnoughWordsWarning'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
       }
-
-
-
-   
-
-    // chosenReviews.sort(function(a,b){
-    //     return new Date(b.review_date) - new Date(a.review_date);
-    // });
-
-    
-    // for (x in chosenReviews){
-    //     let formattedDate = new Date(chosenReviews[x].review_date);
-    //     // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
-    //     document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
-    //         `<div class="card mr-3 ml-3 mt-2">
-    //             <div class="card-body">
-    //             <h6 class="reviewBodyFont" style="font-size:20px">
-    //                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
-    //                 store
-    //                 </span>
-    //                 <div class="float-left ml-1" >
-    //                 ${storeIDandNameDict[chosenReviews[x].store_id]}
-    //                 </div> 
-    //             </h6>
-    //             <br>
-    //             <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
-    //             <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
-    //             </div>
-    //         </div>`;
-    // }
 }
 
 /* 
@@ -347,7 +317,7 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
             selectedSentiment = "NegR"
         }
  
-        updateWordCloud(d.data[selectedSentiment],selectedSentiment)
+        updateWordCloud(d.data[selectedSentiment],selectedSentiment,subzoneChoice)
     }
 
     // function getKeyByValue(object, value) {
