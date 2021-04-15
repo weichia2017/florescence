@@ -26,7 +26,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         storesRanked.innerHTML += 
         `<div class="card">
             <div 
-                onclick="showStoreSpecificDetails(this,${storeID})" 
+                onclick="showStoreSpecificDetails(this,${storeID},'${subzone}')" 
                 data-toggle="collapse" 
                 data-target="#Store${storeID}" 
                 class="card-header pointer reviewBodyFont storesList" 
@@ -54,7 +54,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
 // `<a id="${storeData[x].store_id}" onclick="showStoreSpecificDetails(this,${storeData[x].store_id})" class="list-group-item pointer storesList reviewBodyFont">${rank+'. '}${storeData[x].store_name}</a>
 // `
 
-function showStoreSpecificDetails(e,storeId){
+function showStoreSpecificDetails(e,storeId,subZone){
     let storesList = document.querySelectorAll('.storesList');
 
     document.getElementById("wordCloudNotEnoughWordsWarning").innerHTML     = "";
@@ -76,7 +76,7 @@ function showStoreSpecificDetails(e,storeId){
             document.getElementById("unableToShowInsightsContainer").style.display     = "none";
         }
         dataPrepOnPageLoad(subzoneReviews, false);
-        prepareSentimentOverTime(subzoneReviews);
+        prepareSentimentOverTime(subzoneReviews,subZone);
         prepareWordCloud(subZoneNounAdjPairs);
       
     }
@@ -123,7 +123,7 @@ function showStoreSpecificDetails(e,storeId){
 
         
         let sotURL = hostname + "/reviews/store/" + storeId;
-        retrieveSOTbyStore(sotURL, "GET", "")
+        retrieveSOTbyStore(sotURL, "GET", "",subZone)
         e.classList.add("card-active");
      
     }    

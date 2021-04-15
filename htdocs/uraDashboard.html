@@ -223,7 +223,7 @@ if( isset($_GET['storeID']) ){
       }
 
       .list-group .list-group-item:hover {
-        background-color: #a7a7a7;
+        background-color: #0275d8;
         color:white;
       }
 
@@ -291,6 +291,10 @@ if( isset($_GET['storeID']) ){
 
   <main class="container" style="z-index: 0">
     <div class="container mb-5 mt-3">
+
+      <!-- ============= -->
+      <!--     FILTER    -->
+      <!-- ============= -->
       <div id = filterSubZoneContainer">
         <!-- ROW 0 -->
         <div class="row" id="subzoneExpandDownArrowRow">
@@ -362,9 +366,6 @@ if( isset($_GET['storeID']) ){
             </div>
           </div>
         </div>
-      </div>
-
-      <div id="SubzoneInformationContainer">
         <!-- ROW 2 -->
         <div class="row" id="subzoneExpandUpArrowRow">
           <div class="col border border-secondary rounded mb-1 white-bg shadow text-center">
@@ -373,6 +374,12 @@ if( isset($_GET['storeID']) ){
               </span>
           </div>
         </div>
+      </div>
+
+      <!-- ============= -->
+      <!--  SINGLE MODE  -->
+      <!-- ============= -->
+      <div id="SubzoneInformationContainerSingleMode">
         <!-- ROW 3 -->
         <div class="row">
           <!-- ====================== -->
@@ -488,7 +495,7 @@ if( isset($_GET['storeID']) ){
             </div>
             <br>
             <hr>
-            <div id="accordion" class="scrollStoreRanks float-left w-100">
+            <div id="storeRanksSubzone1" class="scrollStoreRanks float-left w-100">
               <!-- The sorted stores poulate here -->
             </div>
 
@@ -496,7 +503,7 @@ if( isset($_GET['storeID']) ){
             <div class="whiteBackground"></div>
 
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="StorerRankedSpinner" role="status" ></div>
+            <div class="spinner-border text-secondary float-left spinner" id="StorerRankedSpinnerSubzone1" role="status" ></div>
           </div>
 
           <!-- ================================ -->   
@@ -535,12 +542,12 @@ if( isset($_GET['storeID']) ){
               <!-- <div class="col-12 border"></div> -->
               <div id="sentimentOverTimeContainerDiv" class="float-left">
                 <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
-                  Select year: <select id="year"></select>
+                  Select year: <select id="yearSubzone1"></select>
     
-                  <input type="checkbox" id="sort" class="ml-1">	Sort
+                  <input type="checkbox" id="sortSubzone1" class="ml-1">	Sort
                 </div>
 
-                <svg class="container" id="sentimentOverTimeContainer" width="1000" height="400">
+                <svg class="container" id="sentimentOverTimeStackedBarChartSubzone1" width="1000" height="400">
                   <!-- SOT chart populates here -->
                 </svg>
               </div>
@@ -551,7 +558,7 @@ if( isset($_GET['storeID']) ){
               <div class="spinner-border text-secondary float-left spinner" id="SOTSpinner" role="status" ></div>
           </div>
 
-          <!-- ===================================-->   
+          <!-- =================================== -->   
           <!--   STORES WITH LESS THAN # REVIEWS   -->
           <!-- =================================== -->
           <div id="unableToShowInsightsContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
@@ -700,6 +707,8 @@ if( isset($_GET['storeID']) ){
         </div>
         <!-- </div> -->
       </div>
+
+      
     </div>
   </main>
 
@@ -724,8 +733,10 @@ if( isset($_GET['storeID']) ){
     limitToShowIndividualStoreInsights = 10;
     selectedReview='';
 
+    
+    document.getElementById("subzoneExpandUpArrowRow").style.display                = "none";
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
-    document.getElementById("SubzoneInformationContainer").style.display            = "none";
+    document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
     document.getElementById("subZoneSearch").style.display                          = "none";
     document.getElementById("wordCloudReviewsContainer").style.display              = "none";
 
@@ -770,13 +781,13 @@ if( isset($_GET['storeID']) ){
     let subZoneNounAdjPairs;
     let isCallForSubZone = true;
     // The main call to retrieve values for all charts other than wordcloud
-    async function getSentimentScore(subzone_ID){
+    async function getSentimentScore(subzone_ID,subzoneChoice){
       document.getElementById("main-overlay").style.display = "block";
       let reviewsResponse  = await makeRequest(hostname + "/reviews/road/"+subzone_ID, "GET", "");
       subzoneReviews = JSON.parse(reviewsResponse).data;
 
       dataPrepOnPageLoad(subzoneReviews,true);
-      prepareSentimentOverTime(subzoneReviews);
+      prepareSentimentOverTime(subzoneReviews,subzoneChoice);
       document.getElementById("main-overlay").style.display = "none";
     }
 
@@ -971,17 +982,19 @@ if( isset($_GET['storeID']) ){
         document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
 
         // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
-        getSentimentScore(subzone1);
+        getSentimentScore(subzone1,"Subzone1");
 
         // Wordcloud
         let url = hostname + "/adj_noun_pairs/road/"+subzone1;
         retrieveWordCloudNounAdjPairs(url,"GET","");
 
         // Ranking list
-        getRanking(subzone1);
+        let IDtoPlaceRank    = "storeRanksSubzone1";
+        let IDforRankSpinner = "StorerRankedSpinnerSubzone1";
+        getRanking(subzone1,IDtoPlaceRank,IDforRankSpinner);
 
     
-        document.getElementById("SubzoneInformationContainer").style.display = "block";
+        document.getElementById("SubzoneInformationContainerSingleMode").style.display = "block";
         document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
         document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
 
@@ -1005,8 +1018,8 @@ if( isset($_GET['storeID']) ){
         document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
 
         //Ranked Stores
-        document.getElementById("accordion").style.display                              = "none";
-        document.getElementById("StorerRankedSpinner").style.display                    = "block";
+        document.getElementById("storeRanksSubzone1").style.display                     = "none";
+        document.getElementById("StorerRankedSpinnerSubzone1").style.display                    = "block";
 
         //Sentiment Over Time Stacked Bar Chart
         document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
@@ -1015,7 +1028,7 @@ if( isset($_GET['storeID']) ){
         //WordCloud
         document.getElementById("wordCloudContainer").style.display                     = "none"; 
         document.getElementById("wordCloudContainerSpinner").style.display              = "block";
-        // document.getElementById('SubzoneInformationContainer').scrollIntoView({block: "start",behavior:'smooth'});
+        // document.getElementById('SubzoneInformationContainerSingleMode').scrollIntoView({block: "start",behavior:'smooth'});
       }
       
       // Compare Mode

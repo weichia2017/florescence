@@ -1,11 +1,6 @@
-async function retrieveSOTbyStore(url,method,values){
+async function retrieveSOTbyStore(url,method,values,subZone){
     document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-    // document.getElementById("overallSentimentScore").style.display                  = "none";
-    // document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
-    
     document.getElementById("SOTSpinner").style.display                             = "block";
-    // document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
-    // document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
 
     var response = await makeRequest(url, method, values);  
     let reviews  = JSON.parse(response).data;
@@ -13,7 +8,7 @@ async function retrieveSOTbyStore(url,method,values){
     // Only of more than limitNo of reviews
     if(reviews.length > limitToShowIndividualStoreInsights){
         dataPrepOnPageLoad(reviews,false);
-        prepareSentimentOverTime(reviews);
+        prepareSentimentOverTime(reviews,subZone);
     }else{
         
       let chosenReviewsWithFullData = [];
@@ -44,7 +39,7 @@ async function retrieveSOTbyStore(url,method,values){
 }
 
 let setimentOverTimePrepared = [];
-function prepareSentimentOverTime(reviews){
+function prepareSentimentOverTime(reviews, subzoneChoice){
 
     document.getElementById("sentimentOverTimeContainerDiv").style.display          = "block";
     document.getElementById("overallSentimentScore").style.display                  = "block";
@@ -54,8 +49,8 @@ function prepareSentimentOverTime(reviews){
     document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
     document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
 
-    document.getElementById("sentimentOverTimeContainer").innerHTML     = "";
-    document.getElementById("year").innerHTML                           = "";
+    document.getElementById("sentimentOverTimeStackedBarChartSubzone1").innerHTML   = "";
+    document.getElementById("year"+subzoneChoice).innerHTML                         = "";
     setimentOverTimePrepared = [];
     
     // console.log(reviews)
@@ -112,34 +107,6 @@ function prepareSentimentOverTime(reviews){
                     setimentOverTimePrepared[y].NeuR.push(reviews[x].review_id);
                 }
             }
-
-            // if(setimentOverTimePrepared[y].Year == year &&
-            //     month.includes(setimentOverTimePrepared[y].Month)){
-            //     if(reviews[x].compound_score >= 0.05){
-            //         setimentOverTimePrepared[y].Pos += 1;
-            //         setimentOverTimePrepared[y].PosR.push({review_id      : reviews[x].review_id,
-            //                                                review_text    : reviews[x].review_text,
-            //                                                review_date    : reviews[x].review_date,
-            //                                                compound_score : reviews[x].compound_score,
-            //                                                store_id       : reviews[x].store_id});
-            //     } 
-            //     else if(reviews[x].compound_score <= -0.05){
-            //         setimentOverTimePrepared[y].Neg += 1;
-            //         setimentOverTimePrepared[y].NegR.push({review_id      : reviews[x].review_id,
-            //                                                review_text    : reviews[x].review_text,
-            //                                                review_date    : reviews[x].review_date,
-            //                                                compound_score : reviews[x].compound_score,
-            //                                                store_id       : reviews[x].store_id});
-            //     }
-            //     else{
-            //         setimentOverTimePrepared[y].Neu += 1;
-            //         setimentOverTimePrepared[y].NeuR.push({review_id      : reviews[x].review_id,
-            //                                                review_text    : reviews[x].review_text,
-            //                                                review_date    : reviews[x].review_date,
-            //                                                compound_score : reviews[x].compound_score,
-            //                                                store_id       : reviews[x].store_id});
-            //     }
-            // }
         }
     
     }
@@ -147,7 +114,7 @@ function prepareSentimentOverTime(reviews){
 
     let w = document.getElementById('sentimentOverTimeContainerDiv').offsetWidth;
     let h = 400;
-    drawSentimentOverTimeStackedBarChart(w,h);
+    drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice);
 }
 
 
@@ -232,12 +199,12 @@ function resizeSentimentOverTime(){
     let h = 400;
 
     if($(window).width() != width || $(window).height() != height){
-        document.getElementById("sentimentOverTimeContainer").innerHTML = "";
+        document.getElementById("sentimentOverTimeStackedBarChartSubzone1").innerHTML = "";
         drawSentimentOverTimeStackedBarChart(w,h);
     }
 }
 
-function drawSentimentOverTimeStackedBarChart(w,h) {
+function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
     var legendClassArray = []; //store legend classes to select bars in plotSingle()
 
 	var keys = ["Pos", "Neg", "Neu"]
@@ -246,12 +213,12 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
 	var year   = [...new Set(setimentOverTimePrepared.map(d => d.Year))]
 	var Months = [...new Set(setimentOverTimePrepared.map(d => d.Month))]
 
-	var options = d3.select("#year").selectAll("option")
+	var options = d3.select("#year"+subzoneChoice).selectAll("option")
 		.data(year)
 	.enter().append("option")
 		.text(d => d)
 
-	var svg = d3.select("#sentimentOverTimeContainer").attr("viewBox", `0 0 ${w} ${h}`),
+	var svg = d3.select("#sentimentOverTimeStackedBarChartSubzone1").attr("viewBox", `0 0 ${w} ${h}`),
 		margin = {top: 35, left: 35, bottom: 0, right: 20},
 		width = +w - margin.left - margin.right,
 		height = +h - margin.top - margin.bottom;
@@ -276,7 +243,7 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
         .range([posColor, negColor, neuColor])
         .domain(keys);
 
-	update(d3.select("#year").property("value"), 0)
+	update(d3.select("#year"+subzoneChoice).property("value"), 0)
 
 	function update(input, speed) {
 		var data = setimentOverTimePrepared.filter(f => f.Year == input)
@@ -294,7 +261,7 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
 		svg.selectAll(".y-axis").transition().duration(speed)
 			.call(d3.axisLeft(y).ticks(null,'s'))
 
-		data.sort(d3.select("#sort").property("checked")
+		data.sort(d3.select("#sort"+subzoneChoice).property("checked")
 			? (a, b) => b.total - a.total
 			: (a, b) => Months.indexOf(a.Month) - Months.indexOf(b.Month))
 
@@ -434,12 +401,12 @@ function drawSentimentOverTimeStackedBarChart(w,h) {
       .style("text-anchor", "start")
       .text(function(d) { return d ; });
 
-	var select = d3.select("#year")
+	var select = d3.select("#year"+subzoneChoice)
 		.on("change", function() {
 			update(this.value, 750)
 		})
 
-	var checkbox = d3.select("#sort")
+	var checkbox = d3.select("#sort"+subzoneChoice)
 		.on("click", function() {
 			update(select.property("value"), 750)
 		})
