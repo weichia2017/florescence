@@ -4,7 +4,7 @@ function displayStars(overallSentimentScore, isForURARankedContainingStoreID){
       starsType    = "rankedStars"
       placeStarsAt = "rankOverallSentimentOverTime"+isForURARankedContainingStoreID
     }else{
-      starsType = "normalStars"
+      starsType    = "normalStars"
       placeStarsAt = "overallSentimentScore"
     }
     

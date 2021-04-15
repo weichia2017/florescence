@@ -1,5 +1,5 @@
 let storeIDandNameDict = {};
-async function getRanking(subzone_ID){
+async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
     let response   = await makeRequest(hostname + "/stores/road/"+subzone_ID, "GET", "");
     let storeData = JSON.parse(response).data;
 
@@ -8,7 +8,8 @@ async function getRanking(subzone_ID){
         return b.beta_score - a.beta_score;
     });
 
-    storesRanked = document.getElementById("accordion");
+    let subzone      = IDtoPlaceRank.substring(IDtoPlaceRank.length - 8);
+    let storesRanked = document.getElementById(IDtoPlaceRank);
     //Clear all the ranks each time this function is called
     storesRanked.innerHTML = "";
 
@@ -36,19 +37,19 @@ async function getRanking(subzone_ID){
             
         </div>
     
-        <div id="Store${storeID}" class="collapse" data-parent="#accordion">
+        <div id="Store${storeID}" class="collapse" data-parent="#${IDtoPlaceRank}">
             <div class="card-body border d-flex justify-content-between ">
                 <span id="rankOverallSentimentOverTime${storeID}"></span> 
-                <span id="rankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
+                <span id="${subzone}RankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
             </div>
         </div>
         `;
 
         displayStars(storeData[x].average_compound,storeID)
-        document.getElementById("rankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
+        document.getElementById(subzone+"RankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
     }
-    document.getElementById("accordion").style.display            = "block";
-    document.getElementById("StorerRankedSpinner").style.display  = "none";
+    document.getElementById(IDtoPlaceRank).style.display     = "block";
+    document.getElementById(IDforRankSpinner).style.display  = "none";
 }
 // `<a id="${storeData[x].store_id}" onclick="showStoreSpecificDetails(this,${storeData[x].store_id})" class="list-group-item pointer storesList reviewBodyFont">${rank+'. '}${storeData[x].store_name}</a>
 // `
