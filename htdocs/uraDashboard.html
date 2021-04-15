@@ -511,7 +511,6 @@ if( isset($_GET['storeID']) ){
           <!-- ================================ -->
           <div id="entireSentimentOverTimeContainer" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
-              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 timeline
               </span>
@@ -555,7 +554,7 @@ if( isset($_GET['storeID']) ){
               <div class="whiteBackground"></div>
 
               <!-- Spinner that only shows when loading -->
-              <div class="spinner-border text-secondary float-left spinner" id="SOTSpinner" role="status" ></div>
+              <div class="spinner-border text-secondary float-left spinner" id="SOTSpinnerSubzone1" role="status" ></div>
           </div>
 
           <!-- =================================== -->   
@@ -1023,7 +1022,7 @@ if( isset($_GET['storeID']) ){
 
         //Sentiment Over Time Stacked Bar Chart
         document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-        document.getElementById("SOTSpinner").style.display                             = "block";
+        document.getElementById("SOTSpinnerSubzone1").style.display                             = "block";
 
         //WordCloud
         document.getElementById("wordCloudContainer").style.display                     = "none"; 

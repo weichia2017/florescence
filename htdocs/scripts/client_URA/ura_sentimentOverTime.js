@@ -1,6 +1,6 @@
 async function retrieveSOTbyStore(url,method,values,subZone){
     document.getElementById("sentimentOverTimeContainerDiv").style.display          = "none";
-    document.getElementById("SOTSpinner").style.display                             = "block";
+    document.getElementById("SOTSpinnerSubzone1").style.display                     = "block";
 
     var response = await makeRequest(url, method, values);  
     let reviews  = JSON.parse(response).data;
@@ -45,7 +45,7 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
     document.getElementById("overallSentimentScore").style.display                  = "block";
     document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
     
-    document.getElementById("SOTSpinner").style.display                             = "none";
+    document.getElementById("SOTSpinnerSubzone1").style.display                     = "none";
     document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
     document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
 
