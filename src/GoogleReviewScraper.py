@@ -55,14 +55,13 @@ class GoogleReviewScraper:
             except Exception as e:
                 tries += 1
                 self.logger.warn(
-                    'Failed to click "Show More" button, will retry! (Attempt: '+str(tries)+'/'+str(MAX_RETRY)+")")
+                    'Failed to click Sort button, will retry! (Attempt: '+str(tries)+'/'+str(MAX_RETRY)+")")
             if tries == MAX_RETRY:
                 self.logger.warn(
                     'Failed to sort Reviews by Dates, this scrape should be terminated, returning False ')
                 return False
         self.logger.info('Reviews has been sorted by Dates.')
-        recent_rating_bt = self.driver.find_elements_by_xpath(
-            '//li[@role=\'menuitemradio\']')[1]
+        recent_rating_bt = self.driver.find_elements_by_xpath('//li[@role=\'menuitemradio\']')[1]
         recent_rating_bt.click()
         time.sleep(5)
         return True
@@ -81,10 +80,11 @@ class GoogleReviewScraper:
         return reviews
 
     def __expand_reviews(self):
-        links = self.driver.find_elements_by_xpath(
-            '//button[@class=\'section-expand-review blue-link\']')
-        for l in links:
-            l.click()
+        links = self.driver.find_elements_by_xpath('//jsl/button')
+        if len(links)>0:
+            self.logger.info('Expanding Review')
+            for l in links:
+                l.click()
         time.sleep(2)
 
     def __scroll(self):
