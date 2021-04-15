@@ -1,12 +1,20 @@
-function displayStars(overallSentimentScore, isForURARankedContainingStoreID){
+function displayStars(overallSentimentScore, isForURARankedContainingStoreID, subZoneChoice){
 
+  //Business User
+  starsType    = "normalStars"
+  placeStarsAt = "overallSentimentScore" 
+
+  //URA
+  if(subZoneChoice){
     if(isForURARankedContainingStoreID){
       starsType    = "rankedStars"
-      placeStarsAt = "rankOverallSentimentOverTime"+isForURARankedContainingStoreID
+      placeStarsAt = subZoneChoice+"RankOverallSentimentOverTime"+isForURARankedContainingStoreID
     }else{
       starsType    = "normalStars"
-      placeStarsAt = "overallSentimentScore"
+      placeStarsAt = "overallSentimentScore" + subZoneChoice
     }
+  }
+
     
     //CompountScore  Stars
       //-1             0

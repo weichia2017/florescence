@@ -39,13 +39,13 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
     
         <div id="Store${storeID}" class="collapse" data-parent="#${IDtoPlaceRank}">
             <div class="card-body border d-flex justify-content-between ">
-                <span id="rankOverallSentimentOverTime${storeID}"></span> 
+                <span id="${subzoneChoice}RankOverallSentimentOverTime${storeID}"></span> 
                 <span id="${subzoneChoice}RankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
             </div>
         </div>
         `;
 
-        displayStars(storeData[x].average_compound,storeID)
+        displayStars(storeData[x].average_compound,storeID,subzoneChoice)
         document.getElementById(subzoneChoice+"RankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
     }
     document.getElementById(IDtoPlaceRank).style.display     = "block";
@@ -75,7 +75,7 @@ function showStoreSpecificDetails(e,storeId,subZoneChoice){
             document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "block";
             document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "none";
         }
-        dataPrepOnPageLoad(subzoneReviews, false);
+        dataPrepOnPageLoad(subzoneReviews, false,subZoneChoice);
         prepareSentimentOverTime(subzoneReviews,subZoneChoice);
         prepareWordCloud(subZoneNounAdjPairs,false,subZoneChoice);
       

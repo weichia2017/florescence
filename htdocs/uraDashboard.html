@@ -101,7 +101,7 @@ if( isset($_GET['storeID']) ){
         background-color: rgb(243, 243, 243);
       }
 
-      #totalNoOfReviewsContainer {
+      .totalNoOfReviewsContainer {
         font-family:'Anton', sans-serif;
         color: rgb(92, 92, 92);
         font-size: 1.8em;
@@ -109,7 +109,7 @@ if( isset($_GET['storeID']) ){
         margin-left:25px;
       }
 
-      #subzoneNameContainer {
+      .subzoneNameContainer {
         font-family:'Anton', sans-serif;
         color: rgb(92, 92, 92);
         font-size: 1.8em;
@@ -381,29 +381,28 @@ if( isset($_GET['storeID']) ){
           <!--        SUB-ZONES       -->
           <!-- ====================== -->
           <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
-              <div class="lead">
-                <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
-                <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                  place
-                </span>
-                <!-- Create a div where the total number of reviews will be -->
-                <div class="float-left ml-1 headings" >Sub Zones: </div> 
-                <!-- Info PopOver -->
-                <a tabindex="0" class="float-right popoverzindex" 
-                    title="Sub zones" 
-                    data-placement="left" 
-                    data-toggle="popover" 
-                    data-trigger="hover focus" 
-                    data-content="Deatailed information from the selected subzone">
-                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
-                    info_outline
-                  </span>    
-                </a>
-                <div class="container" id="subzoneNameContainer">
-                  <!-- Subzone name get filled here -->
-                  <!-- <span style="font-size: 0.3em;">Alba 1836 Wine Bar & Restaurant</span> -->
-                </div>
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+              <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                place
+              </span>
+              <!-- Create a div where the total number of reviews will be -->
+              <div class="float-left ml-1 headings" >Sub Zones: </div> 
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex" 
+                  title="Sub zones" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Deatailed information from the selected subzone">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+              <div class="container subzoneNameContainer" id="subzoneNameContainerSubzone1">
+                <!-- Subzone name get filled here -->
               </div>
+            </div>
           </div>
           <!-- ========================= -->   
           <!--  OVERALL SENTIMENT SCORE  -->
@@ -425,10 +424,10 @@ if( isset($_GET['storeID']) ){
                   info_outline
                 </span>    
               </a>
-              <div class="container float-left ml-3" id="overallSentimentScore"></div>
+              <div class="container float-left ml-3" id="overallSentimentScoreSubzone1"></div>
             </div>
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinner" role="status" ></div>
+            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinnerSubzone1" role="status" ></div>
           </div>
           <!-- ====================== -->
           <!--     TOTAL REVIEWS      -->
@@ -452,10 +451,10 @@ if( isset($_GET['storeID']) ){
                   info_outline
                 </span>    
               </a>
-              <div class="container" id="totalNoOfReviewsContainer"></div>
+              <div class="container totalNoOfReviewsContainer" id="totalNoOfReviewsContainerSubzone1"></div>
             </div>
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="totalReviewsContainerSpinner" role="status" ></div>
+            <div class="spinner-border text-secondary float-left spinner" id="totalReviewsContainerSpinnerSubzone1" role="status" ></div>
           </div>
         </div>
     
@@ -779,13 +778,13 @@ if( isset($_GET['storeID']) ){
       let reviewsResponse  = await makeRequest(hostname + "/reviews/road/"+subzone_ID, "GET", "");
       subzoneReviews = JSON.parse(reviewsResponse).data;
 
-      dataPrepOnPageLoad(subzoneReviews,true);
+      dataPrepOnPageLoad(subzoneReviews,true,subzoneChoice);
       prepareSentimentOverTime(subzoneReviews,subzoneChoice);
       document.getElementById("main-overlay").style.display = "none";
     }
 
     let sentimentDataForWordCloud = [];
-    function dataPrepOnPageLoad(reviews, processOSTAndTotalReviews){
+    function dataPrepOnPageLoad(reviews, processOSTAndTotalReviews, subzoneChoice){
 
       // Sentiments pos,neg,neu
       let pos          = [];
@@ -817,11 +816,11 @@ if( isset($_GET['storeID']) ){
       if(processOSTAndTotalReviews){
         // Total Reviews Number
         let subZoneTotalReviews = reviews.length;
-        document.getElementById("totalNoOfReviewsContainer").textContent = subZoneTotalReviews;
+        document.getElementById("totalNoOfReviewsContainerSubzone1").textContent = subZoneTotalReviews;
 
         //Overall Sentiment Score 
         let subZoneOverallSentimentScore = totalCompoundScores/subZoneTotalReviews;
-        displayStars(subZoneOverallSentimentScore, false)
+        displayStars(subZoneOverallSentimentScore, false, subzoneChoice)
       }
 
       // Preparing data for adj clicks to see review
@@ -972,7 +971,7 @@ if( isset($_GET['storeID']) ){
         }
 
         subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
-        document.getElementById("subzoneNameContainer").innerText = selectedSubZones[0]
+        document.getElementById("subzoneNameContainerSubzone1").innerText = selectedSubZones[0]
 
         // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
         getSentimentScore(subzone1,"Subzone1");
@@ -1003,12 +1002,12 @@ if( isset($_GET['storeID']) ){
         document.getElementById("entireWordCloudContainerSubzone1").style.display               = "block";
 
         //Overall Sentiment Score (Stars)
-        document.getElementById("overallSentimentScore").style.display                  = "none";
-        document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "block";
+        document.getElementById("overallSentimentScoreSubzone1").style.display                  = "none";
+        document.getElementById("overallSentimentScoreContainerSpinnerSubzone1").style.display  = "block";
         
         //Total Number of Reviews 
-        document.getElementById("totalNoOfReviewsContainer").style.display              = "none";
-        document.getElementById("totalReviewsContainerSpinner").style.display           = "block";
+        document.getElementById("totalNoOfReviewsContainerSubzone1").style.display              = "none";
+        document.getElementById("totalReviewsContainerSpinnerSubzone1").style.display           = "block";
 
         //Ranked Stores
         document.getElementById("storeRanksSubzone1").style.display                     = "none";

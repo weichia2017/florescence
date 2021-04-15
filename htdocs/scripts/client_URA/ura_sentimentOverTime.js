@@ -7,7 +7,7 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
 
     // Only of more than limitNo of reviews
     if(reviews.length > limitToShowIndividualStoreInsights){
-        dataPrepOnPageLoad(reviews,false);
+        dataPrepOnPageLoad(reviews,false,subzoneChoice);
         prepareSentimentOverTime(reviews,subzoneChoice);
     }else{
         
@@ -42,12 +42,12 @@ let setimentOverTimePrepared = [];
 function prepareSentimentOverTime(reviews, subzoneChoice){
 
     document.getElementById("sentimentOverTimeContainerDiv"+subzoneChoice).style.display          = "block";
-    document.getElementById("overallSentimentScore").style.display                  = "block";
-    document.getElementById("totalNoOfReviewsContainer").style.display              = "block";
+    document.getElementById("overallSentimentScore"+subzoneChoice).style.display                  = "block";
+    document.getElementById("totalNoOfReviewsContainer"+subzoneChoice).style.display              = "block";
     
     document.getElementById("SOTSpinner"+subzoneChoice).style.display                     = "none";
-    document.getElementById("overallSentimentScoreContainerSpinner").style.display  = "none";
-    document.getElementById("totalReviewsContainerSpinner").style.display           = "none"; 
+    document.getElementById("overallSentimentScoreContainerSpinner"+subzoneChoice).style.display  = "none";
+    document.getElementById("totalReviewsContainerSpinner"+subzoneChoice).style.display           = "none"; 
 
     document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML   = "";
     document.getElementById("year"+subzoneChoice).innerHTML                         = "";
@@ -382,4 +382,4 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 		})
 }
 
-$(window).resize(resizeSentimentOverTime());
+// $(window).resize(resizeSentimentOverTime());
