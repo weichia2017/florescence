@@ -117,7 +117,7 @@ function showStoreSpecificDetails(e,storeId,subZone){
             
             document.getElementById("entireSentimentOverTimeContainer").style.display  = "none";
             document.getElementById("entireWordCloudContainer").style.display          = "none";
-            document.getElementById("wordCloudReviewsContainer").style.display         = "none";
+            document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display  = "none";
             document.getElementById("unableToShowInsightsContainer").style.display     = "block";
         }
 

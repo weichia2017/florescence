@@ -119,8 +119,8 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
 
 
 function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
-    document.getElementById("wordCloudClickedReviews").innerHTML = '';
-    document.getElementById("wordCloudReviewsContainer").style.display = "none";
+    document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
+    document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "none";
     
     if(chosenReviews.length > 10){
         document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
@@ -150,7 +150,7 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
             </div>
          <br>
          Not enough reviews to display wordcloud. 
-         Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview)">here</a>
+         Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview,'${subzoneChoice}')">here</a>
            to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
         </div>`
         document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "block";

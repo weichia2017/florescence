@@ -660,14 +660,13 @@ if( isset($_GET['storeID']) ){
         </div>
 
         <!-- ROW 6 -->
-        <div id="wordCloudReviewsContainer" class="row">
+        <div id="wordCloudReviewsContainerSubzone1" class="row">
           <!-- ================================ -->   
           <!--        REVIEWS CONTAINER         -->
           <!-- ================================ -->
           <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
             
             <div class="d-flex justify-content-between">
-              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
               <div >
                 <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
                   rate_review
@@ -678,14 +677,14 @@ if( isset($_GET['storeID']) ){
                 <!-- Store name -->
                 <div class="float-left ml-1 headings showStoreName"></div>
                 <!-- Legend for Noun Adj Highlted colors -->
-                <div id="displayLegend" class="float-left reviewBodyFont">
+                <div id="displayLegendSubzone1" class="float-left reviewBodyFont">
                   <span class="ml-3 highLightedAdj float-left">Adj</span>
                   <span class="ml-3 highLightedNoun float-left">Noun</span>
                 </div>
               </div>
 
               <span style="font-size:33px; color: rgb(92, 92, 92)" 
-                    onclick="(function(){document.getElementById('wordCloudReviewsContainer').style.display = 'none'})()"
+                    onclick="(function(){document.getElementById('wordCloudReviewsContainerSubzone1').style.display = 'none'})()"
                     class="material-icons mr-2 pointer">
               close
               </span>
@@ -693,7 +692,7 @@ if( isset($_GET['storeID']) ){
 
               <hr>
                 <!-- <div class="col-12 border"></div> -->
-                <div id="wordCloudClickedReviews" class="scrollReviews">
+                <div id="wordCloudClickedReviewsSubzone1" class="scrollReviews">
                 <!-- Reviews gets Populated Here -->
                 </div>
                 <hr>
@@ -732,7 +731,7 @@ if( isset($_GET['storeID']) ){
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
     document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
     document.getElementById("subZoneSearch").style.display                          = "none";
-    document.getElementById("wordCloudReviewsContainer").style.display              = "none";
+    document.getElementById("wordCloudReviewsContainerSubzone1").style.display              = "none";
 
 
     // Colors for sentiment Over Time In

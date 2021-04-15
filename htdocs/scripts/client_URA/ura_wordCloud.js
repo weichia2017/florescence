@@ -39,8 +39,8 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
     document.getElementById("wordCloudContainer"+subzoneChoice).innerHTML = "";
     document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).innerHTML = "";
     document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
-    document.getElementById("wordCloudClickedReviews").innerHTML = '';
-    document.getElementById("wordCloudReviewsContainer").style.display = "none";
+    document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
+    document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "none";
 
 
 
@@ -341,7 +341,7 @@ function drawWordcLOUD(w,h,subzoneChoice){
             var e = d3.select(this);
             // console.log(e.text())
             // window.scrollBy(0, 300);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1],subzoneChoice);
             e.classed("word-selected", !e.classed("word-selected"));
           }
 
@@ -383,7 +383,7 @@ function drawWordcLOUD(w,h,subzoneChoice){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             // window.scrollBy(0, 200);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1],subzoneChoice);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -426,7 +426,7 @@ function drawWordcLOUD(w,h,subzoneChoice){
             var e = d3.select(this);
             // console.log(e._groups[0][0].id)
             // window.scrollBy(0, 150);
-            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1]);
+            displayReviewsBelowWordCloud_NounAdj(e._groups[0][0].id, e.text(), text.split(".")[1],subzoneChoice);
             e.classed("word-selected", !e.classed("word-selected"));
           }
         }
@@ -447,11 +447,11 @@ function highlight_word(searchpara,adj,noun)
   return new_text
 }
 
-function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "none";
+function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoice){
+  document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
+  document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend"+subzoneChoice).style.display = "none";
   
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
@@ -470,7 +470,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   if(isCallForSubZone){
     for (x in chosenReviewsWithFullData){
         console.log(storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]);
-        document.getElementById("wordCloudClickedReviews").innerHTML +=
+        document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                 <div class="card-body">
                 <h6 class="reviewBodyFont" style="font-size:20px">
@@ -491,7 +491,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   else{
     //Display the values
     for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
+      document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
                   <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
@@ -503,11 +503,11 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
 
 }
 
-function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "block";
+function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoice){
+  document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
+  document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend"+subzoneChoice).style.display = "block";
 
   chosenReviews = chosenReviews.split(",");
   
@@ -531,7 +531,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   if (isCallForSubZone){
     //Display the values
     for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
+      document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
                   <h6 class="reviewBodyFont" style="font-size:20px">
@@ -551,7 +551,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   }else{
     //Display the values
     for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
+      document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
                   <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
