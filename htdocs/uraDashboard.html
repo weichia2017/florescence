@@ -1622,9 +1622,9 @@ if( isset($_GET['storeID']) ){
         subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[1]);
         subzone2 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
 
+
         //Subzone1 Name for Main header
         document.getElementById("subzoneNameContainerSubzone1").innerText = selectedSubZones[1];
-
         //Subzone1 Name for Containers below 
         document.querySelectorAll('.subzoneNameContainerSubzone1').forEach(function(elem){
             elem.innerHTML = selectedSubZones[1];
@@ -1711,6 +1711,25 @@ if( isset($_GET['storeID']) ){
 
         //Reviews Container
         document.getElementById('reviewsContainer').style.display                               = 'none';
+
+        //Remove store names beside the headers of Rank, SOT,WordCloud and Reviews Container 1
+        document.querySelectorAll('.showStoreNameSubzone1').forEach(function(elem){
+            elem.innerHTML = "";
+        });
+        //Show Subzone Name beside the headers of Rank, SOT,WordCloud and Reviews Container  1
+        document.querySelectorAll('.subzoneNameContainerSubzone1').forEach(function(elem){
+            elem.style.display = "block";
+        });
+
+        //Remove store names beside the headers of Rank, SOT,WordCloud and Reviews Container 2
+        document.querySelectorAll('.showStoreNameSubzone2').forEach(function(elem){
+            elem.innerHTML = "";
+        });
+        //Show Subzone Name beside the headers of Rank, SOT,WordCloud and Reviews Container  2
+        document.querySelectorAll('.subzoneNameContainerSubzone2').forEach(function(elem){
+            elem.style.display = "block";
+        });
+
       }
     }
 
