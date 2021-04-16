@@ -115,13 +115,9 @@ function showStoreSpecificDetails(e,storeId,subzoneChoice){
                 elem.innerHTML = storeName;
             });
         }
-    
-    
 
-        
-
-         //Hide Subzone Name
-         document.querySelectorAll('.subzoneNameContainer'+subzoneChoice).forEach(function(elem){
+        //Hide Subzone Name
+        document.querySelectorAll('.subzoneNameContainer'+subzoneChoice).forEach(function(elem){
             elem.style.display = "none";
         });
         

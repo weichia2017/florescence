@@ -9,19 +9,21 @@ async function retrieveWordCloudNounAdjPairs(url,method,values,subzoneChoice){
     let adjNounPairs     = JSON.parse(response).data;
 
     // console.log(adjNounPairs);
-
-  
     if(method == "POST"){
       if( document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display != "block"){
-        prepareWordCloud(adjNounPairs,false,subzoneChoice) 
+        prepareWordCloud(adjNounPairs,false,subzoneChoice); 
       }else{
-        console.log("oops blocked");
+        // console.log("oops blocked");
         document.getElementById("wordCloudContainerSpinner"+subzoneChoice).style.display = "none";
       }
         
     }else{
       if(url.includes("adj_noun_pairs/road")){
+        // Store all Subzone NounAdjPairs
         window["nounAdjPairs"+subzoneChoice] = adjNounPairs;
+      }else if(url.includes("adj_noun_pairs/store")){
+        // Store all IndividualStore NounAdjPairs
+        window["nounAdjPairsIndividualStore"+subzoneChoice] = adjNounPairs;
       }
       prepareWordCloud(adjNounPairs,false,subzoneChoice);
     }

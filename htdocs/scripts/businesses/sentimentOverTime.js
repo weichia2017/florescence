@@ -212,9 +212,7 @@ function drawSentimentOverTimeStackedBarChart(data){
                 .data(d => d, e => e.data.Month);
 
             bars.exit().remove()
-
-            console.log(bars)
-
+            
             bars
             .enter()
             .append("rect")

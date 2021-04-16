@@ -276,8 +276,10 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 			.merge(bars)
 		.transition().duration(speed)
 			.attr("x", d => x(d.data.Month))
+            .attr("id",d => y(d[1]) + x(d.data.Month))
 			.attr("y", d => y(d[1]))
 			.attr("height", d => y(d[0]) - y(d[1]))
+            
       
     bars.enter().selectAll("rect")
       .on("mouseover", showToolTip)
@@ -292,7 +294,7 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 
       d3.select(this)
       .attr("stroke","black")
-      .attr("stroke-width",1)
+      .attr("stroke-width",1.5)
       .style("cursor", "pointer");
 
 
@@ -316,22 +318,68 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
           
     function hideToolTip(d, i) {
       svg.select(".ToolTip").remove();
-      d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+
+      let rectID = d3.select(this)._groups[0][0].id
+            
+      if(sentimentOverTimeSelectedSubzone[0] != rectID){
+        d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+      }
     }
 
+    var sentimentOverTimeSelectedSubzone  = []
     function prepWordCloud(d,i){
-      
-        let selectedSentiment = ''
-        sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
-        if(sentimentSelected == posColor){
-            selectedSentiment = "PosR"
-        }else if(sentimentSelected == neuColor){
-            selectedSentiment = "NeuR"
-        }else{
-            selectedSentiment = "NegR"
+        //Clear all strokes for all rect
+        bars.enter()
+        .selectAll("rect")
+        .attr("stroke","pink")
+        .attr("stroke-width","0.2");
+
+        let rectID = d3.select(this)._groups[0][0].id
+
+        // If sentimentOverTimeSelectedSubzone contains the same rectID remove this rectID from container
+        if(sentimentOverTimeSelectedSubzone[0] == rectID){
+            sentimentOverTimeSelectedSubzone.pop();
+            
+            // Show WordCloud
+            // If store name is empty that means no store is selected so just show the wordcloud for subzone level
+            if(document.querySelectorAll('.showStoreName'+subzoneChoice)[0].innerHTML == ""){
+                prepareWordCloud(window["nounAdjPairs"+subzoneChoice],false,subzoneChoice);
+            }
+            // If store name is present, show the wordcloud for the store instead
+            else{
+                prepareWordCloud(window["nounAdjPairsIndividualStore"+subzoneChoice],false,subzoneChoice);
+            }
         }
- 
-        updateWordCloud(d.data[selectedSentiment],selectedSentiment,subzoneChoice)
+        // Update the reviews container with the newly selected reviews
+        else{
+            // Add stroke for just this selected rect
+            d3.select(this)
+            .attr("stroke","black")
+            .attr("stroke-width",1.5)
+            .style("cursor", "pointer");
+
+             // If container is empty just add rectID
+            if(sentimentOverTimeSelectedSubzone.length == 0){
+                sentimentOverTimeSelectedSubzone.push(rectID);
+            } 
+            // Clear container and add the new rectID into the container
+            else{
+                sentimentOverTimeSelectedSubzone.pop();
+                sentimentOverTimeSelectedSubzone.push(rectID)
+            }
+
+            let selectedSentiment = ''
+            sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
+            if(sentimentSelected == posColor){
+                selectedSentiment = "PosR";
+            }else if(sentimentSelected == neuColor){
+                selectedSentiment = "NeuR";
+            }else{
+                selectedSentiment = "NegR";
+            }
+     
+            updateWordCloud(d.data[selectedSentiment],selectedSentiment,subzoneChoice)
+        }
     }
 
     // function getKeyByValue(object, value) {
