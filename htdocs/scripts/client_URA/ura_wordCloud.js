@@ -43,6 +43,11 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
     document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "none";
 
 
+    //If both containers none hide the header for reviewsContainer
+    if(document.getElementById("wordCloudReviewsContainerSubzone1").style.display == "none" &&
+    document.getElementById("wordCloudReviewsContainerSubzone2").style.display == "none" ){
+        document.getElementById('reviewsContainer').style.display = 'none';
+    }
 
     let fontsizeIdentifierCount = 0;
     for(x in response){
@@ -450,8 +455,9 @@ function highlight_word(searchpara,adj,noun)
 function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoice){
   document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
   document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
+  document.getElementById('reviewsContainer').style.display = 'block';
   document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend"+subzoneChoice).style.display = "none";
+  // document.getElementById("displayLegend").style.display = "none";
   
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
@@ -506,8 +512,9 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
 function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoice){
   document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
   document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
+  document.getElementById('reviewsContainer').style.display = 'block';
   document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend"+subzoneChoice).style.display = "block";
+  // document.getElementById("displayLegend").style.display = "block";
 
   chosenReviews = chosenReviews.split(",");
   

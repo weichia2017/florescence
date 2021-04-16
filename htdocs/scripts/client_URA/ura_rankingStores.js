@@ -66,7 +66,12 @@ function showStoreSpecificDetails(e,storeId,subzoneChoice){
 
         //Remove store names besides the headers of SOT,WordCloud and Reviews Container
         document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
-            elem.innerText = "";
+            elem.innerHTML = "";
+        });
+
+        //Show Subzone Name 
+        document.querySelectorAll('.subzoneNameContainer'+subzoneChoice).forEach(function(elem){
+            elem.style.display = "block";
         });
 
         if(e.childNodes[1].value <= limitToShowIndividualStoreInsights){
@@ -83,15 +88,41 @@ function showStoreSpecificDetails(e,storeId,subzoneChoice){
     else{
         isCallForSubZone = false;
         let noOfReviews = e.childNodes[1].value;
-        let storeName   = e.textContent.trim().substring(3);
 
         storesList.forEach(function(elem) {
             elem.classList.remove("card-active");
         });
 
-        //Update store names besides the headers of SOT,WordCloud and Reviews Container
-        document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
-            elem.innerText = storeName;
+        let storeName = ''
+        //If no number means is for single mode, if single mode no need to show rank number
+        if( /\d/.test(subzoneChoice) ){
+            //COMPARE MODE
+            storeName = e.textContent.trim();
+            //Update store names besides the headers of SOT,WordCloud and Reviews Container (WITH ICON)
+            document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
+                elem.innerHTML = 
+                `<span style="font-size:25px" class="material-icons">
+                    store
+                </span>  
+                ${storeName}
+                `;
+            });
+        }else{
+            //SINGLE MODE
+            storeName = e.textContent.trim().substring(3);
+             //Update store names besides the headers of SOT,WordCloud and Reviews Container (WITHOUT ICON)
+             document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
+                elem.innerHTML = storeName;
+            });
+        }
+    
+    
+
+        
+
+         //Hide Subzone Name
+         document.querySelectorAll('.subzoneNameContainer'+subzoneChoice).forEach(function(elem){
+            elem.style.display = "none";
         });
         
         // Only if more than limitNo of reviews
@@ -102,6 +133,7 @@ function showStoreSpecificDetails(e,storeId,subzoneChoice){
             document.getElementById("entireSentimentOverTimeContainer"+subzoneChoice).style.display  = "block";
             document.getElementById("entireWordCloudContainer"+subzoneChoice).style.display          = "block";
             document.getElementById("unableToShowInsightsContainer"+subzoneChoice).style.display     = "none";
+            document.getElementById('wordCloudHeader').style.display                                 = 'block';
         }else{
 
             //
@@ -118,6 +150,17 @@ function showStoreSpecificDetails(e,storeId,subzoneChoice){
             document.getElementById("entireWordCloudContainer"+subzoneChoice).style.display          = "none";
             document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display         = "none";
             document.getElementById("unableToShowInsightsContainer"+subzoneChoice).style.display     = "block";
+
+            //If both containers none hide the header for reviewsContainer
+            if(document.getElementById("wordCloudReviewsContainerSubzone1").style.display == "none" &&
+            document.getElementById("wordCloudReviewsContainerSubzone2").style.display == "none" ){
+                document.getElementById('reviewsContainer').style.display = 'none';
+            }
+
+            if(document.getElementById("entireWordCloudContainerSubzone1").style.display == "none" &&
+            document.getElementById("entireWordCloudContainerSubzone2").style.display == "none" ){
+                document.getElementById('wordCloudHeader').style.display = 'none';
+            }
         }
 
         

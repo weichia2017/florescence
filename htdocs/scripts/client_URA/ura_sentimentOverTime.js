@@ -123,6 +123,12 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
 function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
     document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
     document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "none";
+
+    //If both containers none hide the header for reviewsContainer
+    if(document.getElementById("wordCloudReviewsContainerSubzone1").style.display == "none" &&
+    document.getElementById("wordCloudReviewsContainerSubzone2").style.display == "none" ){
+        document.getElementById('reviewsContainer').style.display = 'none';
+    }
     
     if(chosenReviews.length > 10){
         document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
