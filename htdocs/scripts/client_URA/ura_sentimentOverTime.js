@@ -38,20 +38,22 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
     }
 }
 
-let setimentOverTimePrepared = [];
+setimentOverTimePreparedSubzone  = [];
+setimentOverTimePreparedSubzone1 = [];
+setimentOverTimePreparedSubzone2 = [];
 function prepareSentimentOverTime(reviews, subzoneChoice){
 
     document.getElementById("sentimentOverTimeContainerDiv"+subzoneChoice).style.display          = "block";
     document.getElementById("overallSentimentScore"+subzoneChoice).style.display                  = "block";
     document.getElementById("totalNoOfReviewsContainer"+subzoneChoice).style.display              = "block";
     
-    document.getElementById("SOTSpinner"+subzoneChoice).style.display                     = "none";
+    document.getElementById("SOTSpinner"+subzoneChoice).style.display                             = "none";
     document.getElementById("overallSentimentScoreContainerSpinner"+subzoneChoice).style.display  = "none";
     document.getElementById("totalReviewsContainerSpinner"+subzoneChoice).style.display           = "none"; 
 
-    document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML   = "";
-    document.getElementById("year"+subzoneChoice).innerHTML                         = "";
-    setimentOverTimePrepared = [];
+    document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML           = "";
+    document.getElementById("year"+subzoneChoice).innerHTML                                       = "";
+    window["setimentOverTimePrepared"+subzoneChoice] = []
     
     // console.log(reviews)
     let years = [];
@@ -76,14 +78,14 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
             let neg           = 0;
             let neu           = 0;
 
-            setimentOverTimePrepared.push({ Year: yearsUnique[x],
-                                     Month: months[y],
-                                     Pos: pos,
-                                     Neg: neg,
-                                     Neu: neu,
-                                     PosR: posR,
-                                     NegR: negR,
-                                     NeuR: neuR})                          
+            window["setimentOverTimePrepared"+subzoneChoice].push({ Year: yearsUnique[x],
+                                                                    Month: months[y],
+                                                                    Pos: pos,
+                                                                    Neg: neg,
+                                                                    Neu: neu,
+                                                                    PosR: posR,
+                                                                    NegR: negR,
+                                                                    NeuR: neuR})                          
         }
     }
 
@@ -91,26 +93,26 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
         year = new Date(reviews[x].review_date).getFullYear();
         month = new Date(reviews[x].review_date).toLocaleString('default', { month: 'long' });
     
-        for(y in setimentOverTimePrepared){
-            if(setimentOverTimePrepared[y].Year == year &&
-                month.includes(setimentOverTimePrepared[y].Month)){
+        for(y in window["setimentOverTimePrepared"+subzoneChoice]){
+            if(window["setimentOverTimePrepared"+subzoneChoice][y].Year == year &&
+                month.includes(window["setimentOverTimePrepared"+subzoneChoice][y].Month)){
                 if(reviews[x].compound_score >= 0.05){
-                    setimentOverTimePrepared[y].Pos += 1;
-                    setimentOverTimePrepared[y].PosR.push(reviews[x].review_id);
+                    window["setimentOverTimePrepared"+subzoneChoice][y].Pos += 1;
+                    window["setimentOverTimePrepared"+subzoneChoice][y].PosR.push(reviews[x].review_id);
                 } 
                 else if(reviews[x].compound_score <= -0.05){
-                    setimentOverTimePrepared[y].Neg += 1;
-                    setimentOverTimePrepared[y].NegR.push(reviews[x].review_id);
+                    window["setimentOverTimePrepared"+subzoneChoice][y].Neg += 1;
+                    window["setimentOverTimePrepared"+subzoneChoice][y].NegR.push(reviews[x].review_id);
                 }
                 else{
-                    setimentOverTimePrepared[y].Neu += 1;
-                    setimentOverTimePrepared[y].NeuR.push(reviews[x].review_id);
+                    window["setimentOverTimePrepared"+subzoneChoice][y].Neu += 1;
+                    window["setimentOverTimePrepared"+subzoneChoice][y].NeuR.push(reviews[x].review_id);
                 }
             }
         }
     
     }
-    // console.log(JSON.stringify(setimentOverTimePrepared)); 
+    // console.log(JSON.stringify(window["setimentOverTimePrepared"+subzoneChoice])); 
 
     let w = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
     let h = 400;
@@ -128,12 +130,12 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
         document.getElementById('wordCloudContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
         
         let dataToBeSentToServer = [{data:[]}];
-        dataToBeSentToServer[0].data = chosenReviews
+        dataToBeSentToServer[0].data = chosenReviews;
         let url = hostname + "/adj_noun_pairs/";
         retrieveWordCloudNounAdjPairs(url,"POST",JSON.stringify(dataToBeSentToServer[0]),subzoneChoice)
       }
       else{
-        selectedReview = chosenReviews //the main variable is in the first few lines of dashboard.php
+        window["selectedReview"+subzoneChoice] = chosenReviews //the 3main variables is in the first few lines of the dashboard page
         if(selectedSentiment == "NeuR"){
             selectedSentiment = "neutral"
         }else if(selectedSentiment == "NegR"){
@@ -150,8 +152,8 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
             </div>
          <br>
          Not enough reviews to display wordcloud. 
-         Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview,'${subzoneChoice}')">here</a>
-           to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead
+         Click <a href="javascript:void(0)" onclick="displayReviewsBelowWordCloud_BelowTenReviews(selectedReview${subzoneChoice},'${subzoneChoice}')">here</a>
+           to view the ${chosenReviews.length} ${selectedSentiment} review(s) instead.
         </div>`
         document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "block";
         document.getElementById('wordCloudNotEnoughWordsWarning'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
@@ -164,11 +166,14 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
 *   2. remove inner HTML of sentiment over time chart
 *   3. draw a new sentiment over time chart
 */ 
-function resizeSentimentOverTime(){
+function resizeSentimentOverTime(subzoneChoice){
     let w = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
     let h = 400;
+    console.log("keke")
 
     if($(window).width() != width || $(window).height() != height){
+        console.log("keke")
+
         document.getElementById("sentimentOverTimeStackedBarChart"+subzoneChoice).innerHTML = "";
         drawSentimentOverTimeStackedBarChart(w,h);
     }
@@ -180,8 +185,11 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 	var keys = ["Pos", "Neg", "Neu"]
     // console.log(keys)
 
-	var year   = [...new Set(setimentOverTimePrepared.map(d => d.Year))]
-	var Months = [...new Set(setimentOverTimePrepared.map(d => d.Month))]
+	var year   = [...new Set(window["setimentOverTimePrepared"+subzoneChoice].map(d => d.Year))]
+	var Months = [...new Set(window["setimentOverTimePrepared"+subzoneChoice].map(d => d.Month))]
+
+    // console.log(year)
+    // console.log(Months)
 
 	var options = d3.select("#year"+subzoneChoice).selectAll("option")
 		.data(year)
@@ -216,9 +224,9 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 	update(d3.select("#year"+subzoneChoice).property("value"), 0)
 
 	function update(input, speed) {
-		var data = setimentOverTimePrepared.filter(f => f.Year == input)
+		var data = window["setimentOverTimePrepared"+subzoneChoice].filter(f => f.Year == input)
 
-		data.forEach(function(d) {
+        data.forEach(function(d) {
 			d.total = d3.sum(keys, k => +d[k])
 			return d
 		})
@@ -328,17 +336,17 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 	var text = svg.selectAll(".text")
 			.data(data, d => d.Month);
 
-		text.exit().remove()
+    text.exit().remove()
 
-		text.enter().append("text")
-			.attr("class", "text")
-			.attr("text-anchor", "middle")
-			.merge(text)
-		.transition().duration(speed)
-			.attr("x", d => x(d.Month) + x.bandwidth() / 2)
-			.attr("y", d => y(d.total) - 5)
-            .attr("font-size","15px")
-			.text(d => d.total)     
+    text.enter().append("text")
+        .attr("class", "text")
+        .attr("text-anchor", "middle")
+        .merge(text)
+    .transition().duration(speed)
+        .attr("x", d => x(d.Month) + x.bandwidth() / 2)
+        .attr("y", d => y(d.total) - 5)
+        .attr("font-size","15px")
+        .text(d => d.total)     
 	}
 
     var legend = svg.selectAll(".legend")
@@ -382,4 +390,6 @@ function drawSentimentOverTimeStackedBarChart(w,h,subzoneChoice) {
 		})
 }
 
-// $(window).resize(resizeSentimentOverTime());
+// $(window).resize(resizeSentimentOverTime("Subzone"));
+// $(window).resize(resizeSentimentOverTime("Subzone1"));
+// $(window).resize(resizeSentimentOverTime("Subzone2"));

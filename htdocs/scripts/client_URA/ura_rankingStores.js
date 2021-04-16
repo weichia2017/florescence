@@ -1,5 +1,5 @@
 let storeIDandNameDict = {};
-async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
+async function getRanking(subzone_ID, subzoneChoice){
     let response   = await makeRequest(hostname + "/stores/road/"+subzone_ID, "GET", "");
     let storeData = JSON.parse(response).data;
 
@@ -8,8 +8,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         return b.beta_score - a.beta_score;
     });
 
-    let subzoneChoice      = IDtoPlaceRank.substring(IDtoPlaceRank.length - 8);
-    let storesRanked = document.getElementById(IDtoPlaceRank);
+    let storesRanked = document.getElementById("storeRanks"+subzoneChoice);
     //Clear all the ranks each time this function is called
     storesRanked.innerHTML = "";
 
@@ -29,7 +28,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
                 onclick="showStoreSpecificDetails(this,${storeID},'${subzoneChoice}')" 
                 data-toggle="collapse" 
                 data-target="#Store${storeID}" 
-                class="card-header pointer reviewBodyFont storesList" 
+                class="card-header pointer reviewBodyFont storesList${subzoneChoice}" 
                 aria-expanded="false">
                 ${rank+'. '}${storeName}
                 <input type="hidden" value="${storeData[x].num_of_reviews}">
@@ -37,7 +36,7 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
             
         </div>
     
-        <div id="Store${storeID}" class="collapse" data-parent="#${IDtoPlaceRank}">
+        <div id="Store${storeID}" class="collapse" data-parent="#storeRanks${subzoneChoice}">
             <div class="card-body border d-flex justify-content-between ">
                 <span id="${subzoneChoice}RankOverallSentimentOverTime${storeID}"></span> 
                 <span id="${subzoneChoice}RankTotalNumberOfReviews${storeID}" class="reviewBodyFont"></span>
@@ -48,17 +47,17 @@ async function getRanking(subzone_ID, IDtoPlaceRank, IDforRankSpinner){
         displayStars(storeData[x].average_compound,storeID,subzoneChoice)
         document.getElementById(subzoneChoice+"RankTotalNumberOfReviews"+storeID).textContent = storeData[x].num_of_reviews + "Reviews";
     }
-    document.getElementById(IDtoPlaceRank).style.display     = "block";
-    document.getElementById(IDforRankSpinner).style.display  = "none";
+    document.getElementById("storeRanks" +subzoneChoice).style.display          = "block";
+    document.getElementById("storeRanksSpinner" + subzoneChoice).style.display  = "none";
 }
 // `<a id="${storeData[x].store_id}" onclick="showStoreSpecificDetails(this,${storeData[x].store_id})" class="list-group-item pointer storesList reviewBodyFont">${rank+'. '}${storeData[x].store_name}</a>
 // `
 
-function showStoreSpecificDetails(e,storeId,subZoneChoice){
-    let storesList = document.querySelectorAll('.storesList');
+function showStoreSpecificDetails(e,storeId,subzoneChoice){
+    let storesList = document.querySelectorAll('.storesList'+subzoneChoice);
 
-    document.getElementById("wordCloudNotEnoughWordsWarning"+subZoneChoice).innerHTML     = "";
-    document.getElementById("wordCloudNotEnoughWordsWarning"+subZoneChoice).style.display = "none";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).innerHTML     = "";
+    document.getElementById("wordCloudNotEnoughWordsWarning"+subzoneChoice).style.display = "none";
 
     //IF SELECTED UNSELECT
     if(e.classList.contains("card-active")){
@@ -66,18 +65,18 @@ function showStoreSpecificDetails(e,storeId,subZoneChoice){
         isCallForSubZone = true;
 
         //Remove store names besides the headers of SOT,WordCloud and Reviews Container
-        document.querySelectorAll('.showStoreName'+subZoneChoice).forEach(function(elem){
+        document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
             elem.innerText = "";
         });
 
         if(e.childNodes[1].value <= limitToShowIndividualStoreInsights){
-            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "block";
-            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "block";
-            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "none";
+            document.getElementById("entireSentimentOverTimeContainer"+subzoneChoice).style.display  = "block";
+            document.getElementById("entireWordCloudContainer"+subzoneChoice).style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer"+subzoneChoice).style.display     = "none";
         }
-        dataPrepOnPageLoad(subzoneReviews, false,subZoneChoice);
-        prepareSentimentOverTime(subzoneReviews,subZoneChoice);
-        prepareWordCloud(subZoneNounAdjPairs,false,subZoneChoice);
+        dataPrepOnPageLoad(window["reviews"+subzoneChoice], false,subzoneChoice);
+        prepareSentimentOverTime(window["reviews"+subzoneChoice],subzoneChoice);
+        prepareWordCloud(window["nounAdjPairs"+subzoneChoice],false,subzoneChoice);
       
     }
     //IF UNSELECTED SELECT
@@ -91,39 +90,39 @@ function showStoreSpecificDetails(e,storeId,subZoneChoice){
         });
 
         //Update store names besides the headers of SOT,WordCloud and Reviews Container
-        document.querySelectorAll('.showStoreName'+subZoneChoice).forEach(function(elem){
+        document.querySelectorAll('.showStoreName'+subzoneChoice).forEach(function(elem){
             elem.innerText = storeName;
         });
         
-        // Only of more than limitNo of reviews
+        // Only if more than limitNo of reviews
         if(noOfReviews > limitToShowIndividualStoreInsights){
             // WordCloud
             let wcURL = hostname + "/adj_noun_pairs/store/" + storeId;
-            retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subZoneChoice)
-            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "block";
-            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "block";
-            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "none";
+            retrieveWordCloudNounAdjPairs(wcURL, "GET", "",subzoneChoice)
+            document.getElementById("entireSentimentOverTimeContainer"+subzoneChoice).style.display  = "block";
+            document.getElementById("entireWordCloudContainer"+subzoneChoice).style.display          = "block";
+            document.getElementById("unableToShowInsightsContainer"+subzoneChoice).style.display     = "none";
         }else{
 
             //
-            document.querySelectorAll('.noOfReviewsForErrorInsights'+subZoneChoice).forEach(function(elem){
+            document.querySelectorAll('.noOfReviewsForErrorInsights'+subzoneChoice).forEach(function(elem){
                 elem.innerText = noOfReviews;
             });
 
-            document.getElementById("errorInsightsSpinner"+subZoneChoice).style.display              = "block";
-            document.getElementById("showReviewsContainerForErrorInsights"+subZoneChoice).innerHTML  = "";
-            document.getElementById("shopNameForErrorInsights"+subZoneChoice).textContent            = storeName;
-            document.getElementById("limitForErrorInsights").textContent               = limitToShowIndividualStoreInsights;
+            document.getElementById("errorInsightsSpinner"+subzoneChoice).style.display              = "block";
+            document.getElementById("showReviewsContainerForErrorInsights"+subzoneChoice).innerHTML  = "";
+            document.getElementById("shopNameForErrorInsights"+subzoneChoice).textContent            = storeName;
+            document.getElementById("limitForErrorInsights").textContent  = limitToShowIndividualStoreInsights;
 
-            document.getElementById("entireSentimentOverTimeContainer"+subZoneChoice).style.display  = "none";
-            document.getElementById("entireWordCloudContainer"+subZoneChoice).style.display          = "none";
-            document.getElementById("wordCloudReviewsContainer"+subZoneChoice).style.display  = "none";
-            document.getElementById("unableToShowInsightsContainer"+subZoneChoice).style.display     = "block";
+            document.getElementById("entireSentimentOverTimeContainer"+subzoneChoice).style.display  = "none";
+            document.getElementById("entireWordCloudContainer"+subzoneChoice).style.display          = "none";
+            document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display         = "none";
+            document.getElementById("unableToShowInsightsContainer"+subzoneChoice).style.display     = "block";
         }
 
         
         let sotURL = hostname + "/reviews/store/" + storeId;
-        retrieveSOTbyStore(sotURL, "GET", "",subZoneChoice)
+        retrieveSOTbyStore(sotURL, "GET", "",subzoneChoice)
         e.classList.add("card-active");
      
     }    

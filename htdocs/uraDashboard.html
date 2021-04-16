@@ -202,7 +202,7 @@ if( isset($_GET['storeID']) ){
         font-size:20px;
       }
 
-      .showStoreNameSubzone1{
+      .showStoreNameSubzone, .showStoreNameSubzone1, .showStoreNameSubzone2{
         /* font-size:15px; */
         color: #0275d8;
       }
@@ -394,12 +394,12 @@ if( isset($_GET['storeID']) ){
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Deatailed information from the selected subzone">
+                  data-content="Detailed information from the selected subzone">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                   info_outline
                 </span>    
               </a>
-              <div class="container subzoneNameContainer" id="subzoneNameContainerSubzone1">
+              <div id="subzoneNameContainerSubzone" class="container subzoneNameContainer" >
                 <!-- Subzone name get filled here -->
               </div>
             </div>
@@ -424,10 +424,10 @@ if( isset($_GET['storeID']) ){
                   info_outline
                 </span>    
               </a>
-              <div class="container float-left ml-3" id="overallSentimentScoreSubzone1"></div>
+              <div id="overallSentimentScoreSubzone" class="container float-left ml-3"></div>
             </div>
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinnerSubzone1" role="status" ></div>
+            <div id="overallSentimentScoreContainerSpinnerSubzone" class="spinner-border text-secondary float-left spinner" role="status" ></div>
           </div>
           <!-- ====================== -->
           <!--     TOTAL REVIEWS      -->
@@ -451,10 +451,10 @@ if( isset($_GET['storeID']) ){
                   info_outline
                 </span>    
               </a>
-              <div class="container totalNoOfReviewsContainer" id="totalNoOfReviewsContainerSubzone1"></div>
+              <div id="totalNoOfReviewsContainerSubzone" class="container totalNoOfReviewsContainer"></div>
             </div>
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="totalReviewsContainerSpinnerSubzone1" role="status" ></div>
+            <div id="totalReviewsContainerSpinnerSubzone" class="spinner-border text-secondary float-left spinner" role="status" ></div>
           </div>
         </div>
     
@@ -489,6 +489,370 @@ if( isset($_GET['storeID']) ){
             </div>
             <br>
             <hr>
+            <div id="storeRanksSubzone" class="scrollStoreRanks float-left w-100">
+              <!-- The sorted stores poulate here -->
+            </div>
+
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="whiteBackground"></div>
+
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="storeRanksSpinnerSubzone" role="status" ></div>
+          </div>
+
+          <!-- ================================ -->   
+          <!--    SENTIMENT OVER TIME CHART     -->
+          <!-- ================================ -->
+          <div id="entireSentimentOverTimeContainerSubzone" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                timeline
+              </span>
+              <div class="float-left ml-1 headings" >Sentiment Over Time:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Sentiment Over Time" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                    <ul>
+                      <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                      <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                      <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
+                    </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+              <br>
+              <hr>
+              <!-- <hr> -->
+              <!-- <div class="col-12 border"></div> -->
+              <div id="sentimentOverTimeContainerDivSubzone" class="float-left">
+                <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
+                  Select year: <select id="yearSubzone"></select>
+    
+                  <input type="checkbox" id="sortSubzone" class="ml-1">	Sort
+                </div>
+
+                <svg id="sentimentOverTimeStackedBarChartSubzone" class="container" width="1000" height="400">
+                  <!-- SOT chart populates here -->
+                </svg>
+              </div>
+              <!-- White background to the empty space of div when spinner is loading -->
+              <div class="whiteBackground"></div>
+
+              <!-- Spinner that only shows when loading -->
+              <div id="SOTSpinnerSubzone" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
+          </div>
+
+          <!-- =================================== -->   
+          <!--   STORES WITH LESS THAN # REVIEWS   -->
+          <!-- =================================== -->
+          <div id="unableToShowInsightsContainerSubzone" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                running_with_errors
+              </span>
+              <div class="float-left ml-1 headings">Error Obtaining Insights: </div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Sentiment Over Time" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                    <ul>
+                      <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                      <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                      <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
+                    </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+            <br>
+            <hr>
+            <div class='p-2 text-center mt-1'>
+              <div style="font-size:50px; color:#fa4646" class="material-icons text-center">
+                running_with_errors  
+              </div>
+              <br>
+              <span id="unableToDisplayMessage">
+                Ooops
+                <span id="shopNameForErrorInsightsSubzone"></span> 
+                has less than 
+                <u><span id="limitForErrorInsights"></span> reviews.</u> 
+                <br>
+                Let's just view the 
+                <span class="noOfReviewsForErrorInsightsSubzone"></span> 
+                reviews below.
+              </span>
+            </div>
+     
+            <div id="showReviewsContainerForErrorInsightsSubzone" class="miniScrollReview"></div>
+             <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="errorInsightsSpinnerSubzone" role="status" ></div>
+           
+          </div>
+
+        </div>
+
+        <!-- ROW 5 -->
+        <div class="row">
+          <!-- ========================= -->   
+          <!--        WORD CLOUD         -->
+          <!-- ========================= -->
+          <div id="entireWordCloudContainerSubzone" class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
+            <div class="lead">
+              <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                cloud 
+              </span>
+              <div class="float-left ml-1 headings">Word Cloud:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Word Cloud" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Displays the most frequent nouns with their most frequent adjectives(descriptors).
+                    <ul>
+                      <li>Nouns are the bigger words on the right</li>
+                      <li>Adjectives(Descriptors) are the smaller words on the left</li>
+                      <li>Clicking on the adjectives(descriptors), allow users to view the review(s) with those noun and adjectives pairs</li>
+                    </ul>
+                    ">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+            <!-- Create a div where the wordcloud will be -->
+            <div id="wordCloudContainerSubzone" class="container float-left" style="border: 1px solid rgb(36, 36, 36);border-radius: 7px;">
+              <!-- Noun Adj's displayed in here -->
+            </div>
+
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="whiteBackground"></div>
+            
+            <!-- The yellow exclamaintion mark triangle along with the text  -->
+            <div id="wordCloudNotEnoughWordsWarningSubzone">
+              <!-- values populated in sentimentScoreDonut -->
+            </div>
+            
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinnerSubzone" role="status" ></div>
+          </div>
+        </div>
+
+        <!-- ROW 6 -->
+        <div id="wordCloudReviewsContainerSubzone" class="row">
+          <!-- ================================ -->   
+          <!--        REVIEWS CONTAINER         -->
+          <!-- ================================ -->
+          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
+            
+            <div class="d-flex justify-content-between">
+              <div >
+                <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                  rate_review
+                </span>
+                <span class="lead float-left headings">
+                  Selected Reviews:
+                </span>
+                <!-- Store name -->
+                <div class="float-left ml-1 headings showStoreNameSubzone"></div>
+                <!-- Legend for Noun Adj Highlted colors -->
+                <div id="displayLegendSubzone" class="float-left reviewBodyFont">
+                  <span class="ml-3 highLightedAdj float-left">Adj</span>
+                  <span class="ml-3 highLightedNoun float-left">Noun</span>
+                </div>
+              </div>
+
+              <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                    onclick="(function(){document.getElementById('wordCloudReviewsContainerSubzone').style.display = 'none'})()"
+                    class="material-icons mr-2 pointer">
+              close
+              </span>
+            </div>
+
+              <hr>
+                <!-- <div class="col-12 border"></div> -->
+                <div id="wordCloudClickedReviewsSubzone" class="scrollReviews">
+                <!-- Reviews gets Populated Here -->
+                </div>
+                <hr>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== -->
+      <!--  COMPARE MODE  -->
+      <!-- ============== -->
+      <div id="SubzoneInformationContainerCompareMode">
+        <!-- ROW 3 NAME OSS TREVIEWS -->
+        <div class="row">
+        <!-- ====================== -->
+        <!--        SUB-ZONE 1      -->
+        <!-- ====================== -->
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow text-center">
+            <div class="lead">
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+                place
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <span class="headings" >Sub Zones: </span> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex" 
+                title="Total Reviews" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="hover focus" 
+                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+                </span>    
+            </a>
+            
+            <div id="subzoneNameContainerSubzone1" class="container subzoneNameContainer">
+                <!-- Subzone name get filled here -->
+            </div>
+            </div>
+            <br>
+            <!-- =========================== -->   
+            <!--  OVERALL SENTIMENT SCORE 1  -->
+            <!-- =========================== -->
+            <div class="lead">
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                auto_awesome
+            </span>
+            <span class="headings" >Overall Sentiment Score:</span> 
+            
+            <div id="overallSentimentScoreSubzone1" class="container float-left ml-3" ></div>
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinnerSubzone1" role="status" ></div>
+            </div>
+            <br>
+            <!-- ====================== -->
+            <!--     TOTAL REVIEWS 1    -->
+            <!-- ====================== -->
+            <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+                rate_review
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <span class="headings" >Total Reviews:</span> 
+            
+            <div id="totalNoOfReviewsContainerSubzone1" class="container totalNoOfReviewsContainer"></div>
+            <!-- Spinner that only shows when loading -->
+            <div id="totalReviewsContainerSpinnerSubzone1" class="spinner-border text-secondary float-left spinner" role="status" ></div>
+            </div> 
+        </div>
+    
+        <!-- ====================== -->
+        <!--        SUB-ZONE 2      -->
+        <!-- ====================== -->
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow text-center">
+            <div class="lead">
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+                place
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <span class="headings" >Sub Zones: </span> 
+            <!-- Info PopOver -->
+            <a tabindex="0" class="float-right popoverzindex" 
+                title="Total Reviews" 
+                data-placement="left" 
+                data-toggle="popover" 
+                data-trigger="hover focus" 
+                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                info_outline
+                </span>    
+            </a>
+            
+            <div id="subzoneNameContainerSubzone2" class="container subzoneNameContainer" >
+                <!-- Subzone name get filled here -->
+            </div>
+            </div>
+            <br>
+            <!-- =========================== -->   
+            <!--  OVERALL SENTIMENT SCORE 2  -->
+            <!-- =========================== -->
+            <div class="lead">
+            <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons">
+                auto_awesome
+            </span>
+            <span class="headings" >Overall Sentiment Score:</span> 
+            
+            <div id="overallSentimentScoreSubzone2" class="container float-left ml-3"></div>
+            <!-- Spinner that only shows when loading -->
+            <div class="spinner-border text-secondary float-left spinner" id="overallSentimentScoreContainerSpinnerSubzone2" role="status" ></div>
+            </div>
+            <br>
+            <!-- ====================== -->
+            <!--     TOTAL REVIEWS 2    -->
+            <!-- ====================== -->
+            <div class="lead">
+            <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
+            <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons">
+                rate_review
+            </span>
+            <!-- Create a div where the total number of reviews will be -->
+            <span class="headings" >Total Reviews:</span> 
+            
+            <div id="totalNoOfReviewsContainerSubzone2" class="container totalNoOfReviewsContainer"></div>
+            <!-- Spinner that only shows when loading -->
+            <div id="totalReviewsContainerSpinnerSubzone2" class="spinner-border text-secondary float-left spinner" role="status" ></div>
+            </div> 
+        </div>
+        </div>
+
+        <!-- ROW 4 RANKING -->
+        <div class="row">
+          <!-- ========================= -->   
+          <!--      STORES RANKED 1      -->
+          <!-- ========================= -->
+          <div class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              align_horizontal_left
+              </span>
+              <div class="float-left ml-1 headings" >Stores Ranked by Sentiments:</div> 
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Stores Ranked" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Stores are ranked based on ....
+                  <ul>
+                    <li>...</li>
+                    <li>...</li>
+                  </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+              <!-- Create a div where the sentimentScore will be -->
+              <!-- <div class="container float-left" id="sentimentScoreContainer"></div> -->
+            </div>
+            <br>
+            <hr>
             <div id="storeRanksSubzone1" class="scrollStoreRanks float-left w-100">
               <!-- The sorted stores poulate here -->
             </div>
@@ -497,13 +861,56 @@ if( isset($_GET['storeID']) ){
             <div class="whiteBackground"></div>
 
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="StorerRankedSpinnerSubzone1" role="status" ></div>
+            <div id="storeRanksSpinnerSubzone1" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
           </div>
 
+          <!-- ========================= -->   
+          <!--      STORES RANKED 2      -->
+          <!-- ========================= -->
+          <div class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow block pl-1" >
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              align_horizontal_left
+              </span>
+              <div class="float-left ml-1 headings" >Stores Ranked by Sentiments:</div> 
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Stores Ranked" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Stores are ranked based on ....
+                  <ul>
+                    <li>...</li>
+                    <li>...</li>
+                  </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+              <!-- Create a div where the sentimentScore will be -->
+              <!-- <div class="container float-left" id="sentimentScoreContainer"></div> -->
+            </div>
+            <br>
+            <hr>
+            <div id="storeRanksSubzone2" class="scrollStoreRanks float-left w-100">
+              <!-- The sorted stores poulate here -->
+            </div>
+
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="whiteBackground"></div>
+
+            <!-- Spinner that only shows when loading -->
+            <div id="storeRanksSpinnerSubzone2" class="spinner-border text-secondary float-left spinner" role="status" ></div>
+          </div>
+        </div>
+
+        <!-- ROW 5 SOT & UNABLE TO DISPLAY -->
+        <div class="row">
           <!-- ================================ -->   
-          <!--    SENTIMENT OVER TIME CHART     -->
+          <!--    SENTIMENT OVER TIME CHART 1   -->
           <!-- ================================ -->
-          <div id="entireSentimentOverTimeContainerSubzone1" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div id="entireSentimentOverTimeContainerSubzone1" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
                 timeline
@@ -539,8 +946,8 @@ if( isset($_GET['storeID']) ){
     
                   <input type="checkbox" id="sortSubzone1" class="ml-1">	Sort
                 </div>
-
-                <svg class="container" id="sentimentOverTimeStackedBarChartSubzone1" width="1000" height="400">
+                
+                <svg id="sentimentOverTimeStackedBarChartSubzone1" class="container" width="1000" height="400">
                   <!-- SOT chart populates here -->
                 </svg>
               </div>
@@ -548,13 +955,13 @@ if( isset($_GET['storeID']) ){
               <div class="whiteBackground"></div>
 
               <!-- Spinner that only shows when loading -->
-              <div class="spinner-border text-secondary float-left spinner" id="SOTSpinnerSubzone1" role="status" ></div>
+              <div id="SOTSpinnerSubzone1" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
           </div>
 
-          <!-- =================================== -->   
-          <!--   STORES WITH LESS THAN # REVIEWS   -->
-          <!-- =================================== -->
-          <div id="unableToShowInsightsContainerSubzone1" class="col-lg-7 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <!-- ===================================== -->   
+          <!--   STORES WITH LESS THAN # REVIEWS 1   -->
+          <!-- ===================================== -->
+          <div id="unableToShowInsightsContainerSubzone1" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -602,18 +1009,127 @@ if( isset($_GET['storeID']) ){
      
             <div id="showReviewsContainerForErrorInsightsSubzone1" class="miniScrollReview"></div>
              <!-- Spinner that only shows when loading -->
-             <div class="spinner-border text-secondary float-left spinner" id="errorInsightsSpinnerSubzone1" role="status" ></div>
+            <div id="errorInsightsSpinnerSubzone1" class="spinner-border text-secondary float-left spinner" role="status" ></div>
            
           </div>
 
+
+          <!-- ================================ -->   
+          <!--    SENTIMENT OVER TIME CHART 2   -->
+          <!-- ================================ -->
+          <div id="entireSentimentOverTimeContainerSubzone2" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                timeline
+              </span>
+              <div class="float-left ml-1 headings" >Sentiment Over Time:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone2"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Sentiment Over Time" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                    <ul>
+                      <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                      <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                      <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
+                    </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+              <br>
+              <hr>
+              <!-- <hr> -->
+              <!-- <div class="col-12 border"></div> -->
+              <div id="sentimentOverTimeContainerDivSubzone2" class="float-left">
+                <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
+                  Select year: <select id="yearSubzone2"></select>
+    
+                  <input type="checkbox" id="sortSubzone2" class="ml-1">	Sort
+                </div>
+
+                <svg id="sentimentOverTimeStackedBarChartSubzone2" class="container" width="1000" height="400">
+                  <!-- SOT chart populates here -->
+                </svg>
+              </div>
+              <!-- White background to the empty space of div when spinner is loading -->
+              <div class="whiteBackground"></div>
+
+              <!-- Spinner that only shows when loading -->
+              <div id="SOTSpinnerSubzone2" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
+          </div>
+
+          <!-- ===================================== -->   
+          <!--   STORES WITH LESS THAN # REVIEWS 2   -->
+          <!-- ===================================== -->
+          <div id="unableToShowInsightsContainerSubzone2" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
+            <div class="lead">
+              <!-- <i style="color: rgb(92, 92, 92)"  class="fas fa-hourglass-half fa-lg"></i> -->
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                running_with_errors
+              </span>
+              <div class="float-left ml-1 headings">Error Obtaining Insights: </div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone2"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Sentiment Over Time" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="View the changing sentiments over the different months in a year, with proportion of positive, negative and neutral reviews shown in each month
+                    <ul>
+                      <li>Change the year via the dropdown list to see the sentiments for that particular year.</li>
+                      <li>Check the sort checkbox to sort the months from the most to the least number of reviews.</li>
+                      <li>Hovering over each stacked bar, shows the number of reviews for that particular sentiment.</li>
+                      <li>Clicking on a particular stacked bar updates the wordcloud based on that sentiment.</li>
+                    </ul>">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+            <br>
+            <hr>
+            <div class='p-2 text-center mt-1'>
+              <div style="font-size:50px; color:#fa4646" class="material-icons text-center">
+                running_with_errors  
+              </div>
+              <br>
+              <span id="unableToDisplayMessage">
+                Ooops
+                <span id="shopNameForErrorInsightsSubzone2"></span> 
+                has less than 
+                <u><span id="limitForErrorInsights"></span> reviews.</u> 
+                <br>
+                Let's just view the 
+                <span class="noOfReviewsForErrorInsightsSubzone2"></span> 
+                reviews below.
+              </span>
+            </div>
+     
+            <div id="showReviewsContainerForErrorInsightsSubzone2" class="miniScrollReview"></div>
+             <!-- Spinner that only shows when loading -->
+            <div id="errorInsightsSpinnerSubzone2" class="spinner-border text-secondary float-left spinner" role="status" ></div>
+           
+          </div>
+
+
+
         </div>
 
-        <!-- ROW 5 -->
+        <!-- ROW 6 WordCloud -->
         <div class="row">
           <!-- ========================= -->   
-          <!--        WORD CLOUD         -->
+          <!--        WORD CLOUD 1       -->
           <!-- ========================= -->
-          <div id="entireWordCloudContainerSubzone1" class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
+          <div id="entireWordCloudContainerSubzone1" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
             <div class="lead">
               <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
               <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -641,7 +1157,7 @@ if( isset($_GET['storeID']) ){
               </a>
             </div>
             <!-- Create a div where the wordcloud will be -->
-            <div class="container float-left" id="wordCloudContainerSubzone1" style="border: 1px solid rgb(36, 36, 36);border-radius: 7px;">
+            <div id="wordCloudContainerSubzone1" class="container float-left" style="border: 1px solid rgb(36, 36, 36);border-radius: 7px;">
               <!-- Noun Adj's displayed in here -->
             </div>
 
@@ -654,17 +1170,62 @@ if( isset($_GET['storeID']) ){
             </div>
             
             <!-- Spinner that only shows when loading -->
-            <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinnerSubzone1" role="status" ></div>
+            <div id="wordCloudContainerSpinnerSubzone1" class="spinner-border text-secondary float-left spinner" role="status" ></div>
+          </div>
+          <!-- ========================= -->   
+          <!--        WORD CLOUD 2       -->
+          <!-- ========================= -->
+          <div id="entireWordCloudContainerSubzone2" class="ml-auto col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >
+            <div class="lead">
+              <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i>
+              <span style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                cloud 
+              </span>
+              <div class="float-left ml-1 headings">Word Cloud:</div> 
+              <!-- Store name -->
+              <div class="float-left ml-1 headings showStoreNameSubzone2"></div>
+              <!-- Info PopOver -->
+              <a tabindex="0" class="float-right popoverzindex"  
+                  title="Word Cloud" 
+                  data-placement="left" 
+                  data-toggle="popover" 
+                  data-trigger="hover focus" 
+                  data-content="Displays the most frequent nouns with their most frequent adjectives(descriptors).
+                    <ul>
+                      <li>Nouns are the bigger words on the right</li>
+                      <li>Adjectives(Descriptors) are the smaller words on the left</li>
+                      <li>Clicking on the adjectives(descriptors), allow users to view the review(s) with those noun and adjectives pairs</li>
+                    </ul>
+                    ">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
+                  info_outline
+                </span>    
+              </a>
+            </div>
+            <!-- Create a div where the wordcloud will be -->
+            <div id="wordCloudContainerSubzone2" class="container float-left" style="border: 1px solid rgb(36, 36, 36);border-radius: 7px;">
+              <!-- Noun Adj's displayed in here -->
+            </div>
+
+            <!-- White background to the empty space of div when spinner is loading -->
+            <div class="whiteBackground"></div>
+            
+            <!-- The yellow exclamaintion mark triangle along with the text  -->
+            <div id="wordCloudNotEnoughWordsWarningSubzone2">
+              <!-- values populated in sentimentScoreDonut -->
+            </div>
+            
+            <!-- Spinner that only shows when loading -->
+            <div id="wordCloudContainerSpinnerSubzone2" class="spinner-border text-secondary float-left spinner" role="status" ></div>
           </div>
         </div>
 
-        <!-- ROW 6 -->
-        <div id="wordCloudReviewsContainerSubzone1" class="row">
+        <!-- ROW 7 Reviews Container -->
+        <div class="row">
           <!-- ================================ -->   
-          <!--        REVIEWS CONTAINER         -->
+          <!--        REVIEWS CONTAINER 1       -->
           <!-- ================================ -->
-          <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow" >
-            
+          <div id="wordCloudReviewsContainerSubzone1" class="col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >    
             <div class="d-flex justify-content-between">
               <div >
                 <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
@@ -689,18 +1250,50 @@ if( isset($_GET['storeID']) ){
               </span>
             </div>
 
-              <hr>
-                <!-- <div class="col-12 border"></div> -->
-                <div id="wordCloudClickedReviewsSubzone1" class="scrollReviews">
-                <!-- Reviews gets Populated Here -->
+            <hr>
+            <!-- <div class="col-12 border"></div> -->
+            <div id="wordCloudClickedReviewsSubzone1" class="scrollReviews">
+            <!-- Reviews gets Populated Here -->
+            </div>
+            <hr>
+          </div>
+          <!-- ================================ -->   
+          <!--        REVIEWS CONTAINER 2       -->
+          <!-- ================================ -->
+          <div id="wordCloudReviewsContainerSubzone2" class="ml-auto col-lg-6 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow" >    
+            <div class="d-flex justify-content-between">
+              <div >
+                <span style="font-size:33px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                  rate_review
+                </span>
+                <span class="lead float-left headings">
+                  Selected Reviews:
+                </span>
+                <!-- Store name -->
+                <div class="float-left ml-1 headings showStoreNameSubzone2"></div>
+                <!-- Legend for Noun Adj Highlted colors -->
+                <div id="displayLegendSubzone2" class="float-left reviewBodyFont">
+                  <span class="ml-3 highLightedAdj float-left">Adj</span>
+                  <span class="ml-3 highLightedNoun float-left">Noun</span>
                 </div>
-                <hr>
+              </div>
+
+              <span style="font-size:33px; color: rgb(92, 92, 92)" 
+                    onclick="(function(){document.getElementById('wordCloudReviewsContainerSubzone2').style.display = 'none'})()"
+                    class="material-icons mr-2 pointer">
+              close
+              </span>
+            </div>
+
+            <hr>
+            <!-- <div class="col-12 border"></div> -->
+            <div id="wordCloudClickedReviewsSubzone2" class="scrollReviews">
+            <!-- Reviews gets Populated Here -->
+            </div>
+            <hr>
           </div>
         </div>
-        <!-- </div> -->
       </div>
-
-      
     </div>
   </main>
 
@@ -723,15 +1316,20 @@ if( isset($_GET['storeID']) ){
 
     var hostname = "http://35.175.55.18:5000";
     limitToShowIndividualStoreInsights = 24;
-    selectedReview='';
+    selectedReviewSubzone='';
+    selectedReviewSubzone1='';
+    selectedReviewSubzone2='';
 
     
     document.getElementById("subzoneExpandUpArrowRow").style.display                = "none";
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
-    document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
+    
     document.getElementById("subZoneSearch").style.display                          = "none";
-    document.getElementById("wordCloudReviewsContainerSubzone1").style.display      = "none";
+    document.getElementById("wordCloudReviewsContainerSubzone").style.display       = "none";
 
+    document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
+    document.getElementById("SubzoneInformationContainerCompareMode").style.display = "none";
+    
 
     // Colors for sentiment Over Time In
     let neuColor = "#AAAAAA"
@@ -769,17 +1367,22 @@ if( isset($_GET['storeID']) ){
       });
     }
 
-    let subzoneReviews;
-    let subZoneNounAdjPairs;
+    let reviewsSubzone;
+    let reviewsSubzone1;
+    let reviewsSubzone2;
+
+    let nounAdjPairsSubzone;
+    let nounAdjPairsSubzone1;
+    let nounAdjPairsSubzone2;
     let isCallForSubZone = true;
     // The main call to retrieve values for all charts other than wordcloud
     async function getSentimentScore(subzone_ID,subzoneChoice){
       document.getElementById("main-overlay").style.display = "block";
       let reviewsResponse  = await makeRequest(hostname + "/reviews/road/"+subzone_ID, "GET", "");
-      subzoneReviews = JSON.parse(reviewsResponse).data;
-
-      dataPrepOnPageLoad(subzoneReviews,true,subzoneChoice);
-      prepareSentimentOverTime(subzoneReviews,subzoneChoice);
+      window["reviews"+subzoneChoice] = JSON.parse(reviewsResponse).data;
+      
+      dataPrepOnPageLoad(window["reviews"+subzoneChoice],true,subzoneChoice);
+      prepareSentimentOverTime(window["reviews"+subzoneChoice],subzoneChoice);
       document.getElementById("main-overlay").style.display = "none";
     }
 
@@ -797,26 +1400,26 @@ if( isset($_GET['storeID']) ){
       for(x in reviews){
         // sentimentDataForWordCloud.push(reviews[x].review_id);
         totalCompoundScores += reviews[x].compound_score;
-        if(reviews[x].compound_score >= 0.05){
-          pos.push(reviews[x].review_id);
-        }
-        else if(reviews[x].compound_score <= -0.05){
-          neg.push(reviews[x].review_id);
-        }
-        else{
-          neu.push(reviews[x].review_id);
-        }
+        // if(reviews[x].compound_score >= 0.05){
+        //   pos.push(reviews[x].review_id);
+        // }
+        // else if(reviews[x].compound_score <= -0.05){
+        //   neg.push(reviews[x].review_id);
+        // }
+        // else{
+        //   neu.push(reviews[x].review_id);
+        // }
       }
-      sentimentDataForWordCloud.push({Positive :pos,
-                                      Negative :neg,
-                                      Neutral  :neu});
+      // sentimentDataForWordCloud.push({Positive :pos,
+      //                                 Negative :neg,
+      //                                 Neutral  :neu});
 
  
       // Only process if for subzoneLevel
       if(processOSTAndTotalReviews){
         // Total Reviews Number
         let subZoneTotalReviews = reviews.length;
-        document.getElementById("totalNoOfReviewsContainerSubzone1").textContent = subZoneTotalReviews;
+        document.getElementById("totalNoOfReviewsContainer"+subzoneChoice).textContent = subZoneTotalReviews;
 
         //Overall Sentiment Score 
         let subZoneOverallSentimentScore = totalCompoundScores/subZoneTotalReviews;
@@ -824,7 +1427,7 @@ if( isset($_GET['storeID']) ){
       }
 
       // Preparing data for adj clicks to see review
-      refactorResponseForReviewsViaWordCloudAdjs(reviews);
+      refactorResponseForReviewsViaWordCloudAdjs(reviews,subzoneChoice);
     }  
 
     /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
@@ -843,11 +1446,13 @@ if( isset($_GET['storeID']) ){
                     store_id      : xxx
                     }
     */
-    let refactoredResponse = {};
-    function refactorResponseForReviewsViaWordCloudAdjs(response){
-      // console.log(response);
+    refactoredResponseSubzone = {};
+    refactoredResponseSubzone1 = {};
+    refactoredResponseSubzone2 = {};
+    function refactorResponseForReviewsViaWordCloudAdjs(response,subzoneChoice){
+      // console.log(window["refactoredResponse"+subzoneChoice]);
       for (x in response){
-        refactoredResponse[response[x].review_id] = {
+        window["refactoredResponse"+subzoneChoice][response[x].review_id] = {
                             compound_score : response[x].compound_score,
                             review_text    : response[x].review_text,
                             review_date    : response[x].review_date,
@@ -855,7 +1460,7 @@ if( isset($_GET['storeID']) ){
                           }
                               
       }
-      // console.log(refactoredResponse)
+      // console.log(window["refactoredResponse"+subzoneChoice])
     }
 
 
@@ -971,61 +1576,141 @@ if( isset($_GET['storeID']) ){
         }
 
         subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
-        document.getElementById("subzoneNameContainerSubzone1").innerText = selectedSubZones[0]
+        document.getElementById("subzoneNameContainerSubzone").innerText = selectedSubZones[0]
 
         // Sentiment over time, Overall Sentiment Score(Stars), Total Reviews
-        getSentimentScore(subzone1,"Subzone1");
+        getSentimentScore(subzone1,"Subzone");
 
         // Wordcloud
         let url = hostname + "/adj_noun_pairs/road/"+subzone1;
-        retrieveWordCloudNounAdjPairs(url,"GET","","Subzone1");
+        retrieveWordCloudNounAdjPairs(url,"GET","","Subzone");
 
         // Ranking list
-        let IDtoPlaceRank    = "storeRanksSubzone1";
-        let IDforRankSpinner = "StorerRankedSpinnerSubzone1";
-        getRanking(subzone1,IDtoPlaceRank,IDforRankSpinner);
+        getRanking(subzone1,"Subzone");
 
-    
+        document.getElementById("SubzoneInformationContainerCompareMode").style.display = "none";
         document.getElementById("SubzoneInformationContainerSingleMode").style.display = "block";
+        
         document.getElementById("subzoneExpandUpArrowRow").style.display     = "block";
         document.getElementById("subzoneExpandDownArrowRow").style.display   = "none";
 
         //Clear StoreNames if present beside headers
-        document.querySelectorAll('.showStoreNameSubzone1').forEach(function(elem){
+        document.querySelectorAll('.showStoreNameSubzone').forEach(function(elem){
           elem.innerText = "";
         });
 
         //ErrorInsights
-        document.getElementById("errorInsightsSpinnerSubzone1").style.display                   = "none";
-        document.getElementById("unableToShowInsightsContainerSubzone1").style.display          = "none";
-        document.getElementById("entireSentimentOverTimeContainerSubzone1").style.display       = "block";
-        document.getElementById("entireWordCloudContainerSubzone1").style.display               = "block";
+        document.getElementById("errorInsightsSpinnerSubzone").style.display                   = "none";
+        document.getElementById("unableToShowInsightsContainerSubzone").style.display          = "none";
+        document.getElementById("entireSentimentOverTimeContainerSubzone").style.display       = "block";
+        document.getElementById("entireWordCloudContainerSubzone").style.display               = "block";
 
         //Overall Sentiment Score (Stars)
-        document.getElementById("overallSentimentScoreSubzone1").style.display                  = "none";
-        document.getElementById("overallSentimentScoreContainerSpinnerSubzone1").style.display  = "block";
+        document.getElementById("overallSentimentScoreSubzone").style.display                  = "none";
+        document.getElementById("overallSentimentScoreContainerSpinnerSubzone").style.display  = "block";
         
         //Total Number of Reviews 
-        document.getElementById("totalNoOfReviewsContainerSubzone1").style.display              = "none";
-        document.getElementById("totalReviewsContainerSpinnerSubzone1").style.display           = "block";
+        document.getElementById("totalNoOfReviewsContainerSubzone").style.display              = "none";
+        document.getElementById("totalReviewsContainerSpinnerSubzone").style.display           = "block";
 
         //Ranked Stores
-        document.getElementById("storeRanksSubzone1").style.display                     = "none";
-        document.getElementById("StorerRankedSpinnerSubzone1").style.display                    = "block";
+        document.getElementById("storeRanksSubzone").style.display                             = "none";
+        document.getElementById("storeRanksSpinnerSubzone").style.display                      = "block";
 
         //Sentiment Over Time Stacked Bar Chart
-        document.getElementById("sentimentOverTimeContainerDivSubzone1").style.display          = "none";
-        document.getElementById("SOTSpinnerSubzone1").style.display                             = "block";
+        document.getElementById("sentimentOverTimeContainerDivSubzone").style.display          = "none";
+        document.getElementById("SOTSpinnerSubzone").style.display                             = "block";
 
         //WordCloud
-        document.getElementById("wordCloudContainerSubzone1").style.display                     = "none"; 
-        document.getElementById("wordCloudContainerSpinnerSubzone1").style.display              = "block";
+        document.getElementById("wordCloudContainerSubzone").style.display                     = "none"; 
+        document.getElementById("wordCloudContainerSpinnerSubzone").style.display              = "block";
         // document.getElementById('SubzoneInformationContainerSingleMode').scrollIntoView({block: "start",behavior:'smooth'});
       }
       
       // Compare Mode
       else{
+        $('#collapsibleSubzoneFilter').collapse("hide");
 
+        function getKeyByValue(object, value) {
+          return Object.keys(object).find(key => object[key] === value);
+        }
+
+        subzone1 = getKeyByValue(subZoneIdNameDic,selectedSubZones[1]);
+        subzone2 = getKeyByValue(subZoneIdNameDic,selectedSubZones[0]);
+        document.getElementById("subzoneNameContainerSubzone1").innerText = selectedSubZones[1]
+        document.getElementById("subzoneNameContainerSubzone2").innerText = selectedSubZones[0]
+
+        // Sentiment over time1, Overall Sentiment Score(Stars)1, Total Reviews 1
+        getSentimentScore(subzone1,"Subzone1");
+
+        // Sentiment over time2, Overall Sentiment Score(Stars)2, Total Reviews 2
+        getSentimentScore(subzone2,"Subzone2");
+
+        // Wordcloud 1
+        let url1 = hostname + "/adj_noun_pairs/road/"+subzone1;
+        retrieveWordCloudNounAdjPairs(url1,"GET","","Subzone1");
+
+        // Wordcloud 2
+        let url2 = hostname + "/adj_noun_pairs/road/"+subzone2;
+        retrieveWordCloudNounAdjPairs(url2,"GET","","Subzone2");
+
+        // Ranking list 1
+        getRanking(subzone1,"Subzone1");
+
+        // Ranking list 2
+        getRanking(subzone2,"Subzone2");
+
+        document.getElementById("SubzoneInformationContainerSingleMode").style.display          = "none";
+        document.getElementById("SubzoneInformationContainerCompareMode").style.display         = "block";
+
+        document.getElementById("subzoneExpandUpArrowRow").style.display                        = "block";
+        document.getElementById("subzoneExpandDownArrowRow").style.display                      = "none";
+
+        //ErrorInsights 1
+        document.getElementById("errorInsightsSpinnerSubzone1").style.display                   = "none";
+        document.getElementById("unableToShowInsightsContainerSubzone1").style.display          = "none";
+        document.getElementById("entireSentimentOverTimeContainerSubzone1").style.display       = "block";
+        document.getElementById("entireWordCloudContainerSubzone1").style.display               = "block";
+        //ErrorInsights 2
+        document.getElementById("errorInsightsSpinnerSubzone2").style.display                   = "none";
+        document.getElementById("unableToShowInsightsContainerSubzone2").style.display          = "none";
+        document.getElementById("entireSentimentOverTimeContainerSubzone2").style.display       = "block";
+        document.getElementById("entireWordCloudContainerSubzone2").style.display               = "block";
+        
+        //Overall Sentiment Score (Stars) 1
+        document.getElementById("overallSentimentScoreSubzone1").style.display                  = "none";
+        document.getElementById("overallSentimentScoreContainerSpinnerSubzone1").style.display  = "block";
+        //Overall Sentiment Score (Stars) 2
+        document.getElementById("overallSentimentScoreSubzone2").style.display                  = "none";
+        document.getElementById("overallSentimentScoreContainerSpinnerSubzone2").style.display  = "block";
+        
+        //Total Number of Reviews 1
+        document.getElementById("totalNoOfReviewsContainerSubzone1").style.display              = "none";
+        document.getElementById("totalReviewsContainerSpinnerSubzone1").style.display           = "block";
+        //Total Number of Reviews 2
+        document.getElementById("totalNoOfReviewsContainerSubzone2").style.display              = "none";
+        document.getElementById("totalReviewsContainerSpinnerSubzone2").style.display           = "block";
+
+        //Ranked Stores 1
+        document.getElementById("storeRanksSubzone1").style.display                             = "none";
+        document.getElementById("storeRanksSpinnerSubzone1").style.display                      = "block";
+        //Ranked Stores 2
+        document.getElementById("storeRanksSubzone2").style.display                             = "none";
+        document.getElementById("storeRanksSpinnerSubzone2").style.display                      = "block";
+
+        //Sentiment Over Time Stacked Bar Chart 1
+        document.getElementById("sentimentOverTimeContainerDivSubzone1").style.display          = "none";
+        document.getElementById("SOTSpinnerSubzone1").style.display                             = "block";
+        //Sentiment Over Time Stacked Bar Chart 2
+        document.getElementById("sentimentOverTimeContainerDivSubzone2").style.display          = "none";
+        document.getElementById("SOTSpinnerSubzone2").style.display                             = "block";
+
+        //WordCloud 1
+        document.getElementById("wordCloudContainerSubzone1").style.display                     = "none"; 
+        document.getElementById("wordCloudContainerSpinnerSubzone1").style.display              = "block";
+        //WordCloud 2
+        document.getElementById("wordCloudContainerSubzone2").style.display                     = "none"; 
+        document.getElementById("wordCloudContainerSpinnerSubzone2").style.display              = "block";
       }
     }
 

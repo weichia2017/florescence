@@ -21,7 +21,7 @@ async function retrieveWordCloudNounAdjPairs(url,method,values,subzoneChoice){
         
     }else{
       if(url.includes("adj_noun_pairs/road")){
-        subZoneNounAdjPairs = adjNounPairs;
+        window["nounAdjPairs"+subzoneChoice] = adjNounPairs;
       }
       prepareWordCloud(adjNounPairs,false,subzoneChoice);
     }
@@ -456,9 +456,9 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
-                                    review_text : refactoredResponse[chosenReviews[x]].review_text,
-                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
+                                    review_date : new Date(window["refactoredResponse"+subzoneChoice][chosenReviews[x]].review_date),
+                                    review_text : window["refactoredResponse"+subzoneChoice][chosenReviews[x]].review_text,
+                                    store_id    : window["refactoredResponse"+subzoneChoice][chosenReviews[x]]['store_id']})
   }
 
   console.log(chosenReviewsWithFullData)
@@ -511,14 +511,14 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
 
   chosenReviews = chosenReviews.split(",");
   
-  // console.log(refactoredResponse);
+  // console.log(window["refactoredResponse"+subzoneChoice]);
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
     // console.log(chosenReviews[x]);
     chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun),
-                                    store_id    : refactoredResponse[chosenReviews[x]]['store_id']})
+                                    review_date : new Date(window["refactoredResponse"+subzoneChoice][chosenReviews[x]]['review_date']),
+                                    review_text : highlight_word(window["refactoredResponse"+subzoneChoice][chosenReviews[x]]['review_text'],adj,noun),
+                                    store_id    : window["refactoredResponse"+subzoneChoice][chosenReviews[x]]['store_id']})
   }
 
   // console.log(chosenReviewsWithFullData);
