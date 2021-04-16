@@ -320,9 +320,9 @@ if( isset($_GET['storeID']) ){
       <!-- ============= -->
       <div id = "filterSubZoneContainer">
         <!-- ROW 0 -->
-        <div class="row" id="subzoneExpandDownArrowRow">
-          <div class="col border border-secondary mb-1 rounded collapse-arrow-bg shadow text-center">
-              <span onclick="closeDownRow()" class="material-icons pointer collapse-arrow-color"  data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSubzoneFilter" >
+        <div id="subzoneExpandDownArrowRow"  class="row">
+          <div  onclick="closeDownRow()" class="col pointer border border-secondary mb-1 rounded collapse-arrow-bg shadow text-center" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSubzoneFilter">
+              <span class="material-icons collapse-arrow-color">
                   keyboard_arrow_down
               </span>
           </div>
@@ -391,8 +391,8 @@ if( isset($_GET['storeID']) ){
         </div>
         <!-- ROW 2 -->
         <div class="row" id="subzoneExpandUpArrowRow">
-          <div class="col border border-secondary rounded mb-1 collapse-arrow-bg shadow text-center">
-              <span onclick="closeUpRow()" class="material-icons pointer collapse-arrow-color"  data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSubzoneFilter" >
+          <div onclick="closeUpRow()" class="col pointer border border-secondary rounded mb-1 collapse-arrow-bg shadow text-center" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSubzoneFilter">
+              <span class="material-icons collapse-arrow-color">
                   keyboard_arrow_up
               </span>
           </div>
