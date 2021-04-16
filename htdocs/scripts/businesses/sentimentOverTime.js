@@ -74,6 +74,8 @@ function sentimentOverTimePrepareData(response){
     drawSentimentOverTimeStackedBarChart(setimentOverTimePrepared);
 }
 
+// Making the SOT globally available 
+var sentimentOverTimeChartsentimentOverTimeChartSVG;
 function drawSentimentOverTimeStackedBarChart(data){
 
     var legendClassArray = []; //store legend classes to select bars in plotSingle()
@@ -143,7 +145,7 @@ function drawSentimentOverTimeStackedBarChart(data){
         .enter().append("option")
             .text(d => d)
 
-        var svg = d3.select("#sentimentOverTimeContainer").attr("viewBox", `0 0 ${w} ${h}`),
+        sentimentOverTimeChartSVG = d3.select("#sentimentOverTimeContainer").attr("viewBox", `0 0 ${w} ${h}`),
             margin = {top: 35, left: 35, bottom: 0, right: 20},
             width = +w - margin.left - margin.right,
             height = +h - margin.top - margin.bottom;
@@ -155,12 +157,12 @@ function drawSentimentOverTimeStackedBarChart(data){
         var y = d3.scaleLinear()
             .rangeRound([height - margin.bottom, margin.top])
 
-        var xAxis = svg.append("g")
+        var xAxis = sentimentOverTimeChartSVG.append("g")
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .attr("class", "x-axis")
 
 
-        var yAxis = svg.append("g")
+        var yAxis = sentimentOverTimeChartSVG.append("g")
             .attr("transform", `translate(${margin.left},0)`)
             .attr("class", "y-axis")
 
@@ -184,7 +186,7 @@ function drawSentimentOverTimeStackedBarChart(data){
             max = max < 8 ? 8 : max;
             y.domain([0, max]);
             
-            svg.selectAll(".y-axis").transition().duration(speed)
+            sentimentOverTimeChartSVG.selectAll(".y-axis").transition().duration(speed)
                 .call(d3.axisLeft(y).ticks(null,'s'))
 
             data.sort(d3.select("#sort").property("checked")
@@ -193,10 +195,10 @@ function drawSentimentOverTimeStackedBarChart(data){
 
             x.domain(data.map(d => d.Month));
 
-            svg.selectAll(".x-axis").transition().duration(speed)
+            sentimentOverTimeChartSVG.selectAll(".x-axis").transition().duration(speed)
                 .call(d3.axisBottom(x).tickSizeOuter(0))
 
-            var group = svg.selectAll("g.layer")
+            var group = sentimentOverTimeChartSVG.selectAll("g.layer")
                 .data(d3.stack().keys(keys)(data), d => d.key)
 
             group.exit().remove()
@@ -206,18 +208,21 @@ function drawSentimentOverTimeStackedBarChart(data){
                 .attr("fill", d => z(d.key));
 
 
-            var bars = svg.selectAll("g.layer").selectAll("rect")
+            var bars = sentimentOverTimeChartSVG.selectAll("g.layer").selectAll("rect")
                 .data(d => d, e => e.data.Month);
 
             bars.exit().remove()
 
+            console.log(bars)
+
             bars
-        .enter()
-        .append("rect")
+            .enter()
+            .append("rect")
                 .attr("width", x.bandwidth())
                 .merge(bars)
             .transition().duration(speed)
                 .attr("x", d => x(d.data.Month))
+                .attr("id",d => y(d[1]) + x(d.data.Month))
                 .attr("y", d => y(d[1]))
                 .attr("height", d => y(d[0]) - y(d[1]))
         
@@ -227,53 +232,95 @@ function drawSentimentOverTimeStackedBarChart(data){
         .on('click', showReviews)
 
         function showToolTip(d, i) {
-        var xPos = parseFloat(d3.select(this).attr("x"));
-        var yPos = parseFloat(d3.select(this).attr("y"));
-        var height = parseFloat(d3.select(this).attr("height"));
-        var width = parseFloat(d3.select(this).attr("width"))
+            var xPos = parseFloat(d3.select(this).attr("x"));
+            var yPos = parseFloat(d3.select(this).attr("y"));
+            var height = parseFloat(d3.select(this).attr("height"));
+            var width = parseFloat(d3.select(this).attr("width"))
 
-        d3.select(this)
-        .attr("stroke","black")
-        .attr("stroke-width",1)
-        .style("cursor", "pointer");
+            d3.select(this)
+            .attr("stroke","black")
+            .attr("stroke-width",1)
+            .style("cursor", "pointer");
 
 
-        var tooltip = svg.append("g")
-            .attr("class", "ToolTip")
-                
-            tooltip.append("rect")
-            .attr("width", 120)
-            .attr("height", 30)
-            .attr("x",xPos +width+5)
-            .attr("y",yPos +height/2-15)
-            .attr("fill", "black")
-            .style("opacity", 0.75);
+            var tooltip = sentimentOverTimeChartSVG.append("g")
+                .attr("class", "ToolTip")
+                    
+                tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 30)
+                .attr("x",xPos +width+5)
+                .attr("y",yPos +height/2-15)
+                .attr("fill", "black")
+                .style("opacity", 0.75);
 
-            tooltip.append("text")
-            .attr("x",xPos +width+10)
-            .attr("y",yPos +height/2+8)
-            .attr("fill","white")
-            .text(d[1]-d[0] + " Review(s)");
+                tooltip.append("text")
+                .attr("x",xPos +width+10)
+                .attr("y",yPos +height/2+8)
+                .attr("fill","white")
+                .text(d[1]-d[0] + " Review(s)");
         }
             
         function hideToolTip(d, i) {
-        svg.select(".ToolTip").remove();
-        d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+            sentimentOverTimeChartSVG.select(".ToolTip").remove();
+
+
+            let rectID = d3.select(this)._groups[0][0].id
+            
+            if(sentimentOverTimeSelected[0] != rectID){
+                d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+
+            }
         }
 
+        var sentimentOverTimeSelected = []
         function showReviews(d,i){
+            //Clear all strokes for all rect
+            bars.enter()
+                .selectAll("rect")
+                .attr("stroke","pink")
+                .attr("stroke-width","0.2");
 
-            let selectedSentiment = ''
-            sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
-            if(sentimentSelected == posColor){
-                selectedSentiment = "PosR"
-            }else if(sentimentSelected == neuColor){
-                selectedSentiment = "NeuR"
-            }else{
-                selectedSentiment = "NegR"
+            let rectID = d3.select(this)._groups[0][0].id
+        
+           
+            // If sentimentOverTimeSelected contains the same rectID remove this rectID from container
+            if(sentimentOverTimeSelected[0] == rectID){
+                sentimentOverTimeSelected.pop();
+                
+                // Close and empty the reviews container
+                document.getElementById('sentimentOverTimeClickedReviews').innerHTML = '';
+                document.getElementById('sentimentReviewsContainer').style.display = 'none';
             }
-    
-            _displayReviewsBelowSentimentOverTime(d.data[selectedSentiment])
+            // Update the reviews container with the newly selected reviews
+            else{
+                // Add stroke for just this selected rect
+                d3.select(this)
+                .attr("stroke","black")
+                .attr("stroke-width",1.5)
+                .style("cursor", "pointer");
+
+                 // If container is empty just add rectID
+                if(sentimentOverTimeSelected.length == 0){
+                    sentimentOverTimeSelected.push(rectID);
+                } 
+                // Clear container and add the new rectID into the container
+                else{
+                    sentimentOverTimeSelected.pop();
+                    sentimentOverTimeSelected.push(rectID)
+                }
+
+                let selectedSentiment = ''
+                sentimentSelected = d3.select(this)._groups[0][0].parentNode.attributes[1].value;
+                if(sentimentSelected == posColor){
+                    selectedSentiment = "PosR"
+                }else if(sentimentSelected == neuColor){
+                    selectedSentiment = "NeuR"
+                }else{
+                    selectedSentiment = "NegR"
+                }
+                _displayReviewsBelowSentimentOverTime(d.data[selectedSentiment])
+            }
         }
 
         // function getKeyByValue(object, value) {
@@ -281,7 +328,7 @@ function drawSentimentOverTimeStackedBarChart(data){
         // }
 
         // Total Reviews on top of the bar text
-        var text = svg.selectAll(".text")
+        var text = sentimentOverTimeChartSVG.selectAll(".text")
                 .data(data, d => d.Month);
 
             text.exit().remove()
@@ -297,7 +344,7 @@ function drawSentimentOverTimeStackedBarChart(data){
                 .text(d => d.total)     
         }
 
-        var legend = svg.selectAll(".legend")
+        var legend = sentimentOverTimeChartSVG.selectAll(".legend")
             .data(z.domain().slice().reverse())
             .enter().append("g")
             //.attr("class", "legend")

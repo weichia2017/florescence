@@ -474,7 +474,7 @@ if( isset($_GET['storeID']) ){
             </div>
 
             <span style="font-size:33px; color: rgb(92, 92, 92)" 
-                  onclick="(function(){document.getElementById('sentimentReviewsContainer').style.display = 'none'})()"
+                  onclick="(closeAndClearSelectionsInSOT())"
                   class="material-icons mr-2 pointer">
             close
             </span>
@@ -509,6 +509,19 @@ if( isset($_GET['storeID']) ){
         }
       });   
     });
+
+    function closeAndClearSelectionsInSOT(){
+      // console.log(sentimentOverTimeChartSVG);
+
+      // Clear all selected rect in sentimentOverTimeChartSVG
+      sentimentOverTimeChartSVG.selectAll("g.layer")
+        .selectAll("rect")
+        .attr("stroke","pink")
+        .attr("stroke-width","0.2");
+      
+      document.getElementById('sentimentReviewsContainer').style.display = 'none';
+      // function(){console.log(svg) document.getElementById('sentimentReviewsContainer').style.display = 'none'})(
+    }
 
     var hostname = "http://35.175.55.18:5000";
     selectedReview='';
