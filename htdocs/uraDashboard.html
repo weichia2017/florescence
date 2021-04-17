@@ -166,7 +166,8 @@ if( isset($_GET['storeID']) ){
 
       /* Overrides list-group-item from Bootstrap */ 
       .list-group-item {
-        padding: 7px 10px
+        padding: 7px 10px;
+        background-color:rgba(0,0,0,.03)
       }
 
       .whiteBackground{
@@ -190,7 +191,7 @@ if( isset($_GET['storeID']) ){
       }
 
       .scrollSubzones{
-        height:550px;
+        height:520px;
         overflow-y: scroll;
       }
 
@@ -247,11 +248,12 @@ if( isset($_GET['storeID']) ){
 
       .list-group .list-group-item:hover {
         background-color: #0275d8;
-        color:white;
+        color:white !important;
       }
 
       .list-group .list-group-item.active {
         background-color: #0275d8;
+        border: 1px solid black;
         color:white;
         z-index:0;
       }
@@ -281,7 +283,7 @@ if( isset($_GET['storeID']) ){
       /* MAP RELATED CSS */
       /* TanjongPagarMap */
       #tanjongPagarMap { 
-        height:600px;
+        height:570px;
         /* width:70%; */
         z-index:0;
       }
@@ -357,13 +359,14 @@ if( isset($_GET['storeID']) ){
                 </a>
               </div>
               <br>
-              <hr>
-              <span id="maxTwoSelections" class="ml-1 text-danger" style="font-family: 'Open Sans', sans-serif;font-weight: 300;">Sorry Max 2 selections only</span>
-              <div class="reviewBodyFont" >
-                <div id="subzonesList" class="list-group scrollSubzones list-group-hover">
+              <hr style="margin-bottom:0px">
+              <span id="maxTwoSelections" class="ml-1 text-danger float-left reviewBodyFont">Sorry Max 2 selections only</span>
+              <span id="noSelectionError" class="ml-1 text-danger float-left reviewBodyFont">You need to select somthing!</span>
+              <div class="reviewBodyFont mt-4" >
+                <div id="subzonesList" class="list-group  scrollSubzones list-group-hover">
                   <!-- Subzones get populated here -->
                 </div>
-                <button id="subZoneSearch" onclick="subZonesSelected()" class="btn btn-primary " type="submit">Search</button>
+                <button id="subZoneSearch" onclick="subZonesSelected()" class="btn btn-primary w-100" type="submit">Search</button>
               </div>
           </div>
 
@@ -390,7 +393,7 @@ if( isset($_GET['storeID']) ){
             <br>
             <hr>
             <div style="width:100%">
-              <div id="tanjongPagarMap" class=""></div>
+              <div id="tanjongPagarMap"></div>
             </div>
           </div>
         </div>
@@ -1294,7 +1297,7 @@ if( isset($_GET['storeID']) ){
     });
 
     var hostname = "http://35.175.55.18:5000";
-    limitToShowIndividualStoreInsights = 24;
+    limitToShowIndividualStoreInsights = 10;
     selectedReviewSubzone='';
     selectedReviewSubzone1='';
     selectedReviewSubzone2='';
@@ -1312,6 +1315,8 @@ if( isset($_GET['storeID']) ){
     document.getElementById("SubzoneInformationContainerCompareMode").style.display = "none";
 
     document.getElementById("maxTwoSelections").style.display                       = "none";
+    document.getElementById("noSelectionError").style.display = "none";
+
     
     // Colors for sentiment Over Time In
     let neuColor = "#AAAAAA"
@@ -1484,6 +1489,7 @@ if( isset($_GET['storeID']) ){
       subzone = subzone.charAt(0).toLowerCase() + subzone.slice(1);
 
       if(selectedSubZones.includes(e.id)){
+        document.getElementById("noSelectionError").style.display = "none";
         document.getElementById("maxTwoSelections").style.display = "none";
         window[subzone].setStyle({weight: 1.5,color: '#3388ff'})
 
@@ -1495,6 +1501,7 @@ if( isset($_GET['storeID']) ){
       }
       else{
         if(selectedSubZones.length < 2){
+          document.getElementById("noSelectionError").style.display = "none";
           document.getElementById("maxTwoSelections").style.display = "none";
           window[subzone].setStyle({weight: 3,color: 'red'})
           selectedSubZones.unshift(e.id)
@@ -1525,7 +1532,7 @@ if( isset($_GET['storeID']) ){
       for (x in subzones){
         subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
         document.getElementById("subzonesList").innerHTML += 
-        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer reviewBodyFont mr-2">${subzones[x].road_name}</a>`;
+        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer reviewBodyFont mr-1">${subzones[x].road_name}</a>`;
       }
       // console.log(subZoneIdNameDic)
       document.getElementById("main-overlay").style.display = "none";
@@ -1557,13 +1564,16 @@ if( isset($_GET['storeID']) ){
     function subZonesSelected(){
       // console.log(selectedSubZones);
       document.getElementById("maxTwoSelections").style.display = "none";
+      document.getElementById("noSelectionError").style.display = "none";
+
 
       
       // =============
       //   ERROR MODE
       // =============
-      if(selectedSubZones.length > 2 || selectedSubZones.length < 0){
-        // RETURN ERROR MESSAGE 
+      if(selectedSubZones.length > 2 || selectedSubZones.length <= 0 || selectedSubZones == undefined){
+        // RETURN ERROR MESSAGE ONLY WAY TO REACH HERE IF USER INSPECTS ELEMENT TRYING TO BRICK THE FRONTEND
+        document.getElementById("noSelectionError").style.display = "block";
       }
       
       // ==============

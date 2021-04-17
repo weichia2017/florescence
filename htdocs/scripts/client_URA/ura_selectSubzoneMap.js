@@ -1,4 +1,4 @@
-var map = L.map('tanjongPagarMap', {zoomSnap: 0.10,zoomControl: false}).setView([1.277294, 103.8437922], 16.4);
+var map = L.map('tanjongPagarMap', {zoomSnap: 0.10,zoomControl: false}).setView([1.277294, 103.8437922], 16.3);
 
 var zoomHome = L.Control.zoomHome();
 zoomHome.addTo(map);
@@ -12,6 +12,7 @@ function onClick(e) {
  
   let subzone = e.target._tooltip._content;
   if(selectedSubZones.includes(subzone)){
+    document.getElementById("noSelectionError").style.display = "none";
     document.getElementById("maxTwoSelections").style.display = "none";
     e.target.setStyle({weight: 1.5,color: '#3388ff'})
 
@@ -23,6 +24,7 @@ function onClick(e) {
   }
   else{
     if(selectedSubZones.length < 2){
+      document.getElementById("noSelectionError").style.display = "none";
       document.getElementById("maxTwoSelections").style.display = "none";
       e.target.setStyle({weight: 3,color: 'red'})
       selectedSubZones.unshift(subzone)
