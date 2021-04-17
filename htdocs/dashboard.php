@@ -450,7 +450,7 @@ if( isset($_GET['storeID']) ){
               </svg>
             </div>
           </div>
-        </div>
+        </div>      
       </div>
       <!-- ================================ -->   
       <!--      SOT REVIEWS CONTAINER       -->

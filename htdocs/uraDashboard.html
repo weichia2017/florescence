@@ -561,7 +561,7 @@ if( isset($_GET['storeID']) ){
               <hr>
               <!-- <hr> -->
               <!-- <div class="col-12 border"></div> -->
-              <div id="sentimentOverTimeContainerDivSubzone" class="float-left">
+              <div id="sentimentOverTimeContainerDivSubzone">
                 <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
                   Select year: <select id="yearSubzone"></select>
     
@@ -573,7 +573,7 @@ if( isset($_GET['storeID']) ){
                 </svg>
               </div>
               <!-- White background to the empty space of div when spinner is loading -->
-              <div class="whiteBackground"></div>
+              <!-- <div class="whiteBackground"></div> -->
 
               <!-- Spinner that only shows when loading -->
               <div id="SOTSpinnerSubzone" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
@@ -962,7 +962,7 @@ if( isset($_GET['storeID']) ){
               <div class="text-center headings showStoreNameSubzone1"></div>
               <hr style="margin-top:0px">
 
-              <div id="sentimentOverTimeContainerDivSubzone1" class="float-left">
+              <div id="sentimentOverTimeContainerDivSubzone1">
                 <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
                   Select year: <select id="yearSubzone1"></select>
     
@@ -974,7 +974,7 @@ if( isset($_GET['storeID']) ){
                 </svg>
               </div>
               <!-- White background to the empty space of div when spinner is loading -->
-              <div class="whiteBackground"></div>
+              <!-- <div class="whiteBackground"></div> -->
 
               <!-- Spinner that only shows when loading -->
               <div id="SOTSpinnerSubzone1" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
@@ -1046,7 +1046,7 @@ if( isset($_GET['storeID']) ){
             <div class="text-center headings showStoreNameSubzone2"></div>
             <hr style="margin-top:0px">
         
-            <div id="sentimentOverTimeContainerDivSubzone2" class="float-left">
+            <div id="sentimentOverTimeContainerDivSubzone2">
               <div class="ml-3 reviewBodyFont" style="font-size: 17px;"> 
                 Select year: <select id="yearSubzone2"></select>
   
@@ -1058,7 +1058,7 @@ if( isset($_GET['storeID']) ){
               </svg>
             </div>
             <!-- White background to the empty space of div when spinner is loading -->
-            <div class="whiteBackground"></div>
+            <!-- <div class="whiteBackground"></div> -->
 
             <!-- Spinner that only shows when loading -->
             <div id="SOTSpinnerSubzone2" class="spinner-border text-secondary float-left spinner"  role="status" ></div>
@@ -1276,7 +1276,6 @@ if( isset($_GET['storeID']) ){
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
 
   <script>
     // Popover
@@ -1294,6 +1293,8 @@ if( isset($_GET['storeID']) ){
     selectedReviewSubzone='';
     selectedReviewSubzone1='';
     selectedReviewSubzone2='';
+    let width  = $(window).width();
+    let height = $(window).height();
 
     
     document.getElementById("subzoneExpandUpArrowRow").style.display                = "none";
@@ -1558,7 +1559,7 @@ if( isset($_GET['storeID']) ){
       // Single mode
       else if(selectedSubZones.length == 1){
         $('#collapsibleSubzoneFilter').collapse("hide");
-  
+
         function getKeyByValue(object, value) {
           return Object.keys(object).find(key => object[key] === value);
         }

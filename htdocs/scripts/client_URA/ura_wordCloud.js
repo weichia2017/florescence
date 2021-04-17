@@ -1,5 +1,4 @@
 let wordCloudData  = [];
-var width          = $(window).width(), height = $(window).height();
 
 async function retrieveWordCloudNounAdjPairs(url,method,values,subzoneChoice){
     document.getElementById("wordCloudContainer"+subzoneChoice).style.display = "none";
