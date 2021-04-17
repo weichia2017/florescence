@@ -356,7 +356,10 @@ if( isset($_GET['storeID']) ){
                   </span>    
                 </a>
               </div>
-              <div class="mt-5 reviewBodyFont" >
+              <br>
+              <hr>
+              <span id="maxTwoSelections" class="ml-1 text-danger" style="font-family: 'Open Sans', sans-serif;font-weight: 300;">Sorry Max 2 selections only</span>
+              <div class="reviewBodyFont" >
                 <div id="subzonesList" class="list-group scrollSubzones list-group-hover">
                   <!-- Subzones get populated here -->
                 </div>
@@ -384,7 +387,9 @@ if( isset($_GET['storeID']) ){
                 </span>    
               </a>
             </div>
-            <div class="mt-5" style="width:100%">
+            <br>
+            <hr>
+            <div style="width:100%">
               <div id="tanjongPagarMap" class=""></div>
             </div>
           </div>
@@ -1305,8 +1310,9 @@ if( isset($_GET['storeID']) ){
 
     document.getElementById("SubzoneInformationContainerSingleMode").style.display  = "none";
     document.getElementById("SubzoneInformationContainerCompareMode").style.display = "none";
-    
 
+    document.getElementById("maxTwoSelections").style.display                       = "none";
+    
     // Colors for sentiment Over Time In
     let neuColor = "#AAAAAA"
     let posColor = "#79a925"
@@ -1478,6 +1484,7 @@ if( isset($_GET['storeID']) ){
       subzone = subzone.charAt(0).toLowerCase() + subzone.slice(1);
 
       if(selectedSubZones.includes(e.id)){
+        document.getElementById("maxTwoSelections").style.display = "none";
         window[subzone].setStyle({weight: 1.5,color: '#3388ff'})
 
         const index = selectedSubZones.indexOf(e.id)
@@ -1488,9 +1495,12 @@ if( isset($_GET['storeID']) ){
       }
       else{
         if(selectedSubZones.length < 2){
+          document.getElementById("maxTwoSelections").style.display = "none";
           window[subzone].setStyle({weight: 3,color: 'red'})
           selectedSubZones.unshift(e.id)
           e.classList.add("active");
+        }else{
+          document.getElementById("maxTwoSelections").style.display = "block";
         }        
       }
       // console.log(selectedSubZones)
@@ -1522,12 +1532,8 @@ if( isset($_GET['storeID']) ){
     }
 
     function closeUpRow(){
-      //collapsibleSubzoneFilter
-      // $("#collapsibleSubzoneFilter").removeClass("show");
-      // $('#collapsibleSubzoneFilter').collapse("hide");
       document.getElementById("subzoneExpandUpArrowRow").style.display   = "none";
       document.getElementById("subzoneExpandDownArrowRow").style.display = "block";
-      // console.log($('#subzoneExpandArrowRow').attr("aria-expanded"))
     }
 
     function closeDownRow(){
@@ -1550,13 +1556,19 @@ if( isset($_GET['storeID']) ){
     // ===============
     function subZonesSelected(){
       // console.log(selectedSubZones);
+      document.getElementById("maxTwoSelections").style.display = "none";
 
-      // Error Mode
+      
+      // =============
+      //   ERROR MODE
+      // =============
       if(selectedSubZones.length > 2 || selectedSubZones.length < 0){
         // RETURN ERROR MESSAGE 
       }
       
-      // Single mode
+      // ==============
+      //   SINGLE MODE
+      // ==============
       else if(selectedSubZones.length == 1){
         $('#collapsibleSubzoneFilter').collapse("hide");
 
@@ -1616,7 +1628,9 @@ if( isset($_GET['storeID']) ){
         // document.getElementById('SubzoneInformationContainerSingleMode').scrollIntoView({block: "start",behavior:'smooth'});
       }
       
-      // Compare Mode
+      // ==============
+      //  COMPARE MODE
+      // ==============
       else{
         $('#collapsibleSubzoneFilter').collapse("hide");
 

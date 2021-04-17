@@ -12,6 +12,7 @@ function onClick(e) {
  
   let subzone = e.target._tooltip._content;
   if(selectedSubZones.includes(subzone)){
+    document.getElementById("maxTwoSelections").style.display = "none";
     e.target.setStyle({weight: 1.5,color: '#3388ff'})
 
     const index = selectedSubZones.indexOf(subzone)
@@ -22,9 +23,13 @@ function onClick(e) {
   }
   else{
     if(selectedSubZones.length < 2){
-        e.target.setStyle({weight: 3,color: 'red'})
-        selectedSubZones.unshift(subzone)
-        document.getElementById(subzone).classList.add("active");
+      document.getElementById("maxTwoSelections").style.display = "none";
+      e.target.setStyle({weight: 3,color: 'red'})
+      selectedSubZones.unshift(subzone)
+      document.getElementById(subzone).classList.add("active");
+    }
+    else{
+      document.getElementById("maxTwoSelections").style.display = "block";
     }
     
   }
