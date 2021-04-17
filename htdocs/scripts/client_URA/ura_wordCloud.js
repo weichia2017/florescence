@@ -179,7 +179,12 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
     }
     // console.log(wordCloudData)
 
-    let w = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
+    // let w = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
+    // let h = 450;
+
+    let containerWidth   = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
+    // let containerHeight = document.getElementById('wordCloudContainer'+subzoneChoice).offsetHeight; 
+    let w = containerWidth == 0 ? 537 : containerWidth;
     let h = 450;
 
     drawWordcLOUD(w,h,subzoneChoice);

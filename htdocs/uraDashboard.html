@@ -852,7 +852,7 @@ if( isset($_GET['storeID']) ){
 
         <!-- RANKING HEADER -->
         <div class="row">
-          <div class="col border border-secondary p-2 mt-2 rounded header-bg shadow">
+          <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleRankingContainer">
             <div class="lead text-center">
               <span style="font-size:30px;" class="material-icons compareHeadingIcons">
               align_horizontal_left
@@ -877,7 +877,7 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
         <!-- ROW 4 RANKING -->
-        <div class="row">
+        <div class="row collapse show" id="collapsibleRankingContainer">
           <!-- ========================= -->   
           <!--      STORES RANKED 1      -->
           <!-- ========================= -->
@@ -924,7 +924,7 @@ if( isset($_GET['storeID']) ){
 
         <!-- SOT HEADER -->
         <div class="row">
-          <div class="col border border-secondary p-2 mt-2 rounded header-bg shadow">
+          <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSOTandUnableToDisplayContainer">
             <div class="lead text-center">
               <span style="font-size:30px" class="material-icons compareHeadingIcons">
                 timeline
@@ -951,7 +951,7 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
         <!-- ROW 5 SOT & UNABLE TO DISPLAY -->
-        <div class="row">
+        <div class="row collapse show" id="collapsibleSOTandUnableToDisplayContainer">
           <!-- ================================ -->   
           <!--    SENTIMENT OVER TIME CHART 1   -->
           <!-- ================================ -->
@@ -1125,7 +1125,7 @@ if( isset($_GET['storeID']) ){
 
         <!-- WORDCLOUD HEADER -->
         <div id="wordCloudHeader" class="row">
-          <div class="col border border-secondary p-2 mt-2 rounded header-bg shadow">
+          <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleWordCloudContainer">
             <div class="lead text-center">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
               <span style="font-size:30px;" class="material-icons compareHeadingIcons">
@@ -1154,7 +1154,7 @@ if( isset($_GET['storeID']) ){
           </div>
         </div>
         <!-- ROW 6 WordCloud -->
-        <div class="row">
+        <div class="row collapse show" id="collapsibleWordCloudContainer">
           <!-- ========================= -->   
           <!--        WORD CLOUD 1       -->
           <!-- ========================= -->
@@ -1619,6 +1619,11 @@ if( isset($_GET['storeID']) ){
       // Compare Mode
       else{
         $('#collapsibleSubzoneFilter').collapse("hide");
+
+        // Open if not already open 
+        $('#collapsibleSOTandUnableToDisplayContainer').collapse("show");
+        $('#collapsibleWordCloudContainer').collapse("show");
+        $('#collapsibleRankingContainer').collapse("show");
 
         function getKeyByValue(object, value) {
           return Object.keys(object).find(key => object[key] === value);

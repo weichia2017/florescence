@@ -173,8 +173,10 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
 function drawSentimentOverTimeStackedBarChart(subzoneChoice) {
     var legendClassArray = []; //store legend classes to select bars in plotSingle()
 
-    let w = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
-    let h = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetHeight;
+    let containerWidth   = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetWidth;
+    let containerHeight = document.getElementById('sentimentOverTimeContainerDiv'+subzoneChoice).offsetHeight; 
+    let w = containerWidth == 0 ? 537 : containerWidth;
+    let h = containerHeight == 0 ? 400 : containerHeight;
 
     _chart(subzoneChoice,w,h)
 
@@ -240,7 +242,7 @@ function drawSentimentOverTimeStackedBarChart(subzoneChoice) {
             .domain(keys);
 
         update(d3.select("#year"+subzoneChoice).property("value"), 0);
-        console.log(svg)
+        // console.log(svg)
 
 
         function update(input, speed) {
