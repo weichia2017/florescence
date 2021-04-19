@@ -105,6 +105,11 @@ if( isset($_GET['storeID']) ){
         color: white;
       }
 
+      .collapse-arrow-color-headers{
+        /* font-size:20px; */
+        color: rgb(68 68 68);
+      }
+
       .collapse-arrow-bg{
         background-color: #404040;
       }
@@ -940,10 +945,14 @@ if( isset($_GET['storeID']) ){
         <div class="row">
           <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleRankingContainer">
             <div class="lead text-center">
+              <span class="material-icons float-left collapse-arrow-color-headers">
+                keyboard_arrow_down
+              </span>
               <span style="font-size:30px;" class="material-icons compareHeadingIcons">
               align_horizontal_left
               </span>
-              <span class="compareHeadings" >Stores Ranked by Sentiments:</span> 
+              <span class="compareHeadings" >Stores Ranked by Sentiments:
+              </span> 
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex"  
                   title="Stores Ranked" 
@@ -1012,6 +1021,9 @@ if( isset($_GET['storeID']) ){
         <div class="row">
           <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleSOTandUnableToDisplayContainer">
             <div class="lead text-center">
+              <span class="material-icons float-left collapse-arrow-color-headers">
+                keyboard_arrow_down
+              </span>
               <span style="font-size:30px" class="material-icons compareHeadingIcons">
                 timeline
               </span>
@@ -1213,7 +1225,9 @@ if( isset($_GET['storeID']) ){
         <div id="wordCloudHeader" class="row">
           <div class="col pointer border border-secondary p-2 mt-2 rounded header-bg shadow" data-toggle="collapse" aria-expanded="true" data-target="#collapsibleWordCloudContainer">
             <div class="lead text-center">
-              <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-cloud fa-lg"></i> -->
+              <span class="material-icons float-left collapse-arrow-color-headers">
+                keyboard_arrow_down
+              </span>
               <span style="font-size:30px;" class="material-icons compareHeadingIcons">
                 cloud 
               </span>
