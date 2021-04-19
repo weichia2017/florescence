@@ -13,6 +13,9 @@ if( isset($_GET['storeID']) ){
     <meta name="description" content="">
     <title>URA Dashboard</title>
 
+    <!-- Load common.js from scripts folder -->
+    <script src="scripts/common.js"></script>
+
     <!-- Material Design (External) -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -22,10 +25,10 @@ if( isset($_GET['storeID']) ){
     <!-- Load d3.js (External) -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
-    <!-- Load Anton font from google fonts (External) -->
-    <!-- https://fonts.google.com/specimen/Anton?preview.text_type=custom&sidebar.open=true&selection.family=Anton -->
+    <!-- Load fonts from google fonts (External) -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&family=Satisfy&display=swap" rel="stylesheet">
+
 
     <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
     <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
@@ -68,6 +71,10 @@ if( isset($_GET['storeID']) ){
     <script src="scripts/client_URA/ura_sentimentOverTime.js" defer></script>
 
     <style>
+      body{
+        background-color: #F0F2F5;
+      }
+
       .white-bg{
         background-color: white;
       }
@@ -113,23 +120,6 @@ if( isset($_GET['storeID']) ){
         left: 0;
         /* background-color: rgb(0,0,0); */
         background-color: rgba(0, 0, 0, 0.651);
-      }
-
-      .navbar-brand {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-        font-size: 1rem;
-        background-color: rgba(0, 0, 0, .25);
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-      }
-
-      .navbar .navbar-toggler {
-        top: .25rem;
-        right: 1rem;
-      }
-
-      body{
-        background-color: rgb(243, 243, 243);
       }
 
       .totalNoOfReviewsContainer {
@@ -299,6 +289,29 @@ if( isset($_GET['storeID']) ){
         line-height: 26px;
       }
 
+
+      #navBarBrand{
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 300;
+        font-size: 1.1em;
+        color:white;
+      }
+
+      @media screen and (max-width : 1920px){
+          .mobile-navbar{
+              display:none;
+          }
+      }
+          
+      @media screen and (max-width : 767px){
+          .desktop-navbar{
+              display:none;
+          }
+          .mobile-navbar{
+              display:inline;
+          }
+      }
+
     </style>
   </head>
 
@@ -307,12 +320,74 @@ if( isset($_GET['storeID']) ){
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
 
-  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
+  <!-- <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
     <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Flourishing Our Locale: Tanjong Pagar</div>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-  </header>
+  </header> -->
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a id="navBarBrand"><span style="font-family: 'Satisfy', cursive;font-size: 1.3em;">Flourishing Our Locale : </span>Tanjong Pagar</a>
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> 
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li> -->
+      </ul> 
+      <!-- <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form> -->
+
+      <!-- ======================== -->
+      <!-- ONLY SHOW IN MOBILE VIEW -->
+      <!-- ======================== -->
+      <ul class="navbar-nav mr-auto mobile-navbar">
+        
+          <!-- Change Password Tab -->
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/resetPasswordLoggedIn}">
+                  <i class="fa fa-exchange text-light"></i> Change Password
+              </a>
+          </li>
+
+          <!-- Logout Tab -->
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/logout}">
+                  <i class="fa fa-power-off text-light"></i> Logout
+              </a>
+          </li>
+      </ul>
+
+      <!-- =========================== -->
+      <!--  ONLY SHOW IN DESKTOP VIEW  -->
+      <!-- =========================== -->
+      <ul class="navbar-nav mr-2 desktop-navbar">
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Account
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="">Change Password</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="">Logout</a>
+            </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
 
   <main class="container" style="z-index: 0">
     <div class="container mb-5 mt-3">
@@ -332,7 +407,7 @@ if( isset($_GET['storeID']) ){
         <!-- ROW 1 -->
         <div class="row collapse" id="collapsibleSubzoneFilter">
           <!-- ====================== -->
-          <!--    FILTER LOCATION     -->
+          <!--    LIST GROUP FILTER   -->
           <!-- ====================== -->
           <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
               <div class="lead">
@@ -370,6 +445,9 @@ if( isset($_GET['storeID']) ){
               </div>
           </div>
 
+          <!-- ====================== -->
+          <!--       MAP FILTER       -->
+          <!-- ====================== -->
           <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 border border-secondary p-2 rounded mb-2 white-bg shadow">
             <div class="lead">
               <!-- <i style="color: rgb(92, 92, 92)" class="fas fa-user-edit fa-lg"></i> -->
@@ -1296,11 +1374,17 @@ if( isset($_GET['storeID']) ){
       });   
     });
 
-    var hostname = "http://35.175.55.18:5000";
+    // Colors for sentiment Over Time In
+    let neuColor = "#AAAAAA"
+    let posColor = "#79a925"
+    let negColor = "#FF4136"
+    
     limitToShowIndividualStoreInsights = 10;
+
     selectedReviewSubzone='';
     selectedReviewSubzone1='';
     selectedReviewSubzone2='';
+
     let width  = $(window).width();
     let height = $(window).height();
 
@@ -1318,41 +1402,36 @@ if( isset($_GET['storeID']) ){
     document.getElementById("noSelectionError").style.display = "none";
 
     
-    // Colors for sentiment Over Time In
-    let neuColor = "#AAAAAA"
-    let posColor = "#79a925"
-    let negColor = "#FF4136"
-    
-    function makeRequest(url,method,values) {
-      return new Promise(function (resolve, reject) {
+    // function makeRequest(url,method,values) {
+    //   return new Promise(function (resolve, reject) {
 
-        let request = new XMLHttpRequest();
+    //     let request = new XMLHttpRequest();
 
-        request.open(method, url);
-        request.timeout = 20000;
-        request.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(request.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: request.statusText
-                });
-            }
-        };
-        request.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: request.statusText
-            });
-        };
-        // request.setRequestHeader('Authorization', 'Bearer ' + token)
-        request.setRequestHeader("Content-type", "application/JSON");
-        request.setRequestHeader('Access-Control-Allow-Origin', '*');
-        // request.withCredentials = false;
-        request.send(values);
-      });
-    }
+    //     request.open(method, url);
+    //     request.timeout = 20000;
+    //     request.onload = function () {
+    //         if (this.status >= 200 && this.status < 300) {
+    //             resolve(request.response);
+    //         } else {
+    //             reject({
+    //                 status: this.status,
+    //                 statusText: request.statusText
+    //             });
+    //         }
+    //     };
+    //     request.onerror = function () {
+    //         reject({
+    //             status: this.status,
+    //             statusText: request.statusText
+    //         });
+    //     };
+    //     // request.setRequestHeader('Authorization', 'Bearer ' + token)
+    //     request.setRequestHeader("Content-type", "application/JSON");
+    //     request.setRequestHeader('Access-Control-Allow-Origin', '*');
+    //     // request.withCredentials = false;
+    //     request.send(values);
+    //   });
+    // }
 
     let reviewsSubzone;
     let reviewsSubzone1;
@@ -1566,8 +1645,6 @@ if( isset($_GET['storeID']) ){
       document.getElementById("maxTwoSelections").style.display = "none";
       document.getElementById("noSelectionError").style.display = "none";
 
-
-      
       // =============
       //   ERROR MODE
       // =============
