@@ -13,8 +13,8 @@ if( isset($_GET['storeID']) ){
     <meta name="description" content="">
     <title>Flourishing Our Locale</title>
 
-    <!-- Fontwesome -->
-    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/> -->
+    <!-- Load common.js from scripts folder -->
+    <script src="scripts/common.js"></script>
 
     <!-- Material Design (External) -->
     <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
@@ -52,6 +52,10 @@ if( isset($_GET['storeID']) ){
     <script src="scripts/businesses/sentimentOverTime.js" defer></script>
 
     <style>
+      body{
+        background-color: #F0F2F5;
+      }
+
       .white-bg{
         background-color: white;
       }
@@ -79,10 +83,6 @@ if( isset($_GET['storeID']) ){
       .navbar .navbar-toggler {
         top: .25rem;
         right: 1rem;
-      }
-
-      body{
-        background-color: rgb(243, 243, 243);
       }
 
       #totalNoOfReviewsContainer {
@@ -366,6 +366,7 @@ if( isset($_GET['storeID']) ){
           <!-- Spinner that only shows when loading -->
           <div class="spinner-border text-secondary float-left spinner" id="wordCloudContainerSpinner" role="status" ></div>
         </div>
+
       </div>
 
       <!-- ======================================== -->   
@@ -546,36 +547,6 @@ if( isset($_GET['storeID']) ){
     let storeIDByUser = document.getElementById('getStoreID').value;
     let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
     
-    function makeRequest(url,method,values) {
-      return new Promise(function (resolve, reject) {
-
-        let request = new XMLHttpRequest();
-
-        request.open(method, url);
-        request.timeout = 20000;
-        request.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(request.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: request.statusText
-                });
-            }
-        };
-        request.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: request.statusText
-            });
-        };
-        // request.setRequestHeader('Authorization', 'Bearer ' + token)
-        request.setRequestHeader("Content-type", "application/JSON");
-        request.setRequestHeader('Access-Control-Allow-Origin', '*');
-        // request.withCredentials = false;
-        request.send(values);
-      });
-    }
 
     function populateReviews(storeBased_Reviews){
       // console.log(storeBased_Reviews)
