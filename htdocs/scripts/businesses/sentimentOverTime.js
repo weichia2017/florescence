@@ -112,9 +112,7 @@ function drawSentimentOverTimeStackedBarChart(data){
         document.getElementById("wordCloudClickedReviews").innerHTML = '';
         document.getElementById("wordCloudReviewsContainer").style.display = "none";
 
-        // window.scrollBy(0, 500);
         document.getElementById('sentimentReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-
 
         chosenReviews.sort(function(a,b){
             return new Date(b.review_date) - new Date(a.review_date);
@@ -122,11 +120,18 @@ function drawSentimentOverTimeStackedBarChart(data){
 
         for (x in chosenReviews){
             let formattedDate = new Date(chosenReviews[x].review_date);
-            // console.log(formattedDate.toLocaleFormat('%d-%b-%Y'))
+
+            let imageName = "tripAdvisorLogo.png"
+            if(chosenReviews[x].review_id.split("-")[1] == 1){
+                imageName = "googleMapsLogo.png"
+            }
             document.getElementById("sentimentOverTimeClickedReviews").innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
-                    <h6 class="reviewHeaderFont">Review Date: ${formattedDate.toLocaleDateString()}</h6>
+                    <h6 class="reviewHeaderFont">
+                        <img src="images/${imageName}" width='30px' height="auto">
+                         Review Date: ${formattedDate.toLocaleDateString()}
+                    </h6>
                     <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>
                     </div>
                 </div>`;

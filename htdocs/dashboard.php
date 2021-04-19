@@ -591,10 +591,17 @@ if( isset($_GET['storeID']) ){
 
       //Display the values
       for (x in chosenReviewsWithFullData){
+        let imageName = "tripAdvisorLogo.png"
+        if(chosenReviewsWithFullData[x].review_id.split("-")[1] == 1){
+            imageName = "googleMapsLogo.png"
+        } 
         document.getElementById("showReviewsContainer").innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
-                    <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                    <h6 class="reviewHeaderFont">
+                      <img src="images/${imageName}" width='30px' height="auto">
+                      Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                    </h6>
                     <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                     </div>
                 </div>`;      

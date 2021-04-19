@@ -26,10 +26,14 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
 
       //Display the values
       for (x in chosenReviewsWithFullData){
+        let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
         document.getElementById("showReviewsContainerForErrorInsights"+subzoneChoice).innerHTML +=
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
-                    <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                    <h6 class="reviewHeaderFont">
+                        <img src="images/${imageName}" width='30px' height="auto">
+                        Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                    </h6>
                     <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                     </div>
                 </div>`;      

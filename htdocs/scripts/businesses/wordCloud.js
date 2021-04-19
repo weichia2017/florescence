@@ -205,78 +205,6 @@ function highlight_word(searchpara,adj,noun)
   return new_text
 }
 
-function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "none";
-
-  // Hide the reviews being shown under sentimentovertime as well 
-  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
-  document.getElementById("sentimentReviewsContainer").style.display = "none";
-  
-  let chosenReviewsWithFullData = [];
-  for (x in chosenReviews){
-    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
-                                    review_text : refactoredResponse[chosenReviews[x]].review_text})
-  }
-
-  console.log(chosenReviewsWithFullData)
-  // Sort By Reviews By Date
-  chosenReviewsWithFullData.sort(function(a,b){
-    return new Date(b.review_date) - new Date(a.review_date);
-  });
-
-
-  for (x in chosenReviewsWithFullData){
-      document.getElementById("wordCloudClickedReviews").innerHTML +=
-          `<div class="card mr-3 ml-3 mt-2">
-              <div class="card-body">
-              <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-              <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-              </div>
-          </div>`;
-  }
-
-}
-
-function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
-  document.getElementById("wordCloudClickedReviews").innerHTML = '';
-  document.getElementById("wordCloudReviewsContainer").style.display = "block";
-  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
-  document.getElementById("displayLegend").style.display = "block";
-
-  // Hide the reviews being shown under sentimentovertime as well 
-  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
-  document.getElementById("sentimentReviewsContainer").style.display = "none";
-
-  chosenReviews = chosenReviews.split(",");
-  
-  let chosenReviewsWithFullData = [];
-  for (x in chosenReviews){
-    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
-                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
-                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun)})
-  }
-
-  // Sort By Reviews By Date
-  chosenReviewsWithFullData.sort(function(a,b){
-    return new Date(b.review_date) - new Date(a.review_date);
-  });
-
-  //Display the values
-  for (x in chosenReviewsWithFullData){
-    document.getElementById("wordCloudClickedReviews").innerHTML +=
-            `<div class="card mr-3 ml-3 mt-2">
-                <div class="card-body">
-                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                </div>
-            </div>`;      
-  }
-}
-
 function drawWordcLOUD(){     
 
   console.log(document.getElementById('wordCloudContainer').offsetHeight);
@@ -477,4 +405,93 @@ function drawWordcLOUD(){
     });
 
   wordCloudSVG.start();
+}
+
+
+
+function getLogoType(reviewID){
+  if(reviewID.split("-")[1] == 1){
+    return "googleMapsLogo.png"
+  } 
+  return "tripAdvisorLogo.png"
+}
+
+function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "none";
+
+  // Hide the reviews being shown under sentimentovertime as well 
+  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+  document.getElementById("sentimentReviewsContainer").style.display = "none";
+  
+  let chosenReviewsWithFullData = [];
+  for (x in chosenReviews){
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]].review_date),
+                                    review_text : refactoredResponse[chosenReviews[x]].review_text})
+  }
+
+  console.log(chosenReviewsWithFullData)
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
+
+
+  for (x in chosenReviewsWithFullData){
+    let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
+    document.getElementById("wordCloudClickedReviews").innerHTML +=
+        `<div class="card mr-3 ml-3 mt-2">
+            <div class="card-body">
+            <h6 class="reviewHeaderFont">
+              <img src="images/${imageName}" width='30px' height="auto">
+              Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+            </h6>
+            <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+            </div>
+        </div>`;
+  }
+
+}
+
+function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
+  document.getElementById("wordCloudClickedReviews").innerHTML = '';
+  document.getElementById("wordCloudReviewsContainer").style.display = "block";
+  document.getElementById('wordCloudReviewsContainer').scrollIntoView({block: "end",behavior:'smooth'});
+  document.getElementById("displayLegend").style.display = "block";
+
+  // Hide the reviews being shown under sentimentovertime as well 
+  document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
+  document.getElementById("sentimentReviewsContainer").style.display = "none";
+
+  chosenReviews = chosenReviews.split(",");
+  
+  let chosenReviewsWithFullData = [];
+  for (x in chosenReviews){
+    chosenReviewsWithFullData.push({review_id   : chosenReviews[x],
+                                    review_date : new Date(refactoredResponse[chosenReviews[x]]['review_date']),
+                                    review_text : highlight_word(refactoredResponse[chosenReviews[x]]['review_text'],adj,noun)})
+  }
+
+  // Sort By Reviews By Date
+  chosenReviewsWithFullData.sort(function(a,b){
+    return new Date(b.review_date) - new Date(a.review_date);
+  });
+
+  //Display the values
+  for (x in chosenReviewsWithFullData){
+    let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
+    document.getElementById("wordCloudClickedReviews").innerHTML +=
+            `<div class="card mr-3 ml-3 mt-2">
+                <div class="card-body">
+                <h6 class="reviewHeaderFont">
+                  <img src="images/${imageName}" width='30px' height="auto">
+                  Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                </h6>
+                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+                </div>
+            </div>`;      
+  }
 }

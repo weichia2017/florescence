@@ -450,6 +450,13 @@ function drawWordcLOUD(w,h,subzoneChoice){
 
 
 
+function getLogoType(reviewID){
+  if(reviewID.split("-")[1] == 1){
+    return "googleMapsLogo.png"
+  } 
+  return "tripAdvisorLogo.png"
+}
+
 function highlight_word(searchpara,adj,noun)
 {
   var pattern=new RegExp("\\b"+adj+"\\b", "gi");
@@ -483,32 +490,40 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
 
   if(isCallForSubZone){
     for (x in chosenReviewsWithFullData){
-        console.log(storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]);
-        document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
-                `<div class="card mr-3 ml-3 mt-2">
-                <div class="card-body">
-                <h6 class="reviewBodyFont" style="font-size:20px">
-                  <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
-                    store
-                  </span>
-                  <div class="float-left ml-1">
-                    ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
-                  </div> 
-                </h6>
-                <br>
-                <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
-                <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
-                </div>
-            </div>`;      
+      let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
+      // console.log(storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]);
+      document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
+              `<div class="card mr-3 ml-3 mt-2">
+              <div class="card-body">
+              <h6 class="reviewBodyFont" style="font-size:20px">
+                <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-left">
+                  store
+                </span>
+                <div class="float-left ml-1">
+                  ${storeIDandNameDict[chosenReviewsWithFullData[x]['store_id']]}
+                </div> 
+              </h6>
+              <br>
+              <h6 class="reviewHeaderFont">
+                <img src="images/${imageName}" width='30px' height="auto">
+                Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+              </h6>
+              <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
+              </div>
+          </div>`;      
     }
   }
   else{
     //Display the values
     for (x in chosenReviewsWithFullData){
+      let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
       document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <h6 class="reviewHeaderFont">
+                    <img src="images/${imageName}" width='30px' height="auto">
+                    Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                  </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                   </div>
               </div>`;      
@@ -546,6 +561,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
   if (isCallForSubZone){
     //Display the values
     for (x in chosenReviewsWithFullData){
+      let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
       document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
@@ -558,7 +574,10 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
                     </div> 
                   </h6>
                   <br>
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <h6 class="reviewHeaderFont">
+                    <img src="images/${imageName}" width='30px' height="auto">
+                    Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                  </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                   </div>
               </div>`;      
@@ -566,10 +585,14 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
   }else{
     //Display the values
     for (x in chosenReviewsWithFullData){
+      let imageName = getLogoType(chosenReviewsWithFullData[x].review_id);
       document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML +=
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
-                  <h6 class="reviewHeaderFont">Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}</h6>
+                  <h6 class="reviewHeaderFont">
+                    <img src="images/${imageName}" width='30px' height="auto">
+                    Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
+                  </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
                   </div>
               </div>`;      
