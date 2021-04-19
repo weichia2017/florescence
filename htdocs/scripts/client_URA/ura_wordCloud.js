@@ -311,6 +311,8 @@ function drawWordcLOUD(w,h,subzoneChoice){
           .attr("text-anchor", "middle")
           .style("font-family", fontFam)
           .attr("transform", `translate(${nounX},${nounY}) rotate(${rotate})`)
+          .attr("data-toggle", "modal")
+          .attr("data-target", "#displayNounAdjModal")
           .text(text.split(".")[1])
           .classed("click-only-text", true)
           .style("fill", color => randomColor());
