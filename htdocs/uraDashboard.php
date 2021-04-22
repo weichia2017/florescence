@@ -1,11 +1,6 @@
-<!-- <?php  
-$storeID = '1';
-if( isset($_GET['storeID']) ){
-  $storeID = $_GET['storeID'];
-  if($storeID == '')
-    $storeID = '1';
-}
-?> -->
+<?php  
+require_once  'include/commonAdmin.php';
+?>
 <!Doctype html>
   <head>
     <meta charset="utf-8">
@@ -361,14 +356,14 @@ if( isset($_GET['storeID']) ){
         
           <!-- Change Password Tab -->
           <li class="nav-item">
-              <a class="nav-link" th:href="@{/resetPasswordLoggedIn}">
+              <a class="nav-link" href="">
                   <i class="fa fa-exchange text-light"></i> Change Password
               </a>
           </li>
 
           <!-- Logout Tab -->
           <li class="nav-item">
-              <a class="nav-link" th:href="@{/logout}">
+              <a class="nav-link" href="processLogout.php">
                   <i class="fa fa-power-off text-light"></i> Logout
               </a>
           </li>
@@ -386,7 +381,7 @@ if( isset($_GET['storeID']) ){
             <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="">Change Password</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="">Logout</a>
+                <a class="dropdown-item" href="processLogout.php">Logout</a>
             </div>
         </li>
       </ul>
