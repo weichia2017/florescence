@@ -1,11 +1,13 @@
 <?php  
 require_once  'include/common.php';
 
-$storeID = '1';
+$storeID = '';
 if( isset($_SESSION["storeID"]) ){
   $storeID = $_SESSION["storeID"];
-  if($storeID == '')
-    $storeID = '1';
+}
+
+if( isset($_SESSION["name"]) ){
+  $userName = $_SESSION["name"];
 }
 ?>
 <!Doctype html>
@@ -209,13 +211,6 @@ if( isset($_SESSION["storeID"]) ){
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
-<!-- 
-  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
-    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><span class="shopName"></span></div>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </header> -->
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -279,7 +274,39 @@ if( isset($_SESSION["storeID"]) ){
   </nav>
 
   <main class="container" style="z-index: 0">
-    <input type="hidden" value=<?= $storeID?>  id="getStoreID">
+    <input type="hidden" value=<?= $storeID?>   id="getStoreID">
+    <input type="hidden" value=<?= $userName?>  id="getUserName">
+
+    <div id="accountVerificationMode" class="container mb-5 mt-5">
+
+      <!-- ======================================== -->   
+      <!--        ACCOUNT VERIFICATION MODE         -->
+      <!-- ======================================== -->
+      <div class="row">
+        <div class="col border border-secondary p-2 rounded mb-2 white-bg shadow">
+          <div class="lead">
+            <div style="font-size:30px; color: rgb(92, 92, 92)" class="material-icons float-left">
+              warning_amber  
+            </div>
+            <div class="float-left ml-1 headings">Account verification: </div> 
+          </div>
+          <br>
+          <hr>
+          <div class='p-2 text-center mt-5'>
+            <div style="font-size:50px; color: #fdcc0d;" class="material-icons text-center">
+                    warning_amber  
+            </div>
+            <br>
+            <span id="clickEmailLinkForVerification"></span>
+             
+          </div>
+          <br>
+          <br>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </div>
 
     <div id="unableToDisplayMode" class="container mb-5 mt-5">
 
@@ -635,6 +662,7 @@ if( isset($_SESSION["storeID"]) ){
     }
 
     var hostname = "http://35.175.55.18:5000";
+    var emailToSendForVerification = 'LIN_Yanling@ura.gov.sg';
     selectedReview='';
     limitNormalMode = 10;
     let width  = $(window).width();
@@ -645,6 +673,7 @@ if( isset($_SESSION["storeID"]) ){
     let posColor = "#79a925"
     let negColor = "#FF4136"
 
+    document.getElementById("accountVerificationMode").style.display        = "none";
     document.getElementById("unableToDisplayMode").style.display            = "none";
     document.getElementById("normalMode").style.display                     = "none";
 
@@ -654,8 +683,9 @@ if( isset($_SESSION["storeID"]) ){
     document.getElementById("wordCloudContainerSpinner").style.display      = "none";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
       
-    let storeIDByUser = document.getElementById('getStoreID').value;
-    let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
+    let shopID    = document.getElementById('getStoreID').value;
+    let usersName = document.getElementById('getUserName').value;
+    // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
     
 
     function populateReviews(storeBased_Reviews){
@@ -693,9 +723,25 @@ if( isset($_SESSION["storeID"]) ){
       }
     }
 
+    function showVerificationMode(){
+      document.getElementById("accountVerificationMode").style.display = "block";
+      document.getElementById("unableToDisplayMode").style.display     = "none";
+      document.getElementById("normalMode").style.display              = "none";
+
+      
+
+      document.getElementById("clickEmailLinkForVerification").innerHTML += 
+      ` Dear ${usersName}, thank you for your interest in our dashboard.<br> 
+        Due to privacy issues, we will require some verification so that we can be sure we are sharing the dashboard information to the right person.<br><br>
+        Please  <a href=mailto:${emailToSendForVerification}?subject="FlourishingOurLocale_Dashboard_Ownership_Request">click here</a>
+        to contact our staff to verify your particulars on your store ownership details.`;
+      document.getElementById("main-overlay").style.display            = "none";
+    }
+
     function showUnableToDisplay(storeBased_Reviews){
-      document.getElementById("unableToDisplayMode").style.display = "block";
-      document.getElementById("normalMode").style.display          = "none";
+      document.getElementById("accountVerificationMode").style.display = "none";
+      document.getElementById("unableToDisplayMode").style.display     = "block";
+      document.getElementById("normalMode").style.display              = "none";
       
       let totalReviews = storeBased_Reviews.length;
       let elements = document.getElementsByClassName('noOfReviews');
@@ -706,8 +752,9 @@ if( isset($_SESSION["storeID"]) ){
     }
 
     function showNormalMode(storeBased_Reviews){
-      document.getElementById("unableToDisplayMode").style.display = "none";
-      document.getElementById("normalMode").style.display          = "block";
+      document.getElementById("accountVerificationMode").style.display = "none";
+      document.getElementById("unableToDisplayMode").style.display     = "none";
+      document.getElementById("normalMode").style.display              = "block";
 
       // Wordcloud
       let wordCloudData  = [];
@@ -725,6 +772,12 @@ if( isset($_SESSION["storeID"]) ){
     let sentimentDataForWordCloud = [];
     async function mainCall(){
       document.getElementById("main-overlay").style.display = "block";
+
+      console.log(shopID);
+      if(shopID == 'null'){
+        showVerificationMode();
+        return;
+      }
       getStoreName();
 
       let response = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
@@ -806,7 +859,6 @@ if( isset($_SESSION["storeID"]) ){
       // console.log(refactoredResponse)
     }
 
-    //Temporary till we have user Login Feature
     async function getStoreName(){
       let storeInfo = await makeRequest(hostname + "/stores/" + shopID, "GET", "");
       // document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
