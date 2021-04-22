@@ -37,7 +37,7 @@ if(isset ($_SESSION["userID"])){
 
     body {
       background-color: #F0F2F5;
-      background-image: url("images/FlourishingOurLocaleXs.jpg");
+      background-image: url("images/FlourishingOurLocaleXXs.jpg");
       background-size:cover;                   
       background-repeat: no-repeat;
       background-position: center 40%;   
@@ -118,19 +118,21 @@ if(isset ($_SESSION["userID"])){
 <script>
 
   $('#password,#username').keyup(function () {
-    const errorMsg = document.getElementById("errorMsg");
-    errorMsg.innerText = "";
-             
-    if($('#username').val() == ""){
-      errorMsg.innerText = "Username cannot be emty";
-      document.getElementById("loginBtn").disabled = true;
-    }
-    else if($('#password').val()==""){
-      errorMsg.innerText = "Password cannot be empty";
-      document.getElementById("loginBtn").disabled = true;
-    }
-    else{
-      document.getElementById("loginBtn").disabled = false;
+    if ($('#username').val() && $('#password').val()) {
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.innerText = "";
+              
+      if($('#username').val() == ""){
+        errorMsg.innerText = "Username cannot be emty";
+        document.getElementById("loginBtn").disabled = true;
+      }
+      else if($('#password').val()==""){
+        errorMsg.innerText = "Password cannot be empty";
+        document.getElementById("loginBtn").disabled = true;
+      }
+      else{
+        document.getElementById("loginBtn").disabled = false;
+      }
     }
   });
 
@@ -186,6 +188,14 @@ if(isset ($_SESSION["userID"])){
     }
   }
   document.getElementById("loginBtn").disabled = true;
+
+  var input = document.getElementById("password");
+  input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("loginBtn").click();
+    }
+  });
 
 </script>
 </body>
