@@ -90,31 +90,31 @@ $adminID = $_SESSION["userID"];
     <div class="container mb-5 mt-5" style="background-color:white">
 
     <div class="row">
-        <div class="col border border-secondary p-4 rounded mb-2 white-bg shadow ">
-        <span id="closeDDL${userID}"  style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
-            supervisor_account
-        </span>
-        <span id="closeDDL${userID}"  style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
-            compare_arrows
-        </span>
-     
-        <span id="closeDDL${userID}"  style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
-            store
-        </span>
-        <span class="headings">
-            Manage Stores Assignment
-        </span>
-        <hr>
-        <table id="manageUsersTable" class="table mytable table-hover table-striped table-bordered dt-responsive nowrap shadow-sm text-center" style="width:100%">
-            <thead> 
-                <tr>
-                    <th>Store</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody><!-- Data Dynamically Populated --></tbody>
-        </table>
+        <div class="col border border-secondary p-4 rounded white-bg shadow ">
+            <span style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
+                supervisor_account
+            </span>
+            <span style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
+                compare_arrows
+            </span>
+        
+            <span style="font-size:28px; color: rgb(92, 92, 92)"  class="material-icons">
+                store
+            </span>
+            <span class="headings">
+                Manage Stores Assignment
+            </span>
+            <hr>
+            <table id="manageUsersTable" class="table mytable table-hover table-striped table-bordered dt-responsive nowrap shadow-sm text-center" style="width:100%">
+                <thead> 
+                    <tr>
+                        <th>Store</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody><!-- Data Dynamically Populated --></tbody>
+            </table>
         </div>
     </div>
     </div>
@@ -136,7 +136,7 @@ $adminID = $_SESSION["userID"];
 
     // Creates the datatable setting its properties
     $('#manageUsersTable').DataTable({
-        "pageLength": 25,
+        "pageLength": datableRowsPerPage,
         fixedHeader: {
             header: true,
             footer: false

@@ -59,4 +59,5 @@ function makeRequestxwwwFormURLEncode(url,method,values) {
     });
 }
 
-var hostname = "http://35.175.55.18:5000";
+var hostname           = "http://35.175.55.18:5000";
+var datableRowsPerPage = 25; //10,25,50 or 100 only
