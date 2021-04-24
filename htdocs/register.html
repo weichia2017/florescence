@@ -1,0 +1,246 @@
+<!Doctype html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Account Registration</title>
+
+    <!-- Load common.js from scripts folder -->
+    <script src="scripts/common.js"></script>
+
+    <!-- Material Design (External) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bootstrap CSS (External) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Load Anton font from google fonts (External) -->
+    <!-- https://fonts.google.com/specimen/Anton?preview.text_type=custom&sidebar.open=true&selection.family=Anton -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F0F2F5;
+        }
+
+        .registerContainer {
+            /* float:right; */
+            border-radius: 7.5px;
+            margin-top: 0px;
+            background-color: white;
+            padding: 15px;
+        }
+
+        .registerContainer img {
+            width: 50px;
+        }
+
+        .row {
+            height: 100vh;
+        }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="row align-items-center">
+    <!-- Main container -->
+    <div class="container text-center col-10 col-sm-8 col-md-7 col-lg-5 col-5 shadow-lg mx-auto d-block registerContainer">
+
+        <!-- ICON/IMAGE GOES HERE -->
+        <!-- <img src="images/Vessel.png" class="img-fluid mx-auto d-block"> -->
+        <div style="font-size:50px; color: rgb(92, 92, 92)" class="material-icons">
+            account_circle
+        </div>
+
+
+        <!-- Container Text -->
+        <p class="lead text-center text-secondary">Sign Up</p>
+        <hr>
+        <p class="lead text-center text-secondary">Please enter your details</p>
+
+        <!-- Register Form -->
+        <!-- <form id="register-form" action= "http://35.175.55.18:5000/users/create" method="POST"> -->
+
+        <!-- Name Field -->
+        <div class="form-group">
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group">
+            <input type="password" name="cfmPassword" id="cfmPassword" class="form-control" placeholder="Confirm Password">
+        </div>
+
+        <!-- Error Messages -->
+        <div id="errorMsg" class="form-group" style="color: red;" ></div>
+         <!-- Error Messages -->
+         <div id="successMsg" class="form-group" style="color: green;" ></div>
+
+        <!-- SignUp Button -->
+        <button type="submit" onclick="submitCreationRequest()" class="btn btn-success btn-block text-white" id="singUpBtn" disabled>Sign Up</button>
+
+        <!-- Seperator -->
+        <hr>
+
+        <!-- Return to Login Link -->
+        <!-- <a href="/index.html">Return to Login</a> -->
+        <a href="/Florescence/htdocs/index.php">Return to Login</a>
+
+
+    </div>
+    </div>
+  
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+       
+        
+        function CheckPwd(pw, cfmpw) {
+            const errorMsg = document.getElementById("errorMsg");
+            if (pw === cfmpw) {
+                errorMsg.innerText = "";
+                successMsg.innerText = "";
+                return true;
+            }
+
+            errorMsg.innerText = "Passwords do not match";
+            document.getElementById("singUpBtn").disabled = true;
+            return false;
+        }
+
+        function CheckEmail(enteredEmail){
+            const errorMsg = document.getElementById("errorMsg");
+            var re = /\S+@\S+\.\S+/;
+            //Check if email is valid
+            if (!(re.test(enteredEmail))) {
+                errorMsg.innerText = "";
+                successMsg.innerText = "";
+                errorMsg.innerText = "Please enter a valid email";
+                return false;
+            }
+            return true
+        }
+
+        function CheckName(enteredName){
+            const errorMsg = document.getElementById("errorMsg");
+            //Check if name is valid
+            if (enteredName == "" || enteredName.length <= 2 || /\d/.test(enteredName)) {
+                errorMsg.innerText = "";
+                successMsg.innerText = "";
+                errorMsg.innerText = "Please enter a valid name";
+                return false;
+            }
+            return true;
+        }
+
+ 
+        $('#password,#cfmPassword,#name,#email').keyup(function () {
+        //Only if the both password fields are not empty
+        if ($('#password').val() && $('#cfmPassword').val() && $('#name').val() && $('#email').val()) {
+            let isPasswordOk = CheckPwd( $('#password').val(), $('#cfmPassword').val() );
+            let isEmailOk    = CheckEmail( $('#email').val() );
+            let isNameOk     = CheckName(  $('#name').val() )
+
+            if(isNameOk && isEmailOk && isPasswordOk){
+                document.getElementById("singUpBtn").disabled = false;
+            }else{
+                document.getElementById("singUpBtn").disabled = true;
+            }
+        
+        }
+        });
+        document.getElementById("singUpBtn").disabled = true;
+
+
+        async function submitCreationRequest(){
+
+            let isPasswordOk = CheckPwd( $('#password').val(), $('#cfmPassword').val() );
+            let isEmailOk    = CheckEmail( $('#email').val() );
+            let isNameOk     = CheckName(  $('#name').val() )
+
+            // Recheck Values if user tries to BYPASS by inspecting element and enabling submit button
+            if(isNameOk && isEmailOk && isPasswordOk){
+                document.getElementById("singUpBtn").disabled = false;
+
+                let requestParameters = "name=" + encodeURIComponent($('#name').val()) +
+                                        "&email=" + encodeURIComponent($('#email').val()) +
+                                        "&password=" + encodeURIComponent($('#password').val());
+                // console.log(requestParameters)
+                let creationResponse  = await makeRequestxwwwFormURLEncode(hostname + "/users/create", "POST", requestParameters);
+                let responseMsg = JSON.parse(creationResponse)['response'];
+                const errorMsg = document.getElementById("errorMsg");
+                const successMsg = document.getElementById("successMsg");
+                errorMsg.innerText = "";
+                successMsg.innerText = "";
+
+                // console.log(responseMsg);
+
+                if(responseMsg == "User Exist"){
+                    errorMsg.innerText = "User Already Exist";
+                }else if(responseMsg == "Server Error"){
+                    errorMsg.innerText = "Server Error Please Try Again Soon";
+                }else if(responseMsg == false){
+                    errorMsg.innerText = "Invalid Name or email";
+                }else{
+                    successMsg.innerText = "Successfully created account";
+                    document.getElementById("name").value = ""
+                    document.getElementById("email").value = ""
+                    document.getElementById("cfmPassword").value = ""
+                    document.getElementById("password").value = ""
+                    document.getElementById("singUpBtn").disabled = true;
+                }
+            }
+
+        }
+
+
+        function addEnterEventListner(){
+            let name   = document.getElementById("name");
+            let email  = document.getElementById("email");
+            let pwd    = document.getElementById("password");
+            let cfmPwd = document.getElementById("cfmPassword");
+            name.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("singUpBtn").click();
+                }
+            });
+            email.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("singUpBtn").click();
+                }
+            });
+            pwd.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("singUpBtn").click();
+                }
+            });
+            cfmPwd.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("singUpBtn").click();
+                }
+            });
+        }
+        
+        addEnterEventListner()
+    </script>
+  </body>
+</html>
