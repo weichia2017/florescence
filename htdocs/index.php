@@ -77,7 +77,7 @@ if(isset ($_SESSION["userID"])){
 
       <!-- Username Field -->
       <div class="form-group">
-        <input type="username" name="username" id="username" class="form-control" placeholder="Username" required>
+        <input type="username" name="username" id="username" class="form-control" placeholder="Email Address" required>
       </div>
 
       <!-- Password Field -->
@@ -169,12 +169,12 @@ if(isset ($_SESSION["userID"])){
         let user_id  = JSON.parse(creationResponse)['user_id']
         let admin    = JSON.parse(creationResponse)['admin'];
 
-        console.log(name)
-        console.log(store_id)
-        console.log(user_id)
-        console.log(admin)
+        // console.log(name)
+        // console.log(store_id)
+        // console.log(user_id)
+        // console.log(admin)
    
-        let url = 'http://localhost/Florescence/htdocs/processLogin.php';
+        let url = '/Florescence/htdocs/processLogin.php';
         let form = $(
           `<form action="${url}" method="POST">
             <input type="text" name="name" value="${name}"/>
