@@ -173,7 +173,7 @@ $adminID = $_SESSION["userID"];
         dataTable.clear().draw();
 
         for(user in listOfUsers){
-            if(listOfUsers[user]['name'] != 'admin'){
+            if(listOfUsers[user]['admin'] != '1'){
 
                 let userID      = listOfUsers[user]['user_id'];
 
