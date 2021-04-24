@@ -1,9 +1,14 @@
+<?php
+// if( isset($_SESSION["name"]) ){
+//     $userName = $_SESSION["name"];
+// }
+?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <a id="navBarBrand"><span style="font-family: 'Satisfy', cursive;font-size: 1.3em;">Flourishing Our Locale : </span>Tanjong Pagar</a>
+      <a id="navBarBrand"><span style="font-family: 'Satisfy', cursive;font-size: 1.3em;">Flourishing Our Locale : </span><span class="shopName"></span></a>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> 
         <!-- <li class="nav-item active">
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
@@ -24,23 +29,17 @@
       <!-- ONLY SHOW IN MOBILE VIEW -->
       <!-- ======================== -->
       <ul class="navbar-nav mr-auto mobile-navbar">
-          <!-- Change Password Tab -->
-          <li class="nav-item">
-              <a class="nav-link" href="uraDashboard.php">
-                Dashboard
-              </a>
-          </li>
 
-          <!-- Change Password Tab -->
-          <li class="nav-item">
-              <a class="nav-link" href="manageUsers.php">
-                Manage Stores
+         <!-- Dashboard Tab -->
+         <li class="nav-item">
+              <a class="nav-link" href="dashboard.php">
+                Dashboard
               </a>
           </li>
         
           <!-- Change Password Tab -->
           <li class="nav-item">
-              <a class="nav-link" href="uraUpdatePassword.php"">
+              <a class="nav-link" href="bizUpdatePassword.php">
                 Change Password
               </a>
           </li>
@@ -48,7 +47,7 @@
           <!-- Logout Tab -->
           <li class="nav-item">
               <a class="nav-link" href="processLogout.php">
-                  <i class="fa fa-power-off text-light"></i> Logout
+                Logout
               </a>
           </li>
       </ul>
@@ -63,15 +62,13 @@
             Account
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="uraDashboard.php">Dashboard</a>
+                <a class="dropdown-item" href="dashboard.php">Dashboard</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="manageUsers.php">Manage Stores</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="uraUpdatePassword.php">Change Password</a>
+                <a class="dropdown-item" href="bizUpdatePassword.php">Change Password</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="processLogout.php">Logout</a>
             </div>
         </li>
       </ul>
     </div>
-</nav>
+  </nav>
