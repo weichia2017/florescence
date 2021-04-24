@@ -1,6 +1,5 @@
 <?php  
 require_once  'include/commonAdmin.php';
-require_once  'uraNavBar.php';
 ?>
 <!Doctype html>
   <head>
@@ -279,6 +278,9 @@ require_once  'uraNavBar.php';
   </head>
 
   <body>
+  <!-- NavBar -->
+  <?php require_once  'uraNavBar.php' ?>
+  
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>

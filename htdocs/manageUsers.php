@@ -1,6 +1,5 @@
 <?php
 require_once  'include/commonAdmin.php';
-require_once  'uraNavBar.php';
 
 $adminID = $_SESSION["userID"];
 ?>
@@ -80,6 +79,9 @@ $adminID = $_SESSION["userID"];
     </head>
 
     <body>
+    <!-- NavBar -->
+    <?php require_once  'uraNavBar.php' ?>
+
     <input type="hidden" value=<?= $adminID?>  id="getAdminID">
 
     <div id="main-overlay">

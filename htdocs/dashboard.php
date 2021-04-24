@@ -1,6 +1,5 @@
 <?php  
 require_once  'include/common.php';
-require_once  'bizNavBar.php';
 
 $storeID = '';
 if( isset($_SESSION["storeID"]) ){
@@ -21,6 +20,9 @@ if( isset($_SESSION["name"]) ){
     <!-- Load common.js from scripts folder -->
     <script src="scripts/common.js"></script>
 
+    <!-- Load common.css from scripts folder -->
+    <link rel="stylesheet" href="css/common.css">
+
     <!-- Material Design (External) -->
     <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
@@ -33,7 +35,7 @@ if( isset($_SESSION["name"]) ){
 
     <!-- Load fonts from google fonts (External) -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&family=Satisfy&display=swap" rel="stylesheet">
 
     <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
     <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
@@ -56,15 +58,15 @@ if( isset($_SESSION["name"]) ){
     <script src="scripts/businesses/sentimentOverTime.js" defer></script>
 
     <style>
-      body{
+      /* body{
         background-color: #F0F2F5;
-      }
+      } */
 
       .white-bg{
         background-color: white;
       }
 
-      #main-overlay {
+      /* #main-overlay {
         height: 100%;
         width: 100%;
         display: none;
@@ -74,9 +76,9 @@ if( isset($_SESSION["name"]) ){
         left: 0;
         background-color: rgb(0,0,0);
         background-color: rgba(0,0,0, 0.9);
-      }
+      } */
 
-      .navbar-brand {
+      /* .navbar-brand {
         padding-top: .75rem;
         padding-bottom: .75rem;
         font-size: 1rem;
@@ -87,7 +89,7 @@ if( isset($_SESSION["name"]) ){
       .navbar .navbar-toggler {
         top: .25rem;
         right: 1rem;
-      }
+      } */
 
       #totalNoOfReviewsContainer {
         font-family:'Anton', sans-serif;
@@ -112,11 +114,11 @@ if( isset($_SESSION["name"]) ){
         border-radius: 7px;
       }
 
-      .spinner{
+      /* .spinner{
         position: absolute;
         top: 50%;
         left: 47%;
-      }
+      } */
 
       #wordCloudWhiteBackground{
         background-image: url("images/white-bg.png");
@@ -133,9 +135,9 @@ if( isset($_SESSION["name"]) ){
         overflow-y: scroll;
       }
 
-      .pointer{
+      /* .pointer{
         cursor: pointer;
-      }
+      } */
 
       .highLightedNoun{
         /* Olive */
@@ -182,12 +184,12 @@ if( isset($_SESSION["name"]) ){
         font-weight: 300;
       }
 
-      #navBarBrand{
+      /* #navBarBrand{
         font-family: 'Open Sans', sans-serif;
         font-weight: 300;
         font-size: 1.1em;
         color:white;
-      }
+      } */
 
       @media screen and (max-width : 1920px){
           .mobile-navbar{
@@ -208,6 +210,9 @@ if( isset($_SESSION["name"]) ){
   </head>
 
   <body>
+  <!-- NavBar -->
+  <?php require_once  'bizNavBar.php'?>
+  
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>

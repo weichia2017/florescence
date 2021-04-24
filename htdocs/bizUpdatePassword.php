@@ -1,7 +1,5 @@
 <?php
 require_once  'include/common.php';
-require_once  'bizNavBar.php';
-require_once  'updatePasswordBody.php';
 ?>
 <!Doctype html>
   <head>
@@ -44,7 +42,12 @@ require_once  'updatePasswordBody.php';
   </head>
 
   <body>
+    <!-- NavBar -->
+    <?php require_once  'uraNavBar.php' ?>
+
     <!-- Contents get populated from updatePasswordBody.php -->
+    <?php  require_once  'updatePasswordBody.php' ?>
+   
     
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
