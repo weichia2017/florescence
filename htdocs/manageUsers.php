@@ -143,7 +143,7 @@ $adminID = $_SESSION["userID"];
         },
         // "targets": 'no-sort',
         // "bSort": false,
-        "order": [[0,"desc"]],
+        "order": [[0,"asc"]],
         "columnDefs": [{ "orderable": false, "targets": [1,2] }]
     } );
 
@@ -193,6 +193,7 @@ $adminID = $_SESSION["userID"];
                 if(storeName == "-"){
                     store_name.innerHTML =  
                     `<div id="ddlWithCloseIcon${userID}" class="d-flex justify-content-between">
+
                         <select id="EditDDL${userID}"  onblur="editStoreNamesText('${userID}',this)" onchange="editStoreNamesText('${userID}',this)" class="custom-select w-100" data-live-search="true" >
                             ${optionNameOptionTags}
                         </select>
