@@ -1,15 +1,18 @@
 <?php  
 require_once  'include/commonAdmin.php';
+require_once  'uraNavBar.php';
 ?>
 <!Doctype html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>URA Dashboard</title>
 
     <!-- Load common.js from scripts folder -->
     <script src="scripts/common.js"></script>
+
+    <!-- Load common.css from scripts folder -->
+    <link rel="stylesheet" media="all" href="css/common.css">
 
     <!-- Material Design (External) -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -66,10 +69,6 @@ require_once  'include/commonAdmin.php';
     <script src="scripts/client_URA/ura_sentimentOverTime.js" defer></script>
 
     <style>
-      body{
-        background-color: #F0F2F5;
-      }
-
       .white-bg{
         background-color: white;
       }
@@ -78,12 +77,6 @@ require_once  'include/commonAdmin.php';
         background-color: #d2d2d2;
       }
 
-
-      .headings{
-        font-family: 'Merienda', cursive;
-        color: rgb(100, 100, 100);
-        font-size:20px;
-      }
 
       .compareHeadings{
         font-family: 'Merienda', cursive;
@@ -107,19 +100,6 @@ require_once  'include/commonAdmin.php';
 
       .collapse-arrow-bg{
         background-color: #404040;
-      }
-
-
-      #main-overlay {
-        height: 100%;
-        width: 100%;
-        display: none;
-        position: fixed;
-        z-index: 2;
-        top: 0;
-        left: 0;
-        /* background-color: rgb(0,0,0); */
-        background-color: rgba(0, 0, 0, 0.651);
       }
 
       .totalNoOfReviewsContainer {
@@ -148,11 +128,7 @@ require_once  'include/commonAdmin.php';
         color: #fdcc0d;
       }
 
-      .spinner{
-        position: absolute;
-        top: 50%;
-        left: 47%;
-      }
+
 
       /* Overrides list-group-item from Bootstrap */ 
       .list-group-item {
@@ -183,10 +159,6 @@ require_once  'include/commonAdmin.php';
       .scrollSubzones{
         height:520px;
         overflow-y: scroll;
-      }
-
-      .pointer{
-        cursor: pointer;
       }
 
       .highLightedNoun{
@@ -280,21 +252,13 @@ require_once  'include/commonAdmin.php';
 
       /* Zoom Reset Zoom for Map */
       .leaflet-control-zoomhome a {
-            font: bold 18px "Lucida Console",Monaco,monospace;
-        }
+        font: bold 18px "Lucida Console",Monaco,monospace;
+      }
 
       a.leaflet-control-zoomhome-in,
       a.leaflet-control-zoomhome-out {
         font-size: 1.5em;
         line-height: 26px;
-      }
-
-
-      #navBarBrand{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-        font-size: 1.1em;
-        color:white;
       }
 
       @media screen and (max-width : 1920px){
@@ -311,7 +275,6 @@ require_once  'include/commonAdmin.php';
               display:inline;
           }
       }
-
     </style>
   </head>
 
@@ -319,74 +282,6 @@ require_once  'include/commonAdmin.php';
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
-
-  <!-- <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="z-index: 1">
-    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Flourishing Our Locale: Tanjong Pagar</div>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </header> -->
-
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <a id="navBarBrand"><span style="font-family: 'Satisfy', cursive;font-size: 1.3em;">Flourishing Our Locale : </span>Tanjong Pagar</a>
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> 
-        <!-- <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li> -->
-      </ul> 
-      <!-- <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form> -->
-
-      <!-- ======================== -->
-      <!-- ONLY SHOW IN MOBILE VIEW -->
-      <!-- ======================== -->
-      <ul class="navbar-nav mr-auto mobile-navbar">
-        
-          <!-- Change Password Tab -->
-          <li class="nav-item">
-              <a class="nav-link" href="">
-                  <i class="fa fa-exchange text-light"></i> Change Password
-              </a>
-          </li>
-
-          <!-- Logout Tab -->
-          <li class="nav-item">
-              <a class="nav-link" href="processLogout.php">
-                  <i class="fa fa-power-off text-light"></i> Logout
-              </a>
-          </li>
-      </ul>
-
-      <!-- =========================== -->
-      <!--  ONLY SHOW IN DESKTOP VIEW  -->
-      <!-- =========================== -->
-      <ul class="navbar-nav mr-2 desktop-navbar">
-        <!-- Dropdown -->
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Account
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="">Change Password</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="processLogout.php">Logout</a>
-            </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
   
 
   <main class="container" style="z-index: 0">

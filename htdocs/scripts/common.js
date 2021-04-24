@@ -24,7 +24,7 @@ function makeRequest(url,method,values) {
       // request.setRequestHeader('Authorization', 'Bearer ' + token)
       request.setRequestHeader("Content-type", "application/JSON");
       request.setRequestHeader('Access-Control-Allow-Origin', '*');
-      // request.withCredentials = false;
+    //   request.withCredentials = false;
       request.send(values);
     });
 }
