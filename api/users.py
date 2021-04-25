@@ -27,15 +27,15 @@ def login():
     password = request.form.get('password')
     with DataAccess() as dao:
         try:
-            row = dao.getUserByEmail(email)[0]
-            if len(dao.getUserByEmail(email)) == 0:
+            try:
+                row = dao.getUserByEmail(email)[0]
+            except:
                 return jsonify(response="User not found"), 400
             if not row['active']:
                 return jsonify(response="Account is not active"), 400
             if check_password_hash(row['password'], password):
-                if row['admin']:
-                    return jsonify(response=True, user_id=row['user_id'], admin=row['admin']), 200
-                return jsonify(response=True, user_id=row['user_id'], store_id=row['store_id']), 200
+                return jsonify(response=True, user_id=row['user_id'], name=row['name'],     \
+                                       admin=row['admin'], store_id=row['store_id']), 200
             else:
                 return jsonify(response="Incorrect Password"), 401
         except Exception as e:
@@ -48,22 +48,33 @@ def changePassword():
     user_id = request.form.get('user_id')
     password = request.form.get('password')
     newPassword = request.form.get('newPassword')
+    checkOnly = request.form.get('checkOnly')
+    
+    if checkOnly not in ["True", "true", "1"] and (newPassword == None or newPassword == ""):
+        return jsonify(response="Missing new password"), 401
+    
     hashed_password = generate_password_hash(newPassword, method='sha256')
     with DataAccess() as dao:
         try:
-            row = dao.getUserByUserId(user_id)[0]
-            if len(row) == 0:
+            try:
+                row = dao.getUserByUserId(user_id)[0]
+            except:
                 return jsonify(response="Account not found"), 400
+            
+            if checkOnly in ["True", "true", "1"]:
+                if not check_password_hash(row['password'], password):
+                    return jsonify(response="Incorrect existing password"), 401
+                else:
+                    return jsonify(response="Valid Password"), 200
+            
             if check_password_hash(row['password'], password):
-                results = dao.updateUserPassword(
-                    row['user_id'], hashed_password)
+                results = dao.updateUserPassword(row['user_id'], hashed_password)
                 return jsonify(response=results), 200
             else:
                 return jsonify(response="Incorrect existing password"), 401
         except Exception as e:
             return jsonify(response="Server Error", error=e), 500
     return jsonify(response="Server Error"), 500
-
 
 @bp.route('/update/store_id', methods=['POST'])
 def changeStoreId():
@@ -79,6 +90,7 @@ def changeStoreId():
         except Exception as e:
             return jsonify(response="Server Error", error=e), 500
     return jsonify(response="Server Error"), 500
+
 
 @bp.route('/users', methods=['POST'])
 def getAllUsers():

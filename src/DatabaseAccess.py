@@ -35,7 +35,7 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
             LEFT JOIN raw_reviews rr ON
@@ -45,7 +45,7 @@ class DataAccess:
             GROUP BY
                 s.store_id
             ORDER BY
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
         '''
         output = self.__executeSelectQuery(query)
         if not return_as_dataframe:
@@ -67,7 +67,7 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
             LEFT JOIN raw_reviews rr ON
@@ -79,7 +79,7 @@ class DataAccess:
             GROUP BY
                 s.store_id
             ORDER BY
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
         '''
         args = (store_id,)
         output = self.__executeSelectQuery(query, args)
@@ -102,7 +102,7 @@ class DataAccess:
                 s.tripadvisors_url,
                 AVG(ss.compound) as "average_compound",
                 COUNT(ss.compound) as "num_of_reviews",
-                (2+COUNT(ss.compound)*AVG(ss.compound))/(3+2+COUNT(ss.compound)) as "beta_score"
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) as "beta_score"
             FROM
                 stores s
             LEFT JOIN raw_reviews rr ON
@@ -114,7 +114,7 @@ class DataAccess:
             GROUP BY
                 s.store_id
             ORDER BY
-                (3+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
+                (2+COUNT(ss.compound)*AVG(ss.compound))/(2+3+COUNT(ss.compound)) DESC
         '''
         args = (road_id,)
         output = self.__executeSelectQuery(query, args)
@@ -320,7 +320,7 @@ class DataAccess:
 
     def getUserByEmail(self, email):
         query = '''
-            SELECT * FROM users WHERE email = %s
+            SELECT * FROM users WHERE email = %s 
         '''
         args = (email,)
         return self.__executeSelectQuery(query, args)
@@ -334,7 +334,7 @@ class DataAccess:
 
     def getAllUsers(self):
         query = '''
-            SELECT user_id, email, name, active, admin, store_id FROM users
+            SELECT user_id, email, name, active, admin, s.store_id, s.store_name FROM users u LEFT JOIN stores s ON s.store_id = u.store_id
         '''
         return self.__executeSelectQuery(query)
     
@@ -346,6 +346,7 @@ class DataAccess:
         return self.__executeModificationQuery(query, args)
 
     def updateStoreId(self, user_id, store_id):
+        store_id = None if store_id == 'None' else store_id
         query = '''
             UPDATE `users` SET `store_id` = %s WHERE `users`.`user_id` = %s;
         '''

@@ -19,6 +19,8 @@ def Roads():
 def Road(road_id):
     df = None
     with DataAccess() as dao:
+        if road_id not in dao.getRoads().index.to_list():
+            return jsonify(error="The road identifier was not found"), 400
         try:
             df = dao.getRoad(road_id).reset_index()
             return jsonify(data=df.to_dict('records')), 200
