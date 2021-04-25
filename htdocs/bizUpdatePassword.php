@@ -43,7 +43,7 @@ require_once  'include/common.php';
 
   <body>
     <!-- NavBar -->
-    <?php require_once  'uraNavBar.php' ?>
+    <?php require_once  'bizNavBar.php' ?>
 
     <!-- Contents get populated from updatePasswordBody.php -->
     <?php  require_once  'updatePasswordBody.php' ?>
