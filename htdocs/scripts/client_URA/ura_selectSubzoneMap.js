@@ -5,7 +5,12 @@ zoomHome.addTo(map);
 
 L.esri.basemapLayer('Topographic').addTo(map);
 
+const mapDiv = document.getElementById("tanjongPagarMap");
+const resizeObserver = new ResizeObserver(() => {
+  map.invalidateSize();
+});
 
+resizeObserver.observe(mapDiv);
 
 // OVERALL
 function onClick(e) {
