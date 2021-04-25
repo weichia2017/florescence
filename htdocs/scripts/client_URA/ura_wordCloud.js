@@ -73,7 +73,6 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
         if( (response[parseInt(x)+1] !== undefined && currentNoun != response[parseInt(x)+1].noun) || 
             response[parseInt(x)+1] === undefined){
             
-            // console.log(fontsizeIdentifierCount);
             let multiplier = 0
             if(fontsizeIdentifierCount >30){
               multiplier= 30;
@@ -90,33 +89,6 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
             }else if(fontsizeIdentifierCount >1){
               multiplier = 95;
             }
-
-            // console.log(fontsizeIdentifierCount);
-            // let multiplier = 1
-            // if(fontsizeIdentifierCount > 50){
-            //   multiplier= 10;
-            // }else if(fontsizeIdentifierCount > 45){
-            //   multiplier= 15;
-            // }else if(fontsizeIdentifierCount > 40){
-            //   multiplier= 20;
-            // }else if(fontsizeIdentifierCount > 35){
-            //   multiplier= 25;
-            // }else if(fontsizeIdentifierCount > 30){
-            //   multiplier = 30;
-            // }else if(fontsizeIdentifierCount > 25){
-            //   multiplier = 35;
-            // }else if(fontsizeIdentifierCount > 20){
-            //   multiplier = 40;
-            // }else if(fontsizeIdentifierCount > 15){
-            //   multiplier = 45;
-            // }else if(fontsizeIdentifierCount > 10){
-            //   multiplier = 50;
-            // }else if(fontsizeIdentifierCount > 5){
-            //   multiplier = 65;
-            // }else if(fontsizeIdentifierCount > 1){
-            //   multiplier = 95;
-            // }
-
 
             if(totalCountForNoun==1){
               totalCountForNoun = 2;
@@ -177,13 +149,8 @@ function prepareWordCloud(response,isShowSpinner,subzoneChoice){
             accumulatedAdj    = [];
         }
     }
-    // console.log(wordCloudData)
-
-    // let w = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
-    // let h = 450;
 
     let containerWidth   = document.getElementById('wordCloudContainer'+subzoneChoice).offsetWidth;
-    // let containerHeight = document.getElementById('wordCloudContainer'+subzoneChoice).offsetHeight; 
     let w = containerWidth == 0 ? 537 : containerWidth;
     let h = 450;
 

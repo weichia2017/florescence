@@ -409,6 +409,7 @@ function drawWordcLOUD(){
 
 
 
+
 function getLogoType(reviewID){
   if(reviewID.split("-")[1] == 1){
     return "googleMapsLogo.png"

@@ -4,15 +4,12 @@ require_once  'include/commonAdmin.php';
 <!Doctype html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>URA Dashboard</title>
 
-    <!-- Load common.js from scripts folder -->
-    <script src="scripts/common.js"></script>
-
-    <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" media="all" href="css/common.css">
-
+    <!-- ========================== -->
+    <!--            CDN             -->
+    <!-- ========================== -->
     <!-- Material Design (External) -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -26,26 +23,21 @@ require_once  'include/commonAdmin.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&family=Satisfy&display=swap" rel="stylesheet">
 
-
     <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
-    <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
     <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js"
     data-seamless></script>
 
     <!-- Load Leaflet from CDN (External) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
     <!-- Load Esri Leaflet from CDN (External) -->
-    <script src="https://unpkg.com/esri-leaflet@3.0.1/dist/esri-leaflet.js"
-      integrity="sha512-JmpptMCcCg+Rd6x0Dbg6w+mmyzs1M7chHCd9W8HPovnImG2nLAQWn3yltwxXRM7WjKKFFHOAKjjF2SC4CgiFBg=="
-      crossorigin=""></script>
+    <script src="https://unpkg.com/esri-leaflet@3.0.1/dist/esri-leaflet.js" integrity="sha512-JmpptMCcCg+Rd6x0Dbg6w+mmyzs1M7chHCd9W8HPovnImG2nLAQWn3yltwxXRM7WjKKFFHOAKjjF2SC4CgiFBg==" crossorigin=""></script>
 
 
+    <!-- ========================== -->
+    <!--        SCRIPTS FOLDER      -->
+    <!-- ========================== -->
     <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/> -->
     <script src="scripts/client_URA/leaflet.zoomhome.min.js"></script>
 
@@ -67,15 +59,16 @@ require_once  'include/commonAdmin.php';
     <!-- Load sentimentScoreOverTime from scripts folder -->
     <script src="scripts/client_URA/ura_sentimentOverTime.js" defer></script>
 
-    <style>
-      .white-bg{
-        background-color: white;
-      }
 
+    <!-- ========================== -->
+    <!--          COMMON CSS        -->
+    <!-- ========================== -->
+    <!-- Load common.css from scripts folder -->
+    <link rel="stylesheet" media="all" href="css/common.css">
+    <style>
       .header-bg{
         background-color: #d2d2d2;
       }
-
 
       .compareHeadings{
         font-family: 'Merienda', cursive;
@@ -117,17 +110,10 @@ require_once  'include/commonAdmin.php';
         margin-left:25px;
       }
 
-      .normalStars{
-        font-size:40px; 
-        color: #fdcc0d;
-      }
-
       .rankedStars{
         font-size:22px; 
         color: #fdcc0d;
       }
-
-
 
       /* Overrides list-group-item from Bootstrap */ 
       .list-group-item {
@@ -138,11 +124,6 @@ require_once  'include/commonAdmin.php';
       .whiteBackground{
         background-image: url("images/white-bg.png");
         height:430px;
-      }
-
-      .scrollReviews{
-        height:400px;
-        overflow-y: scroll;
       }
 
       .miniScrollReview{
@@ -159,38 +140,6 @@ require_once  'include/commonAdmin.php';
         height:520px;
         overflow-y: scroll;
       }
-
-      .highLightedNoun{
-        /* Olive */
-        background-color: #3D9970;
-        padding: 0.1em 0.1em;
-      }
-
-      .highLightedAdj{
-        /* Teal */
-        padding: 0.1em 0.1em;
-        background-color: #39CCCC;
-      }
-
-      .popover{
-        box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
-        width: 400px;
-      }
-
-      .popover-header {
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 600;
-        font-size:17px;
-      }
-
-      .popover-body{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-        font-size:17px;
-      }
-
-  
-
 
       .showStoreNameSubzone, .showStoreNameSubzone1, .showStoreNameSubzone2{
         /* font-size:15px; */
@@ -219,9 +168,6 @@ require_once  'include/commonAdmin.php';
         z-index:0;
       }
 
-
-
-
       /* STORE RANK CARDS */
       .card .card-header:hover {
         background-color: #0275d8;
@@ -239,7 +185,6 @@ require_once  'include/commonAdmin.php';
       .card-body{
         padding:0.7rem;
       }
-
 
       /* MAP RELATED CSS */
       /* TanjongPagarMap */
@@ -259,33 +204,17 @@ require_once  'include/commonAdmin.php';
         font-size: 1.5em;
         line-height: 26px;
       }
-
-      @media screen and (max-width : 1920px){
-          .mobile-navbar{
-              display:none;
-          }
-      }
-          
-      @media screen and (max-width : 767px){
-          .desktop-navbar{
-              display:none;
-          }
-          .mobile-navbar{
-              display:inline;
-          }
-      }
     </style>
   </head>
 
   <body>
   <!-- NavBar -->
   <?php require_once  'uraNavBar.php' ?>
-  
+
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
   </div>
   
-
   <main class="container" style="z-index: 0">
     <div class="container mb-5 mt-3">
 
@@ -486,11 +415,7 @@ require_once  'include/commonAdmin.php';
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Stores are ranked based on ....
-                  <ul>
-                    <li>...</li>
-                    <li>...</li>
-                  </ul>">
+                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher.">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                   info_outline
                 </span>    
@@ -714,7 +639,7 @@ require_once  'include/commonAdmin.php';
       <!--  COMPARE MODE  -->
       <!-- ============== -->
       <div id="SubzoneInformationContainerCompareMode">
-        <!-- ROW 3 NAME OSS TREVIEWS -->
+        <!-- ROW 3 NAME OSS REVIEWS -->
         <div class="row">
         <!-- ====================== -->
         <!--        SUB-ZONE 1      -->
@@ -851,11 +776,7 @@ require_once  'include/commonAdmin.php';
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Stores are ranked based on ....
-                  <ul>
-                    <li>...</li>
-                    <li>...</li>
-                  </ul>">
+                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher.">
                 <span style="font-size:25px" class="material-icons compareHeadingIcons float-right pointer">
                   info_outline
                 </span>    
@@ -1294,32 +1215,14 @@ require_once  'include/commonAdmin.php';
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+  <!-- Load common.js from scripts folder -->
+  <script src="scripts/common.js"></script>
+
   <script>
-    // Popover
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ 
-        html : true, 
-        content: function() {
-          return $('#popover_content_wrapper').html();
-        }
-      });   
-    });
-
-    // Colors for sentiment Over Time In
-    let neuColor = "#AAAAAA"
-    let posColor = "#79a925"
-    let negColor = "#FF4136"
-    
-    limitToShowIndividualStoreInsights = 10;
-
     selectedReviewSubzone='';
     selectedReviewSubzone1='';
     selectedReviewSubzone2='';
 
-    let width  = $(window).width();
-    let height = $(window).height();
-
-    
     document.getElementById("subzoneExpandUpArrowRow").style.display                = "none";
     document.getElementById("subzoneExpandDownArrowRow").style.display              = "none";
     
@@ -1330,39 +1233,8 @@ require_once  'include/commonAdmin.php';
     document.getElementById("SubzoneInformationContainerCompareMode").style.display = "none";
 
     document.getElementById("maxTwoSelections").style.display                       = "none";
-    document.getElementById("noSelectionError").style.display = "none";
+    document.getElementById("noSelectionError").style.display                       = "none";
 
-    
-    // function makeRequest(url,method,values) {
-    //   return new Promise(function (resolve, reject) {
-
-    //     let request = new XMLHttpRequest();
-
-    //     request.open(method, url);
-    //     request.timeout = 20000;
-    //     request.onload = function () {
-    //         if (this.status >= 200 && this.status < 300) {
-    //             resolve(request.response);
-    //         } else {
-    //             reject({
-    //                 status: this.status,
-    //                 statusText: request.statusText
-    //             });
-    //         }
-    //     };
-    //     request.onerror = function () {
-    //         reject({
-    //             status: this.status,
-    //             statusText: request.statusText
-    //         });
-    //     };
-    //     // request.setRequestHeader('Authorization', 'Bearer ' + token)
-    //     request.setRequestHeader("Content-type", "application/JSON");
-    //     request.setRequestHeader('Access-Control-Allow-Origin', '*');
-    //     // request.withCredentials = false;
-    //     request.send(values);
-    //   });
-    // }
 
     let reviewsSubzone;
     let reviewsSubzone1;
@@ -1399,22 +1271,8 @@ require_once  'include/commonAdmin.php';
       let totalCompoundScores = 0;
 
       for(x in reviews){
-        // sentimentDataForWordCloud.push(reviews[x].review_id);
         totalCompoundScores += reviews[x].compound_score;
-        // if(reviews[x].compound_score >= 0.05){
-        //   pos.push(reviews[x].review_id);
-        // }
-        // else if(reviews[x].compound_score <= -0.05){
-        //   neg.push(reviews[x].review_id);
-        // }
-        // else{
-        //   neu.push(reviews[x].review_id);
-        // }
       }
-      // sentimentDataForWordCloud.push({Positive :pos,
-      //                                 Negative :neg,
-      //                                 Neutral  :neu});
-
  
       // Only process if for subzoneLevel
       if(processOSTAndTotalReviews){
@@ -1431,7 +1289,12 @@ require_once  'include/commonAdmin.php';
       refactorResponseForReviewsViaWordCloudAdjs(reviews,subzoneChoice);
     }  
 
-    /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
+    refactoredResponseSubzone = {};
+    refactoredResponseSubzone1 = {};
+    refactoredResponseSubzone2 = {};
+    function refactorResponseForReviewsViaWordCloudAdjs(response,subzoneChoice){
+      // console.log(window["refactoredResponse"+subzoneChoice]);
+      /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
        its reviewid can be used to do a search in O(1) using key value pairs rather than O(n^2) using nested for loops
        From this: {
                     compound_score: xxx,
@@ -1446,12 +1309,7 @@ require_once  'include/commonAdmin.php';
                     review_text   : xxx,
                     store_id      : xxx
                     }
-    */
-    refactoredResponseSubzone = {};
-    refactoredResponseSubzone1 = {};
-    refactoredResponseSubzone2 = {};
-    function refactorResponseForReviewsViaWordCloudAdjs(response,subzoneChoice){
-      // console.log(window["refactoredResponse"+subzoneChoice]);
+      */
       for (x in response){
         window["refactoredResponse"+subzoneChoice][response[x].review_id] = {
                             compound_score : response[x].compound_score,
@@ -1528,25 +1386,7 @@ require_once  'include/commonAdmin.php';
       }
     }
 
-    var selectedSubZones = [];
-    var subZoneIdNameDic = {};
-    async function mainCall(){
-      document.getElementById("main-overlay").style.display = "block";
-      $('#collapsibleSubzoneFilter').collapse("show");
 
-      let subzoneResponse  = await makeRequest(hostname + "/roads/", "GET", "");
-      subzones = JSON.parse(subzoneResponse).data;
-
-      // console.log(subzones)
-
-      for (x in subzones){
-        subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
-        document.getElementById("subzonesList").innerHTML += 
-        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer reviewBodyFont mr-1">${subzones[x].road_name}</a>`;
-      }
-      // console.log(subZoneIdNameDic)
-      document.getElementById("main-overlay").style.display = "none";
-    }
 
     function closeUpRow(){
       document.getElementById("subzoneExpandUpArrowRow").style.display   = "none";
@@ -1773,6 +1613,27 @@ require_once  'include/commonAdmin.php';
         });
 
       }
+    }
+
+
+    var selectedSubZones = [];
+    var subZoneIdNameDic = {};
+    async function mainCall(){
+      document.getElementById("main-overlay").style.display = "block";
+      $('#collapsibleSubzoneFilter').collapse("show");
+
+      let subzoneResponse  = await makeRequest(hostname + "/roads/", "GET", "");
+      subzones = JSON.parse(subzoneResponse).data;
+
+      // console.log(subzones)
+
+      for (x in subzones){
+        subZoneIdNameDic[subzones[x].road_id] = subzones[x].road_name;
+        document.getElementById("subzonesList").innerHTML += 
+        `<a id="${subzones[x].road_name}" onclick="selectSubzone(this)" onmouseover="enlargePolygon(this)" onmouseout="shrinkPolygon(this)" class="list-group-item pointer reviewBodyFont mr-1">${subzones[x].road_name}</a>`;
+      }
+      // console.log(subZoneIdNameDic)
+      document.getElementById("main-overlay").style.display = "none";
     }
 
     mainCall();

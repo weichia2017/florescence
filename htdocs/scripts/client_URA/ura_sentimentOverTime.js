@@ -72,7 +72,6 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
     yearsUnique.sort().reverse();
     let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     
-    // console.log(yearsUnique)
     // Create All the empty Values for all the months of all the years that exist in the reviews
     for (x in yearsUnique){
         for (y in months){
@@ -118,13 +117,9 @@ function prepareSentimentOverTime(reviews, subzoneChoice){
         }
     
     }
-    // console.log(JSON.stringify(window["setimentOverTimePrepared"+subzoneChoice])); 
-
-
     
     drawSentimentOverTimeStackedBarChart(subzoneChoice);
 }
-
 
 function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
     document.getElementById("wordCloudClickedReviews"+subzoneChoice).innerHTML = '';
@@ -172,8 +167,6 @@ function updateWordCloud(chosenReviews,selectedSentiment,subzoneChoice){
       }
 }
 
-
-
 function drawSentimentOverTimeStackedBarChart(subzoneChoice) {
     var legendClassArray = []; //store legend classes to select bars in plotSingle()
 
@@ -207,13 +200,9 @@ function drawSentimentOverTimeStackedBarChart(subzoneChoice) {
 
     function _chart(subzoneChoice,w,h){
         var keys = ["Pos", "Neg", "Neu"]
-        // console.log(keys)
 
         var year   = [...new Set(window["setimentOverTimePrepared"+subzoneChoice].map(d => d.Year))]
         var Months = [...new Set(window["setimentOverTimePrepared"+subzoneChoice].map(d => d.Month))]
-
-        // console.log(year)
-        // console.log(Months)
 
         var options = d3.select("#year"+subzoneChoice).selectAll("option")
             .data(year)
@@ -401,10 +390,6 @@ function drawSentimentOverTimeStackedBarChart(subzoneChoice) {
                 updateWordCloud(d.data[selectedSentiment],selectedSentiment,subzoneChoice)
             }
         }
-
-        // function getKeyByValue(object, value) {
-        //   return Object.keys(object).find(key => object[key] === value);
-        // }
 
         // Total Reviews on top of the bar text
         var text = svg.selectAll(".text")

@@ -1,30 +1,19 @@
 <?php  
 require_once  'include/common.php';
 
-$storeID = '';
-if( isset($_SESSION["storeID"]) ){
-  $storeID = $_SESSION["storeID"];
-}
-
-if( isset($_SESSION["name"]) ){
-  $userName = $_SESSION["name"];
-}
+$storeID = $_SESSION["storeID"];
+$userName = $_SESSION["name"];
 ?>
 <!Doctype html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
     <title>Flourishing Our Locale</title>
 
-    <!-- Load common.js from scripts folder -->
-    <script src="scripts/common.js"></script>
-
-    <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" href="css/common.css">
-
+    <!-- ========================== -->
+    <!--            CDN             -->
+    <!-- ========================== -->
     <!-- Material Design (External) -->
-    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
 
     <!-- Bootstrap CSS (External) -->
@@ -38,10 +27,13 @@ if( isset($_SESSION["name"]) ){
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda&family=Open+Sans:wght@300;600&family=Satisfy&display=swap" rel="stylesheet">
 
     <!-- Load SmoothScroll for mobile/tablet browsers (External) -->
-    <!-- <script src="scripts/seamless.auto-polyfill.min.js" data-seamless></script> -->
     <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js"
     data-seamless></script>
 
+
+    <!-- ========================== -->
+    <!--        SCRIPTS FOLDER      -->
+    <!-- ========================== -->
     <!-- Load d3-cloud from scripts folder -->
     <script src="scripts/d3.layout.cloud.js"></script>
 
@@ -57,40 +49,14 @@ if( isset($_SESSION["name"]) ){
     <!-- Load sentimentScoreOverTime from scripts folder -->
     <script src="scripts/businesses/sentimentOverTime.js" defer></script>
 
+
+    <!-- ========================== -->
+    <!--          COMMON CSS        -->
+    <!-- ========================== -->
+    <!-- Load common.css from scripts folder -->
+    <link rel="stylesheet" href="css/common.css">
+
     <style>
-      /* body{
-        background-color: #F0F2F5;
-      } */
-
-      .white-bg{
-        background-color: white;
-      }
-
-      /* #main-overlay {
-        height: 100%;
-        width: 100%;
-        display: none;
-        position: fixed;
-        z-index: 2;
-        top: 0;
-        left: 0;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0, 0.9);
-      } */
-
-      /* .navbar-brand {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-        font-size: 1rem;
-        background-color: rgba(0, 0, 0, .25);
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-      }
-
-      .navbar .navbar-toggler {
-        top: .25rem;
-        right: 1rem;
-      } */
-
       #totalNoOfReviewsContainer {
         font-family:'Anton', sans-serif;
         color: rgb(92, 92, 92);
@@ -99,119 +65,22 @@ if( isset($_SESSION["name"]) ){
         margin-left:25px;
       }
 
-      .normalStars{
-        font-size:40px; 
-        color: #fdcc0d;
-      }
-
-      .rankedStars{
-        font-size:22px; 
-        color: #fdcc0d;
-      }
-
       #wordCloudContainer {
         border: 1px solid rgb(36, 36, 36);
         border-radius: 7px;
       }
 
-      /* .spinner{
-        position: absolute;
-        top: 50%;
-        left: 47%;
-      } */
-
       #wordCloudWhiteBackground{
         background-image: url("images/white-bg.png");
         height:460px;
       }
-
-      .scrollReviews{
-        height:400px;
-        overflow-y: scroll;
-      }
-
-      .miniScrollReview{
-        height:300px;
-        overflow-y: scroll;
-      }
-
-      /* .pointer{
-        cursor: pointer;
-      } */
-
-      .highLightedNoun{
-        /* Olive */
-        background-color: #3D9970;
-        padding: 0.1em 0.1em;
-      }
-
-      .highLightedAdj{
-        /* Teal */
-        padding: 0.1em 0.1em;
-        background-color: #39CCCC;
-      }
-
-      .popover{
-        box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
-        width: 400px;
-      }
-
-      .popover-header {
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 600;
-        font-size:17px;
-      }
-
-      .popover-body{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-        font-size:17px;
-      }
-
-      .headings{
-        font-family: 'Merienda', cursive;
-        color: rgb(100, 100, 100);
-        font-size:20px;
-      }
-
-      .reviewHeaderFont{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 600;
-      }
-
-      .reviewBodyFont{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-      }
-
-      /* #navBarBrand{
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
-        font-size: 1.1em;
-        color:white;
-      } */
-
-      @media screen and (max-width : 1920px){
-          .mobile-navbar{
-              display:none;
-          }
-      }
-          
-      @media screen and (max-width : 767px){
-          .desktop-navbar{
-              display:none;
-          }
-          .mobile-navbar{
-              display:inline;
-          }
-      }
-
     </style>
+   
   </head>
 
   <body>
   <!-- NavBar -->
-  <?php require_once  'bizNavBar.php'?>
+  <?php require_once 'bizNavBar.php'?>
   
   <div id="main-overlay">
     <div class="spinner-border text-light spinner" role="status"> </div>
@@ -579,43 +448,11 @@ if( isset($_SESSION["name"]) ){
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
+  <!-- Load common.js from scripts folder -->
+  <script src="scripts/common.js"></script>
 
-  <script>
-
-    // Popover
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ 
-        html : true, 
-        content: function() {
-          return $('#popover_content_wrapper').html();
-        }
-      });   
-    });
-
-    function closeAndClearSelectionsInSOT(){
-      // console.log(sentimentOverTimeChartSVG);
-
-      // Clear all selected rect in sentimentOverTimeChartSVG
-      sentimentOverTimeChartSVG.selectAll("g.layer")
-        .selectAll("rect")
-        .attr("stroke","pink")
-        .attr("stroke-width","0.2");
-      
-      document.getElementById('sentimentReviewsContainer').style.display = 'none';
-      // function(){console.log(svg) document.getElementById('sentimentReviewsContainer').style.display = 'none'})(
-    }
-
-    var hostname = "http://35.175.55.18:5000";
-    var emailToSendForVerification = 'LIN_Yanling@ura.gov.sg';
+  <script>    
     selectedReview='';
-    limitNormalMode = 10;
-    let width  = $(window).width();
-    let height = $(window).height();
-
-    // Colors for Donut and Stacked Bar Charts
-    let neuColor = "#AAAAAA"
-    let posColor = "#79a925"
-    let negColor = "#FF4136"
 
     document.getElementById("accountVerificationMode").style.display        = "none";
     document.getElementById("unableToDisplayMode").style.display            = "none";
@@ -623,18 +460,13 @@ if( isset($_SESSION["name"]) ){
 
     document.getElementById("wordCloudReviewsContainer").style.display      = "none";
     document.getElementById("sentimentReviewsContainer").style.display      = "none";
-    // document.getElementById("wordCloudContainer").style.display             = "block";
     document.getElementById("wordCloudContainerSpinner").style.display      = "none";
     document.getElementById("wordCloudNotEnoughWordsWarning").style.display = "none";
       
     let shopID    = document.getElementById('getStoreID').value;
-    let usersName = document.getElementById('getUserName').value;
-    // let shopID = (storeIDByUser == null) ? '1' : storeIDByUser;
-    
+    let usersName = document.getElementById('getUserName').value;    
 
     function populateReviews(storeBased_Reviews){
-      // console.log(storeBased_Reviews)
-
       let chosenReviewsWithFullData = [];
       //Convert String Date to Normal Date for the sorting
       for (x in storeBased_Reviews){
@@ -665,74 +497,6 @@ if( isset($_SESSION["name"]) ){
                     </div>
                 </div>`;      
       }
-    }
-
-    function showVerificationMode(){
-      document.getElementById("accountVerificationMode").style.display = "block";
-      document.getElementById("unableToDisplayMode").style.display     = "none";
-      document.getElementById("normalMode").style.display              = "none";
-
-      
-
-      document.getElementById("clickEmailLinkForVerification").innerHTML += 
-      ` Dear ${usersName}, thank you for your interest in our dashboard.<br> 
-        Due to privacy issues, we will require some verification so that we can be sure we are sharing the dashboard information to the right person.<br><br>
-        Please  <a href=mailto:${emailToSendForVerification}?subject="FlourishingOurLocale_Dashboard_Ownership_Request">click here</a>
-        to contact our staff to verify your particulars on your store ownership details.`;
-      document.getElementById("main-overlay").style.display            = "none";
-    }
-
-    function showUnableToDisplay(storeBased_Reviews){
-      document.getElementById("accountVerificationMode").style.display = "none";
-      document.getElementById("unableToDisplayMode").style.display     = "block";
-      document.getElementById("normalMode").style.display              = "none";
-      
-      let totalReviews = storeBased_Reviews.length;
-      let elements = document.getElementsByClassName('noOfReviews');
-      for (index in elements){
-          elements[index].innerText = totalReviews;
-      }      
-      populateReviews(storeBased_Reviews)
-    }
-
-    function showNormalMode(storeBased_Reviews){
-      document.getElementById("accountVerificationMode").style.display = "none";
-      document.getElementById("unableToDisplayMode").style.display     = "none";
-      document.getElementById("normalMode").style.display              = "block";
-
-      // Wordcloud
-      let wordCloudData  = [];
-      let url = hostname + "/adj_noun_pairs/store/" + shopID;
-      $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
-
-      // Donut, Total Reviews, Overall Sentiment Score(Stars)
-      dataPrepOnPageLoad(storeBased_Reviews);
-
-      // Sentiments Over Time
-      sentimentOverTimePrepareData(storeBased_Reviews); 
-    }
-
-    // The main call to retrieve values for all charts other than wordcloud
-    let sentimentDataForWordCloud = [];
-    async function mainCall(){
-      document.getElementById("main-overlay").style.display = "block";
-
-      console.log(shopID);
-      if(shopID == 'null'){
-        showVerificationMode();
-        return;
-      }
-      getStoreName();
-
-      let response = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
-      let storeBased_Reviews = JSON.parse(response).data;
-
-      if(storeBased_Reviews.length > limitNormalMode){
-        showNormalMode(storeBased_Reviews);
-      }else{
-        showUnableToDisplay(storeBased_Reviews);
-      }
-      document.getElementById("main-overlay").style.display = "none";
     }
 
     function dataPrepOnPageLoad(response){
@@ -775,23 +539,23 @@ if( isset($_SESSION["name"]) ){
       refactorResponseForReviewsViaWordCloudAdjs(response);
     }  
 
-    /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
-       its reviewid can be used to do a search in O(1) using key value pairs rather than O(n^2) using nested for loops
-       From this: {
-                    compound_score: xxx,
-                    review_date   : xxx,
-                    review_id     : xxx,
-                    review_text   : xxx
-                    }
-       To this: review_id :{
-                    compound_score: xxx,
-                    review_date   : xxx,
-                    review_text   : xxx
-                    }
-    */
     let refactoredResponse = {};
     function refactorResponseForReviewsViaWordCloudAdjs(response){
       // console.log(response);
+      /* Prepares a "search table" for the noun adj word cloud pairs. When user selects any adj,
+        its reviewid can be used to do a search in O(1) using key value pairs rather than O(n^2) using nested for loops
+        From this: {
+                      compound_score: xxx,
+                      review_date   : xxx,
+                      review_id     : xxx,
+                      review_text   : xxx
+                      }
+        To this: review_id :{
+                      compound_score: xxx,
+                      review_date   : xxx,
+                      review_text   : xxx
+                      }
+      */
       for (x in response){
         refactoredResponse[response[x].review_id] = {
                             compound_score : response[x].compound_score,
@@ -803,9 +567,71 @@ if( isset($_SESSION["name"]) ){
       // console.log(refactoredResponse)
     }
 
+    function closeAndClearSelectionsInSOT(){
+      // Clear all selected rect in sentimentOverTimeChartSVG
+      sentimentOverTimeChartSVG.selectAll("g.layer")
+        .selectAll("rect")
+        .attr("stroke","pink")
+        .attr("stroke-width","0.2");
+      
+      document.getElementById('sentimentReviewsContainer').style.display = 'none';
+    }
+
+    // ========================
+    //  SHOW VERIFICATION MODE
+    // ========================
+    function showVerificationMode(){
+      document.getElementById("accountVerificationMode").style.display = "block";
+      document.getElementById("unableToDisplayMode").style.display     = "none";
+      document.getElementById("normalMode").style.display              = "none"; 
+
+      document.getElementById("clickEmailLinkForVerification").innerHTML += 
+      ` Dear ${usersName}, thank you for your interest in our dashboard.<br> 
+        Due to privacy issues, we will require some verification so that we can be sure we are sharing the dashboard information to the right person.<br><br>
+        Please  <a href=mailto:${emailToSendForVerification}?subject="FlourishingOurLocale_Dashboard_Ownership_Request">click here</a>
+        to contact our staff to verify your particulars on your store ownership details.`;
+
+      document.getElementById("main-overlay").style.display = "none";
+    }
+
+    // ========================
+    //     SHOW NORMAL MODE
+    // ========================
+    function showNormalMode(storeBased_Reviews){
+      document.getElementById("accountVerificationMode").style.display = "none";
+      document.getElementById("unableToDisplayMode").style.display     = "none";
+      document.getElementById("normalMode").style.display              = "block";
+
+      // Wordcloud
+      let wordCloudData  = [];
+      let url = hostname + "/adj_noun_pairs/store/" + shopID;
+      $(document).ready(retrieveWordCloudNounAdjPairs(url,"GET",""));
+
+      // Donut, Total Reviews, Overall Sentiment Score(Stars)
+      dataPrepOnPageLoad(storeBased_Reviews);
+
+      // Sentiments Over Time
+      sentimentOverTimePrepareData(storeBased_Reviews); 
+    }
+
+    // =======================================
+    //  SHOW UNABLE TO DISPLAY INSIGHTS MODE
+    // =======================================
+    function showUnableToDisplay(storeBased_Reviews){
+      document.getElementById("accountVerificationMode").style.display = "none";
+      document.getElementById("unableToDisplayMode").style.display     = "block";
+      document.getElementById("normalMode").style.display              = "none";
+      
+      let totalReviews = storeBased_Reviews.length;
+      let elements = document.getElementsByClassName('noOfReviews');
+      for (index in elements){
+          elements[index].innerText = totalReviews;
+      }      
+      populateReviews(storeBased_Reviews);
+    }
+    
     async function getStoreName(){
       let storeInfo = await makeRequest(hostname + "/stores/" + shopID, "GET", "");
-      // document.getElementById('shopNameNavBar').innerText = JSON.parse(storeInfo).data[0].store_name;
       let elements = document.getElementsByClassName('shopName');
       let shopName = JSON.parse(storeInfo).data[0].store_name;
       for (index in elements){
@@ -814,9 +640,39 @@ if( isset($_SESSION["name"]) ){
       sessionStorage.setItem('shopName', shopName);
     }
 
+    // The main call to retrieve values for all charts other than wordcloud
+    let sentimentDataForWordCloud = [];
+    async function mainCall(){
+      document.getElementById("main-overlay").style.display = "block";
+
+      // console.log(shopID);
+      if(shopID == 'null'){
+        // ========================
+        //  SHOW VERIFICATION MODE
+        // ========================
+        showVerificationMode();
+        return;
+      }
+
+      getStoreName();
+      let response = await makeRequest(hostname + "/reviews/store/" + shopID, "GET", "");
+      let storeBased_Reviews = JSON.parse(response).data;
+
+      if(storeBased_Reviews.length > limitNormalMode){
+        // ========================
+        //     SHOW NORMAL MODE
+        // ========================
+        showNormalMode(storeBased_Reviews);
+      }else{
+        // =======================================
+        //  SHOW UNABLE TO DISPLAY INSIGHTS MODE
+        // =======================================
+        showUnableToDisplay(storeBased_Reviews);
+      }
+      document.getElementById("main-overlay").style.display = "none";
+    }
+
     mainCall();
   </script>
-
-  
   </body>
 </html>

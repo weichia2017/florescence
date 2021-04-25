@@ -17,10 +17,7 @@ if(isset ($_SESSION["userID"])){
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <!-- Required meta tags -->
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-  <!-- Load common.js from scripts folder -->
-  <script src="scripts/common.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
 
@@ -41,6 +38,8 @@ if(isset ($_SESSION["userID"])){
       background-size:cover;                   
       background-repeat: no-repeat;
       background-position: center 40%;   
+      overflow-y: hidden; 
+      overflow-x: hidden; 
     }
 
     .loginContainer {
@@ -103,7 +102,7 @@ if(isset ($_SESSION["userID"])){
 
       <!-- Register Button -->
       <button class="btn btn-success">
-        <a href="/Florescence/htdocs/register.html" class="text-decoration-none text-white d-block">Create New Account</a>
+        <a href="register.html" class="text-decoration-none text-white d-block">Create New Account</a>
       </button>
 
     </div>
@@ -114,6 +113,8 @@ if(isset ($_SESSION["userID"])){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<!-- Load common.js from scripts folder -->
+<script src="scripts/common.js"></script>
 
 <script>
 
@@ -168,13 +169,8 @@ if(isset ($_SESSION["userID"])){
         let store_id = JSON.parse(creationResponse)['store_id'];
         let user_id  = JSON.parse(creationResponse)['user_id']
         let admin    = JSON.parse(creationResponse)['admin'];
-
-        // console.log(name)
-        // console.log(store_id)
-        // console.log(user_id)
-        // console.log(admin)
    
-        let url = '/Florescence/htdocs/processLogin.php';
+        let url = 'processLogin.php';
         let form = $(
           `<form action="${url}" method="POST">
             <input type="text" name="name" value="${name}"/>
@@ -201,10 +197,3 @@ if(isset ($_SESSION["userID"])){
 </body>
 
 </html>
-
-<?php 
-// //Create Session and store
-// $_SESSION["user_id"] = '<script>document.write(user_id)</script>';
-// header("Location: dashboard.php");
-// return;
-// ?>

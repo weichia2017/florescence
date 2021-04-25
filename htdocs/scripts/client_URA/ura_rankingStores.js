@@ -50,8 +50,6 @@ async function getRanking(subzone_ID, subzoneChoice){
     document.getElementById("storeRanks" +subzoneChoice).style.display          = "block";
     document.getElementById("storeRanksSpinner" + subzoneChoice).style.display  = "none";
 }
-// `<a id="${storeData[x].store_id}" onclick="showStoreSpecificDetails(this,${storeData[x].store_id})" class="list-group-item pointer storesList reviewBodyFont">${rank+'. '}${storeData[x].store_name}</a>
-// `
 
 function showStoreSpecificDetails(e,storeId,subzoneChoice){
     let storesList = document.querySelectorAll('.storesList'+subzoneChoice);

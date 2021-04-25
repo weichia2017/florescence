@@ -97,7 +97,6 @@ function CheckPwd() {
 //         document.getElementById("pwdError").innerText = "Old and New Password cannot be the same";
 //         document.getElementById("resetPassword").disabled = true;
 //     }
-
 // }
   
 
