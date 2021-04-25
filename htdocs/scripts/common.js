@@ -59,5 +59,16 @@ function makeRequestxwwwFormURLEncode(url,method,values) {
     });
 }
 
-var hostname           = "http://35.175.55.18:5000";
-var datableRowsPerPage = 25; //10,25,50 or 100 only
+var hostname               = "http://35.175.55.18:5000";
+var datableRowsPerPage     = 25; //10,25,50 or 100 only
+var emailSubjectToCustomer = `FlourishingOurLocale_Dashboard_Status_Update`;
+var emailBodyToCustomer    = 
+`
+We have viewed and verified your credentials.
+We are glad to inform you that your account has been activated.
+
+Lin Yanling
+Senior Place Manager
+Urban Design, Central
+Urban Redevelopment Authority Team
+`

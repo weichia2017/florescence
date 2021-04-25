@@ -89,7 +89,7 @@ $adminID = $_SESSION["userID"];
     </div>
   
       
-    <div class="container mb-5 mt-5" style="background-color:white">
+    <div class="container mb-5 mt-5 text-center" style="background-color:white">
 
     <div class="row">
         <div class="col border border-secondary p-4 rounded white-bg shadow ">
@@ -160,7 +160,7 @@ $adminID = $_SESSION["userID"];
             optionNameOptionTags += `<option value='${storesData[x].store_id}'>${storesData[x].store_name}</option>`
         }
 
-        console.log(optionNameOptionTags)
+        // console.log(optionNameOptionTags)
         retrieveUserData();
     }
 
@@ -186,9 +186,22 @@ $adminID = $_SESSION["userID"];
                 let name        = document.createElement("td");
                 let email       = document.createElement("td");
                 
+                let customersName = listOfUsers[user]['name'];
+                name.innerText  = customersName;
+
                 
-                name.innerText  = listOfUsers[user]['name'];
-                email.innerText = listOfUsers[user]['email'];
+                let emailAddress = listOfUsers[user]['email'];
+                let emailSalutationBody = 
+                `Dear ${customersName},\n`;
+
+                //emailSubjectToCustomer and emailBodyToCustomer is in common.js
+                email.innerHTML = 
+                `${emailAddress}
+                <a href=mailto:${emailAddress}?subject=${emailSubjectToCustomer}&body=${encodeURIComponent(emailSalutationBody+emailBodyToCustomer)}>
+                    <span style="font-size:25px; color: rgb(15 98 183)"  class="material-icons">
+                        reply
+                    </span>
+                </a>`;
 
                 let storeName = listOfUsers[user]['store_name'] == null ? "-": listOfUsers[user]['store_name'];
 
