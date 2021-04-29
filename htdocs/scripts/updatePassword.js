@@ -1,6 +1,6 @@
 let userID = $("#getUserID").val();
 
-console.log("Userid=" + userID);
+// console.log("Userid=" + userID);
 
 //setup before functions
 var typingTimer;                  //timer identifier
@@ -69,7 +69,7 @@ function CheckPwd() {
         isBothPasswordsSame = true;
 
         if (!isOldPasswordValid){
-            pwdError.innerText = "Invalid OLD password";
+            pwdError.innerText = "Incorrect existing password";
             document.getElementById("resetPassword").disabled = true;
             return;
         }
@@ -102,10 +102,10 @@ function CheckPwd() {
 
 // on keyup, start the countdown
 $('#newPassword,#cfmNewPassword').keyup(function () {
-//Only if the both password fields are not empty
-if ($('#newPassword').val() && $('#cfmNewPassword').val()) {
-    CheckPwd();
-}
+    //Only if the both password fields are not empty
+    if ($('#newPassword').val() && $('#cfmNewPassword').val()) {
+        CheckPwd();
+    }
 });
 
 

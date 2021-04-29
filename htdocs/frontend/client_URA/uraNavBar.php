@@ -32,7 +32,7 @@
 
         <!-- Logout Tab -->
         <li class="nav-item">
-            <a class="nav-link" href="processLogout.php">
+            <a class="nav-link" href="../processLogout.php">
                 <i class="fa fa-power-off text-light"></i> Logout
             </a>
         </li>
@@ -54,7 +54,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="uraUpdatePassword.php">Change Password</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="processLogout.php">Logout</a>
+              <a class="dropdown-item" href="../processLogout.php">Logout</a>
           </div>
       </li>
     </ul>

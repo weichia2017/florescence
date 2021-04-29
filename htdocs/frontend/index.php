@@ -2,12 +2,12 @@
 session_start();
 
 if(isset ($_SESSION["userID"]) && $_SESSION["aStatus"] == 1){
-    header("Location: uraDashboard.php");
+    header("Location: client_URA/uraDashboard.php");
     return;
 }
 
 if(isset ($_SESSION["userID"])){
-  header("Location: dashboard.php");
+  header("Location: businesses/dashboard.php");
   return;
 }
 ?>
@@ -22,8 +22,7 @@ if(isset ($_SESSION["userID"])){
   <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 
   <!-- Internal CSS -->
   <style>
@@ -34,7 +33,7 @@ if(isset ($_SESSION["userID"])){
 
     body {
       background-color: #F0F2F5;
-      background-image: url("images/FlourishingOurLocaleXXs.jpg");
+      background-image: url("../images/FlourishingOurLocaleXXs.jpg");
       background-size:cover;                   
       background-repeat: no-repeat;
       background-position: center 40%;   
@@ -114,7 +113,7 @@ if(isset ($_SESSION["userID"])){
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <!-- Load common.js from scripts folder -->
-<script src="scripts/common.js"></script>
+<script src="../scripts/common.js"></script>
 
 <script>
 

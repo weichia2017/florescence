@@ -26,7 +26,7 @@
 
         <!-- Logout Tab -->
         <li class="nav-item">
-            <a class="nav-link" href="processLogout.php">
+            <a class="nav-link" href="../processLogout.php">
               Logout
             </a>
         </li>
@@ -46,7 +46,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="bizUpdatePassword.php">Change Password</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="processLogout.php">Logout</a>
+              <a class="dropdown-item" href="../processLogout.php">Logout</a>
           </div>
       </li>
     </ul>

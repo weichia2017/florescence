@@ -1,5 +1,5 @@
 <?php  
-require_once  'include/common.php';
+require_once  '../../include/common.php';
 
 $storeID = $_SESSION["storeID"];
 $userName = $_SESSION["name"];
@@ -35,26 +35,26 @@ $userName = $_SESSION["name"];
     <!--        SCRIPTS FOLDER      -->
     <!-- ========================== -->
     <!-- Load d3-cloud from scripts folder -->
-    <script src="scripts/d3.layout.cloud.js"></script>
+    <script src="../../scripts/d3.layout.cloud.js"></script>
 
     <!-- Load overallSentimentScore from scripts folder -->
-    <script src="scripts/overallSentimentScore.js" defer></script>
+    <script src="../../scripts/overallSentimentScore.js" defer></script>
 
     <!-- Load wordcloud from scripts folder -->
-    <script src="scripts/businesses/wordCloud.js" defer></script>
+    <script src="../../scripts/businesses/wordCloud.js" defer></script>
 
     <!-- Load sentimentScoreDonut from scripts folder -->
-    <script src="scripts/businesses/sentimentScoreDonut.js" defer></script>
+    <script src="../../scripts/businesses/sentimentScoreDonut.js" defer></script>
 
     <!-- Load sentimentScoreOverTime from scripts folder -->
-    <script src="scripts/businesses/sentimentOverTime.js" defer></script>
+    <script src="../../scripts/businesses/sentimentOverTime.js" defer></script>
 
 
     <!-- ========================== -->
     <!--          COMMON CSS        -->
     <!-- ========================== -->
     <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="../../css/common.css">
 
     <style>
       #totalNoOfReviewsContainer {
@@ -308,7 +308,7 @@ $userName = $_SESSION["name"];
                         <h6>
                             Please click on the <span style="color:#659c34">Adjectives</span> instead of <span style="color:#e22401">Nouns</span>.
                         </h6>
-                        <img src="images/nounAdjWarningPrompt.png" width='100%' height="auto">
+                        <img src="../../images/nounAdjWarningPrompt.png" width='100%' height="auto">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Oh Okay!</button>
@@ -449,7 +449,7 @@ $userName = $_SESSION["name"];
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
   <!-- Load common.js from scripts folder -->
-  <script src="scripts/common.js"></script>
+  <script src="../../scripts/common.js"></script>
 
   <script>    
     selectedReview='';
@@ -490,7 +490,7 @@ $userName = $_SESSION["name"];
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
                     <h6 class="reviewHeaderFont">
-                      <img src="images/${imageName}" width='30px' height="auto">
+                      <img src="../../images/${imageName}" width='30px' height="auto">
                       Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
                     </h6>
                     <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>

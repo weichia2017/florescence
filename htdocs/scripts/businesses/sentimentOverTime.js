@@ -129,7 +129,7 @@ function drawSentimentOverTimeStackedBarChart(data){
                 `<div class="card mr-3 ml-3 mt-2">
                     <div class="card-body">
                     <h6 class="reviewHeaderFont">
-                        <img src="images/${imageName}" width='30px' height="auto">
+                        <img src="../../images/${imageName}" width='30px' height="auto">
                          Review Date: ${formattedDate.toLocaleDateString()}
                     </h6>
                     <p class="reviewBodyFont">${chosenReviews[x].review_text}</p>

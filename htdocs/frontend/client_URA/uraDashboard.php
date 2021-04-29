@@ -1,5 +1,5 @@
 <?php  
-require_once  'include/commonAdmin.php';
+require_once  '../../include/commonAdmin.php';
 ?>
 <!Doctype html>
   <head>
@@ -38,33 +38,32 @@ require_once  'include/commonAdmin.php';
     <!-- ========================== -->
     <!--        SCRIPTS FOLDER      -->
     <!-- ========================== -->
-    <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/> -->
-    <script src="scripts/client_URA/leaflet.zoomhome.min.js"></script>
+    <script src="../../scripts/client_URA/leaflet.zoomhome.min.js"></script>
 
     <!-- Load d3-cloud from scripts folder -->
-    <script src="scripts/d3.layout.cloud.js"></script>
+    <script src="../../scripts/d3.layout.cloud.js"></script>
 
     <!-- Load selectSubzoneMap from scripts folder -->
-    <script src="scripts/client_URA/ura_selectSubzoneMap.js" defer></script>
+    <script src="../../scripts/client_URA/ura_selectSubzoneMap.js" defer></script>
 
     <!-- Load overallSentimentScore from scripts folder -->
-    <script src="scripts/overallSentimentScore.js" defer></script>
+    <script src="../../scripts/overallSentimentScore.js" defer></script>
 
     <!-- Load ranking from scripts folder -->
-    <script src="scripts/client_URA/ura_rankingStores.js" defer></script>
+    <script src="../../scripts/client_URA/ura_rankingStores.js" defer></script>
 
     <!-- Load wordcloud from scripts folder -->
-    <script src="scripts/client_URA/ura_wordCloud.js" defer></script>
+    <script src="../../scripts/client_URA/ura_wordCloud.js" defer></script>
 
     <!-- Load sentimentScoreOverTime from scripts folder -->
-    <script src="scripts/client_URA/ura_sentimentOverTime.js" defer></script>
+    <script src="../../scripts/client_URA/ura_sentimentOverTime.js" defer></script>
 
 
     <!-- ========================== -->
     <!--          COMMON CSS        -->
     <!-- ========================== -->
     <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" media="all" href="css/common.css">
+    <link rel="stylesheet" media="all" href="../../css/common.css">
     <style>
       .header-bg{
         background-color: #d2d2d2;
@@ -122,7 +121,7 @@ require_once  'include/commonAdmin.php';
       }
 
       .whiteBackground{
-        background-image: url("images/white-bg.png");
+        background-image: url("../../images/white-bg.png");
         height:430px;
       }
 
@@ -242,17 +241,17 @@ require_once  'include/commonAdmin.php';
                   filter_alt
                 </span>
                 <!-- Create a div where the total number of reviews will be -->
-                <div class="float-left ml-1 headings" >Select Sub Zone(s): </div> 
+                <div class="float-left ml-1 headings" >Select Subzone(s): </div> 
                 <!-- Info PopOver -->
                 <a tabindex="0" class="float-right popoverzindex" 
-                    title="Total Reviews" 
+                    title="Select Subzone" 
                     data-placement="left" 
                     data-toggle="popover" 
                     data-trigger="hover focus" 
                     data-content="Select sub zone(s) of interest in Tanjong Pagar<br>
                     <ul>
-                    <li>Select 1 subzone for normal mode.</li>
-                    <li>Select 2 suzones for comparison mode.</li>
+                    <li>Select 1 subzone to see the sentiments for that area. (Normal mode)</li>
+                    <li>Select 2 suzones to compare the sentiments for two areas. (Comparison mode.)</li>
                     <li>Maximum 2 selections at any one time.</li>">
                   <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                     info_outline
@@ -327,10 +326,10 @@ require_once  'include/commonAdmin.php';
                 place
               </span>
               <!-- Create a div where the total number of reviews will be -->
-              <div class="float-left ml-1 headings" >Sub Zones: </div> 
+              <div class="float-left ml-1 headings" >Subzone: </div> 
               <!-- Info PopOver -->
               <a tabindex="0" class="float-right popoverzindex" 
-                  title="Sub zones" 
+                  title="Subzone selected" 
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
@@ -415,7 +414,9 @@ require_once  'include/commonAdmin.php';
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher.">
+                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher. 
+                  <br> By selecting a store name, the Sentiment Over Time Bar Chart and Word Cloud will be updated for that store. 
+                  To unselect click on the store name again.">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                   info_outline
                 </span>    
@@ -650,14 +651,19 @@ require_once  'include/commonAdmin.php';
                 place
             </span>
             <!-- Create a div where the total number of reviews will be -->
-            <span class="headings" >Sub Zones: </span> 
+            <span class="headings" >Subzone: </span> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex" 
-                title="Total Reviews" 
+                title="Subzone General Information" 
                 data-placement="left" 
                 data-toggle="popover" 
                 data-trigger="hover focus" 
-                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
+                data-content="
+                <ul>
+                <li>Subzone selected</li>
+                <li>Overall Sentiment Score: Higher the number of stars,the more positive customers feel about the stores in this subzone</li>
+                <li>Total Number of reviews: from TripAdvisor and Google Reivews</li>
+                </ul>">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
                 </span>    
@@ -708,14 +714,19 @@ require_once  'include/commonAdmin.php';
                 place
             </span>
             <!-- Create a div where the total number of reviews will be -->
-            <span class="headings" >Sub Zones: </span> 
+            <span class="headings" >Subzone: </span> 
             <!-- Info PopOver -->
             <a tabindex="0" class="float-right popoverzindex" 
-                title="Total Reviews" 
+                title="Subzone General Information" 
                 data-placement="left" 
                 data-toggle="popover" 
                 data-trigger="hover focus" 
-                data-content="Total number of reviews retrieved from TripAdvisor and Google Reviews for this subzone">
+                data-content="
+                <ul>
+                <li>Subzone selected</li>
+                <li>Overall Sentiment Score: Higher the number of stars,the more positive customers feel about the stores in this subzone</li>
+                <li>Total Number of reviews: from TripAdvisor and Google Reivews</li>
+                </ul>">
                 <span style="font-size:25px; color: rgb(92, 92, 92)" class="material-icons float-right pointer">
                 info_outline
                 </span>    
@@ -776,7 +787,9 @@ require_once  'include/commonAdmin.php';
                   data-placement="left" 
                   data-toggle="popover" 
                   data-trigger="hover focus" 
-                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher.">
+                  data-content="Stores are ranked based on overall sentiment score, with the ones with higher positive sentiment ranked higher. 
+                  <br> By selecting a store name, the Sentiment Over Time Bar Chart and Word Cloud will be updated for that store. 
+                  To unselect click on the store name again.">
                 <span style="font-size:25px" class="material-icons compareHeadingIcons float-right pointer">
                   info_outline
                 </span>    
@@ -1199,7 +1212,7 @@ require_once  'include/commonAdmin.php';
                       <h6>
                           Please click on the <span style="color:#659c34">Adjectives</span> instead of <span style="color:#e22401">Nouns</span>.
                       </h6>
-                      <img src="images/nounAdjWarningPrompt.png" width='100%' height="auto">
+                      <img src="../../images/nounAdjWarningPrompt.png" width='100%' height="auto">
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-primary" data-dismiss="modal">Oh Okay!</button>
@@ -1216,7 +1229,7 @@ require_once  'include/commonAdmin.php';
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
   <!-- Load common.js from scripts folder -->
-  <script src="scripts/common.js"></script>
+  <script src="../../scripts/common.js"></script>
 
   <script>
     selectedReviewSubzone='';
@@ -1263,9 +1276,9 @@ require_once  'include/commonAdmin.php';
     function dataPrepOnPageLoad(reviews, processOSTAndTotalReviews, subzoneChoice){
 
       // Sentiments pos,neg,neu
-      let pos          = [];
-      let neg          = [];
-      let neu          = [];
+      let pos  = [];
+      let neg  = [];
+      let neu  = [];
 
       //Overall Sentiment Score Accumulator
       let totalCompoundScores = 0;
@@ -1483,7 +1496,6 @@ require_once  'include/commonAdmin.php';
         //WordCloud
         document.getElementById("wordCloudContainerSubzone").style.display                     = "none"; 
         document.getElementById("wordCloudContainerSpinnerSubzone").style.display              = "block";
-        // document.getElementById('SubzoneInformationContainerSingleMode').scrollIntoView({block: "start",behavior:'smooth'});
       }
       
       // ==============

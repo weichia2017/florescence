@@ -439,7 +439,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
   document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
   document.getElementById('reviewsContainer').style.display = 'block';
   document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
-  // document.getElementById("displayLegend").style.display = "none";
+  document.getElementById("displayLegendSubzone").style.display = "none";
   
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
@@ -472,7 +472,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
               </h6>
               <br>
               <h6 class="reviewHeaderFont">
-                <img src="images/${imageName}" width='30px' height="auto">
+                <img src="../../images/${imageName}" width='30px' height="auto">
                 Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
               </h6>
               <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
@@ -488,7 +488,7 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews,subzoneChoic
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
                   <h6 class="reviewHeaderFont">
-                    <img src="images/${imageName}" width='30px' height="auto">
+                    <img src="../../images/${imageName}" width='30px' height="auto">
                     Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
                   </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
@@ -504,7 +504,8 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
   document.getElementById("wordCloudReviewsContainer"+subzoneChoice).style.display = "block";
   document.getElementById('reviewsContainer').style.display = 'block';
   document.getElementById('wordCloudReviewsContainer'+subzoneChoice).scrollIntoView({block: "end",behavior:'smooth'});
-  // document.getElementById("displayLegend").style.display = "block";
+  document.getElementById("displayLegendSubzone").style.display = "block";
+
 
   chosenReviews = chosenReviews.split(",");
   
@@ -542,7 +543,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
                   </h6>
                   <br>
                   <h6 class="reviewHeaderFont">
-                    <img src="images/${imageName}" width='30px' height="auto">
+                    <img src="../../images/${imageName}" width='30px' height="auto">
                     Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
                   </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>
@@ -557,7 +558,7 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun,subzoneChoi
               `<div class="card mr-3 ml-3 mt-2">
                   <div class="card-body">
                   <h6 class="reviewHeaderFont">
-                    <img src="images/${imageName}" width='30px' height="auto">
+                    <img src="../../images/${imageName}" width='30px' height="auto">
                     Review Date: ${chosenReviewsWithFullData[x]['review_date'].toLocaleDateString()}
                   </h6>
                   <p class="reviewBodyFont">${chosenReviewsWithFullData[x]['review_text']}</p>

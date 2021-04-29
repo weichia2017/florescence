@@ -45,7 +45,6 @@
         <div class="container text-center col-10 col-sm-8 col-md-7 col-lg-5 col-5 shadow-lg mx-auto d-block registerContainer">
 
             <!-- ICON/IMAGE GOES HERE -->
-            <!-- <img src="images/Vessel.png" class="img-fluid mx-auto d-block"> -->
             <div style="font-size:50px; color: rgb(92, 92, 92)" class="material-icons">
                 account_circle
             </div>
@@ -56,8 +55,6 @@
             <hr>
             <p class="lead text-center text-secondary">Please enter your details</p>
 
-            <!-- Register Form -->
-            <!-- <form id="register-form" action= "http://35.175.55.18:5000/users/create" method="POST"> -->
 
             <!-- Name Field -->
             <div class="form-group">
@@ -91,7 +88,7 @@
             <hr>
 
             <!-- Return to Login Link -->
-            <a href="index.php">Return to Login</a>
+            <a href="index.php" class="float-left">Return to Login</a>
 
         </div>
     </div>
@@ -102,7 +99,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <!-- Load common.js from scripts folder -->
-    <script src="scripts/common.js"></script>
+    <script src="../scripts/common.js"></script>
 
     <script>
         function CheckPwd(pw, cfmpw) {
@@ -160,6 +157,7 @@
         });
         
         async function submitCreationRequest(){
+            document.getElementById("singUpBtn").disabled = true;
 
             let isPasswordOk = CheckPwd( $('#password').val(), $('#cfmPassword').val() );
             let isEmailOk    = CheckEmail( $('#email').val() );
@@ -167,7 +165,6 @@
 
             // Recheck Values if user tries to BYPASS by inspecting element and enabling submit button
             if(isNameOk && isEmailOk && isPasswordOk){
-                document.getElementById("singUpBtn").disabled = false;
 
                 let requestParameters = "name=" + encodeURIComponent($('#name').val()) +
                                         "&email=" + encodeURIComponent($('#email').val()) +
@@ -191,7 +188,6 @@
                     document.getElementById("email").value = ""
                     document.getElementById("cfmPassword").value = ""
                     document.getElementById("password").value = ""
-                    document.getElementById("singUpBtn").disabled = true;
                 }
             }
 

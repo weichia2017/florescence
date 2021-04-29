@@ -1,5 +1,5 @@
 <?php
-require_once  'include/commonAdmin.php';
+require_once  '../../include/commonAdmin.php';
 
 $adminID = $_SESSION["userID"];
 ?>
@@ -31,7 +31,7 @@ $adminID = $_SESSION["userID"];
     <!--          COMMON CSS        -->
     <!-- ========================== -->
     <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" media="all" href="css/common.css">
+    <link rel="stylesheet" media="all" href="../../css/common.css">
     
     <style>
         #manageUsersTable{
@@ -112,7 +112,7 @@ $adminID = $_SESSION["userID"];
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <!-- Load common.js from scripts folder -->
-    <script src="scripts/common.js"></script>
+    <script src="../../scripts/common.js"></script>
 
     <!-- Meant for DataTable -->
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
@@ -136,7 +136,7 @@ $adminID = $_SESSION["userID"];
     } );
 
     let optionNameOptionTags = `<option value="">Select Store</option>`;
-    // optionNameOptionTags += `<option value="NULL">testbreak</option>`;
+    optionNameOptionTags += `<option value="NULL">testbreak</option>`;
     async function mainCall(){
         document.getElementById("main-overlay").style.display = "block";
         let response   = await makeRequest(hostname + "/stores/", "GET", "");

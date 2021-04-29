@@ -1,5 +1,5 @@
 <?php
-require_once 'include/common.php';
+require_once '../../include/common.php';
 ?>
 <!Doctype html>
   <head>
@@ -25,7 +25,7 @@ require_once 'include/common.php';
     <!--          COMMON CSS        -->
     <!-- ========================== -->
     <!-- Load common.css from scripts folder -->
-    <link rel="stylesheet" media="all" href="css/common.css">
+    <link rel="stylesheet" media="all" href="../../css/common.css">
 
     <style></style>
 
@@ -36,7 +36,7 @@ require_once 'include/common.php';
     <?php require_once  'bizNavBar.php' ?>
 
     <!-- Contents get populated from updatePasswordBody.php -->
-    <?php  require_once  'updatePasswordBody.php' ?>
+    <?php  require_once  '../updatePasswordBody.php' ?>
     
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -44,10 +44,10 @@ require_once 'include/common.php';
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
    
     <!-- Load common.js from scripts folder -->
-    <script src="scripts/common.js"></script>
+    <script src="../../scripts/common.js"></script>
 
     <!-- Leave this below as it requires jquery -->
-    <script src="scripts/updatePassword.js"></script>
+    <script src="../../scripts/updatePassword.js"></script>
 
     <script>
       let shopName =sessionStorage.getItem('shopName');
