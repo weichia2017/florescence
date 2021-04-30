@@ -20,7 +20,7 @@ async function retrieveSOTbyStore(url,method,values,subzoneChoice){
                                       })
       }
       // Sort By Reviews By Date
-      reviews.sort(function(a,b){
+      chosenReviewsWithFullData.sort(function(a,b){
         return new Date(b.review_date) - new Date(a.review_date);
       });
 

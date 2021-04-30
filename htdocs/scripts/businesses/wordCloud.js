@@ -426,6 +426,11 @@ function displayReviewsBelowWordCloud_BelowTenReviews(chosenReviews){
   // Hide the reviews being shown under sentimentovertime as well 
   document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
   document.getElementById("sentimentReviewsContainer").style.display = "none";
+
+  sentimentOverTimeChartSVG.selectAll("g.layer")
+  .selectAll("rect")
+  .attr("stroke","pink")
+  .attr("stroke-width","0.2");
   
   let chosenReviewsWithFullData = [];
   for (x in chosenReviews){
@@ -466,6 +471,12 @@ function displayReviewsBelowWordCloud_NounAdj(chosenReviews,adj,noun){
   // Hide the reviews being shown under sentimentovertime as well 
   document.getElementById("sentimentOverTimeClickedReviews").innerHTML = '';
   document.getElementById("sentimentReviewsContainer").style.display = "none";
+
+  sentimentOverTimeChartSVG.selectAll("g.layer")
+  .selectAll("rect")
+  .attr("stroke","pink")
+  .attr("stroke-width","0.2");
+
 
   chosenReviews = chosenReviews.split(",");
   

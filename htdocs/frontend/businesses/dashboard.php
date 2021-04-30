@@ -71,7 +71,7 @@ $userName = $_SESSION["name"];
       }
 
       #wordCloudWhiteBackground{
-        background-image: url("images/white-bg.png");
+        background-image: url("../../images/white-bg.png");
         height:460px;
       }
     </style>
@@ -468,6 +468,7 @@ $userName = $_SESSION["name"];
 
     function populateReviews(storeBased_Reviews){
       let chosenReviewsWithFullData = [];
+      console.log(chosenReviewsWithFullData)
       //Convert String Date to Normal Date for the sorting
       for (x in storeBased_Reviews){
         chosenReviewsWithFullData.push({review_id   : storeBased_Reviews[x]['review_id'],
@@ -476,7 +477,7 @@ $userName = $_SESSION["name"];
                                       })
       }
       // Sort By Reviews By Date
-      storeBased_Reviews.sort(function(a,b){
+      chosenReviewsWithFullData.sort(function(a,b){
         return new Date(b.review_date) - new Date(a.review_date);
       });
 
