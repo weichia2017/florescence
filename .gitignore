@@ -13,3 +13,4 @@ __pycache__
 TripAdvisorScraper.log
 logger.log
 
+setup/insertDatabase.sql
